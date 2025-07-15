@@ -1,0 +1,90 @@
+from typing import List
+
+from maya import cmds as mc
+
+
+__all__ = [
+    'getDeformers',
+    'getNodeHistoryByType',
+]
+
+
+def getDeformers(node: str, types: str) -> List[str]:
+
+    history = mc.listHistory(node)
+    deformers = [
+        deformer
+        for deformer in history
+        if mc.nodeType(deformer) in types
+    ] or []
+
+    return deformers
+
+
+def getNodeHistoryByType(node: str, **kwargs) -> list[str]:
+    """
+
+    Args:
+        node: the node to start the search from
+        kwargs: all the keyword arguments to pass to the ls return command
+
+    Returns:
+        a list of nodes corresponding to the demand
+    """
+
+    past_history = set(mc.listHistory(
+        node, allConnections=True, fastIteration=True
+    ))
+    future_history = set(mc.listHistory(
+        node, future=True, allConnections=True, fastIteration=True
+    ))
+
+    past_history.update(future_history)
+
+    return mc.ls(*list(past_history), **kwargs)
+
+
+# def get_deformers(target: str, deformer_type: list | str = None) -> list | None:
+#     """
+#     Only works for maya 2018 and up
+#     Queries the deformer(s) applied to a target node
+#     Accepted deformer types are :
+#         [normal] : [
+#             'skinCluster', 'blendShape', 'nonLinear', 'ffd', 'cluster',
+#             'tension', 'deltaMush', 'wrap', 'tweak', 'wire', 'shrinkWrap',
+#             'softMod', 'sculpt'
+#         ]
+#         [nonLinear] : [
+#             'bend', 'flare', 'sine', 'squash', 'twist', 'wave'
+#         ]
+#     :param target: the node name to query deformers from
+#     :param deformer_type: the deformer type to search for
+#     :return: a list of deformers or None
+#     """
+#
+#     deformer_list = mc.findDeformers(target)
+#     if not deformer_list:
+#         return None
+#
+#     if deformer_type is None:
+#         return deformer_list
+#
+#     wanted_deformer = [
+#         x for x in deformer_list
+#         if mc.nodeType(x) in deformer_type
+#     ]
+#
+#     if wanted_deformer:
+#         return wanted_deformer
+#
+#     for deform in deformer_list:
+#
+#         if mc.objExists(f'{deform}.deformerData'):
+#             deformer_handle = mc.listConnections(
+#                 f'{deform}.deformerData', s=True, sh=True
+#             )[0]
+#
+#             if deformer_type.capitalize() in mc.nodeType(deformer_handle):
+#                 wanted_deformer.append(deformer_handle)
+#
+#     return wanted_deformer or None
