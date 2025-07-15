@@ -1,0 +1,42 @@
+from maya import cmds as mc
+
+from .singleton_metaclass import SingletonMeta
+
+
+__all__ = ['MayaFileInfo']
+
+
+class MayaFileInfo(dict, metaclass=SingletonMeta):
+
+    @property
+    def raw_data(self) -> list:
+        return mc.fileInfo(query=True)
+
+    def get(self, key, default=None):
+
+        return mc.fileInfo(key, query=True) or default
+
+    def __getitem__(self, key):
+
+        return mc.fileInfo(key, query=True)
+
+    def __setitem__(self, key, value):
+        super().__setitem__(key, value)
+        super().update({key: value})
+
+        mc.fileInfo(str(key), str(value))
+
+    def update(self, other, **kwargs):
+
+        if not isinstance(other, dict):
+            raise TypeError(f'Need dict instance, got {type(other)}')
+
+        for key, value in other.items():
+            mc.fileInfo(str(key), str(value))
+
+        self.clear()
+
+        raw_data = mc.fileInfo(query=True)
+        for key, value in zip(raw_data[::2], raw_data[1::2]):
+            self[key] = value
+            super().__setitem__(key, value)
