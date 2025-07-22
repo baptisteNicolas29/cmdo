@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from maya.api import OpenMaya as om
 
@@ -11,7 +11,7 @@ class DistanceBetween(dg_lib.DGNode):
     _NODE_TYPE = "distanceBetween"
     _API_TYPE = om.MFn.kDistanceBetween
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of DistanceBetween

@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 from maya import cmds as mc
 from maya.api import OpenMaya as om
@@ -13,7 +13,7 @@ class UVPin(dg_lib.DGNode):
     _NODE_TYPE = "uvPin"
     _API_TYPE = om.MFn.kUVPin
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of UVPin
@@ -85,13 +85,13 @@ class UVPin(dg_lib.DGNode):
         return self['outputMatrix'].numElements()
 
     @property
-    def deformedGeometry(self) -> om.MObject | None:
+    def deformedGeometry(self) -> Union[om.MObject, None]:
 
         """
         Get the deformedGeometry source plug
 
         Returns:
-             om.MObject | None: the deformedGeometry source plug or None
+             Union[om.MObject, None]: the deformedGeometry source plug or None
         """
 
         deformedGeometry = self['deformedGeometry']
@@ -113,13 +113,13 @@ class UVPin(dg_lib.DGNode):
         self['deformedGeometry'] = value
 
     @property
-    def originalGeometry(self) -> om.MObject | None:
+    def originalGeometry(self) -> Union[om.MObject, None]:
 
         """
         Get the originalGeometry source plug
 
         Returns:
-             om.MObject | None: the originalGeometry source plug or None
+             Union[om.MObject, None]: the originalGeometry source plug or None
         """
 
         originalGeometry = self['originalGeometry']
@@ -153,13 +153,13 @@ class UVPin(dg_lib.DGNode):
         return self['normalAxis'].asInt()
 
     @normalAxis.setter
-    def normalAxis(self, value: int | str) -> None:
+    def normalAxis(self, value: Union[int, str]) -> None:
 
         """
         Set the normalAxis value
 
         Args:
-            value: int | str, the normal axis to set, either the index or the
+            value: Union[int, str], the normal axis to set, either the index or the
                 string (ie: "y")
         """
 
@@ -187,13 +187,13 @@ class UVPin(dg_lib.DGNode):
         return self['tangentAxis'].asInt()
 
     @tangentAxis.setter
-    def tangentAxis(self, value: int | str) -> None:
+    def tangentAxis(self, value: Union[int, str]) -> None:
 
         """
         Set the tangentAxis value
 
         Args:
-            value: int | str, the normal axis to set, either the index or the
+            value: Union[int, str], the normal axis to set, either the index or the
                 string (ie: "-y")
         """
 
@@ -269,13 +269,13 @@ class UVPin(dg_lib.DGNode):
         return self['normalOverride'].asInt()
 
     @normalOverride.setter
-    def normalOverride(self, value: int | str) -> None:
+    def normalOverride(self, value: Union[int, str]) -> None:
 
         """
         Set the normalOverride value
 
         Args:
-            value: int | str, the normal override to set, either the index or
+            value: Union[int, str], the normal override to set, either the index or
                 the string (ie: "Auto")
         """
 
@@ -303,13 +303,13 @@ class UVPin(dg_lib.DGNode):
         return self['relativeSpaceMode'].asInt()
 
     @relativeSpaceMode.setter
-    def relativeSpaceMode(self, value: int | str) -> None:
+    def relativeSpaceMode(self, value: Union[int, str]) -> None:
 
         """
         Set the relativeSpaceMode value
 
         Args:
-            value: int | str, the relative space to set, either the index or
+            value: Union[int, str], the relative space to set, either the index or
                 the string (ie: "World")
         """
 
@@ -336,7 +336,7 @@ class UVPin(dg_lib.DGNode):
         return self['relativeSpaceMatrix'].value
 
     @relativeSpaceMatrix.setter
-    def relativeSpaceMatrix(self, value: om.MPlug | List[float]) -> None:
+    def relativeSpaceMatrix(self, value: Union[om.MPlug, List[float]]) -> None:
 
         """
         Set the relativeSpaceMatrix value
@@ -360,7 +360,7 @@ class UVPin(dg_lib.DGNode):
 
         return self['coordinate'][index].value
 
-    def setCoordinate(self, index: int, value: Tuple[float, float] | om.MPlug) -> None:
+    def setCoordinate(self, index: int, value: Union[Tuple[float, float], om.MPlug]) -> None:
         """
         Set the coordinate from a target index value
 
@@ -384,7 +384,7 @@ class UVPin(dg_lib.DGNode):
 
         return self['coordinate'][index]['coordinateU'].asFloat()
 
-    def setCoordinateU(self, index: int, value: Tuple[float, float] | om.MPlug) -> None:
+    def setCoordinateU(self, index: int, value: Union[Tuple[float, float], om.MPlug]) -> None:
         """
         Set the coordinateU from a target index value
 
@@ -408,7 +408,7 @@ class UVPin(dg_lib.DGNode):
 
         return self['coordinate'][index]['coordinateV'].asFloat()
 
-    def setCoordinateV(self, index: int, value: Tuple[float, float] | om.MPlug) -> None:
+    def setCoordinateV(self, index: int, value: Union[Tuple[float, float], om.MPlug]) -> None:
         """
         Set the coordinateV from a target index value
 

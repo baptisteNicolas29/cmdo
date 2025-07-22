@@ -15,7 +15,7 @@ class Curve(dag_lib.DAGNode):
     _NODE_TYPE = "nurbsCurve"
     _API_TYPE = om.MFn.kNurbsCurve
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of Curve
@@ -210,7 +210,7 @@ class Curve(dag_lib.DAGNode):
 
         self.mfnNurbsCurve.updateCurve()
 
-    def translate(self, vector: list[float | int]) -> None:
+    def translate(self, vector: List[Union[float, int]]) -> None:
 
         """
         Translate the curve
@@ -229,7 +229,7 @@ class Curve(dag_lib.DAGNode):
 
         self.update()
 
-    def rotate(self, rotation: list[float | int]) -> None:
+    def rotate(self, rotation: List[Union[float, int]]) -> None:
 
         """
         Rotate the curve
@@ -257,7 +257,7 @@ class Curve(dag_lib.DAGNode):
 
         self.update()
 
-    def scale(self, vector: list[float | int]) -> None:
+    def scale(self, vector: List[Union[float, int]]) -> None:
 
         """
         Scale the curve
@@ -276,7 +276,7 @@ class Curve(dag_lib.DAGNode):
 
         self.update()
 
-    def setCVPositions(self, array: list[int | float], space: int = om.MSpace.kObject) -> None:
+    def setCVPositions(self, array: List[Union[float, int]], space: int = om.MSpace.kObject) -> None:
 
         """
         Set all cv positions

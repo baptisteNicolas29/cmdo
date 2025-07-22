@@ -2,6 +2,7 @@ from .dg.absolute_lib import *
 from .dg.addDoubleLinear_lib import *
 from .dg.aimMatrix_lib import *
 from .dg.angleBetween_lib import *
+from .dg.animCurve_lib import *
 from .dg.animLayer_lib import *
 from .dg.axisAngleToQuat_lib import *
 from .dg.blendMatrix_lib import *
@@ -25,6 +26,7 @@ from .dg.pickMatrix_lib import *
 from .dg.plusMinusAverage_lib import *
 from .dg.pointMatrixMult_lib import *
 from .dg.quatToEuler_lib import *
+from .dg.reference_lib import *
 from .dg.remapValue_lib import *
 from .dg.objectSet_lib import *
 from .dg.setRange_lib import *

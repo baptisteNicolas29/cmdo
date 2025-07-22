@@ -3,27 +3,12 @@ from typing import Optional, Union, List, Dict, Set, Type
 from maya import cmds as mc
 from maya.api import OpenMaya as om, OpenMayaAnim as oma
 
-from ...core.abstract import dag_lib, dg_lib
+from ...core.abstract import dg_lib
 from ...core.node_registry import NodeRegistry
-
-# from ...core.abstract import geometryFilter_lib
-# from ..dg.dagPose_lib import DagPose
+from ...core.graph_lib import Graph
 
 
-InfluenceType = Optional[
-    Union[
-        om.MDagPathArray,
-        List[om.MDagPath],
-        List[Type[dag_lib.DAGNode]],
-        List[str],
-        om.MDagPath,
-        Type[dag_lib.DAGNode],
-        str
-    ]
-]
-
-
-# TODO: Start refactor here
+# TODO: Still some work to do here
 class SkinCluster(dg_lib.DGNode):
 
     _NODE_TYPE = "skinCluster"
@@ -46,7 +31,7 @@ class SkinCluster(dg_lib.DGNode):
         Get mfnSkinCluster of the om.MObject
 
         Returns:
-            om.mfnSkinCluster: the skinCluster object
+            oma.mfnSkinCluster: the skinCluster object
         """
         return oma.MFnSkinCluster(self)
 
@@ -63,7 +48,7 @@ class SkinCluster(dg_lib.DGNode):
         return NodeRegistry().get(dagPoseNode)(dagPoseNode)
 
     @property
-    def influenceObjects(self) -> om.MSelectionList:
+    def influenceObjects(self) -> Graph:
         """
         Get an om.MSelectionList of all influence objects
 
@@ -71,12 +56,11 @@ class SkinCluster(dg_lib.DGNode):
             om.MSelectionList, a list of influence objects
         """
 
-        influenceObjects = om.MSelectionList()
-
+        graph = Graph()
         for obj in self.mfnSkinCluster.influenceObjects():
-            influenceObjects.add(obj.node())
+            graph.add(obj.node())
 
-        return influenceObjects
+        return graph
 
     @property
     def deformedMesh(self) -> om.MObject:

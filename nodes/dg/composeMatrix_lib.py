@@ -12,7 +12,7 @@ class ComposeMatrix(dg_lib.DGNode):
     _NODE_TYPE = "composeMatrix"
     _API_TYPE = om.MFn.kComposeMatrix
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of ComposeMatrix
@@ -48,7 +48,7 @@ class ComposeMatrix(dg_lib.DGNode):
         return self['inputRotateOrder'].asInt()
 
     @inputRotateOrder.setter
-    def inputRotateOrder(self, value: int | str):
+    def inputRotateOrder(self, value: Union[int, str]):
 
         """
         Set the inputRotateOrder value

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from maya.api import OpenMaya as om
 
@@ -11,7 +11,7 @@ class PointMatrixMult(dg_lib.DGNode):
     _NODE_TYPE = "pointMatrixMult"
     _API_TYPE = om.MFn.kPointMatrixMult
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
         """
         Initialize an instance of PointMatrixMult
 
@@ -44,7 +44,7 @@ class PointMatrixMult(dg_lib.DGNode):
         self['inMatrix'] = value
 
     @property
-    def inPoint(self) -> list[float]:
+    def inPoint(self) -> List[float]:
         """
         Get the inPoint value
 
@@ -158,7 +158,7 @@ class PointMatrixMult(dg_lib.DGNode):
         self['vectorMultiply'] = value
 
     @property
-    def output(self) -> list[float]:
+    def output(self) -> List[float]:
         """
         Get the output value
 

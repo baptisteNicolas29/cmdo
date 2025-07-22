@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union, List
 
 from maya import cmds as mc
 from maya.api import OpenMaya as om
@@ -12,7 +12,7 @@ class Joint(Transform):
     _NODE_TYPE = "joint"
     _API_TYPE = om.MFn.kJoint
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of Joint
@@ -49,7 +49,7 @@ class Joint(Transform):
         self['radius'] = value
 
     @property
-    def jointOrient(self) -> list[float]:
+    def jointOrient(self) -> List[float]:
         """
 
         :return:

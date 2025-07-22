@@ -12,7 +12,7 @@ class Divide(dg_lib.DGNode):
     _NODE_TYPE = "divide"
     _API_TYPE = om.MFn.kDivide
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
         """
         Initialize an instance of Divide
 

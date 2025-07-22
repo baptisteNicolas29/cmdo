@@ -11,7 +11,7 @@ class PickMatrix(dg_lib.DGNode):
     _NODE_TYPE = "pickMatrix"
     _API_TYPE = om.MFn.kPickMatrix
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
         """
         Initialize an instance of PickMatrix
 

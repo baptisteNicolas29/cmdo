@@ -1,3 +1,5 @@
+from typing import List
+
 from maya import cmds as mc
 from maya.api import OpenMaya as om
 
@@ -52,7 +54,7 @@ def getAllNamespaces(recursive: bool = True):
     return all_namespaces
 
 
-def getAllUnusedNamespaces(recursive: bool = True) -> list[str]:
+def getAllUnusedNamespaces(recursive: bool = True) -> List[str]:
     """
     Gets all the namespaces in the scene and sorts them in ascending order
     (child -> parent). Remove namespaces without content
@@ -135,7 +137,7 @@ def removeAllNamespaces() -> None:
         removeNamespace(namespace)
 
 
-def getObjectsFromNamespace(namespace: str) -> list[om.MObject]:
+def getObjectsFromNamespace(namespace: str) -> List[om.MObject]:
     """
     Get objects from the given namespace
     Args:

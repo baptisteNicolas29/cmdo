@@ -1,10 +1,8 @@
-from maya import cmds as mc
 from maya.api import OpenMaya as om
 
 from .singleton_metaclass import SingletonMeta
 from .abstract import node_lib
-# from .abstract import dg_lib
-# from .abstract import dag_lib
+
 
 __all__ = [
     'NodeRegistry',
@@ -13,22 +11,25 @@ __all__ = [
 
 class NodeRegistry(dict, metaclass=SingletonMeta):
     """
-    This class is a singleton and only one instance will exist in TARLib
+    This class is a singleton and only one instance will exist in cmdo
 
     ```
-    # To access the registry in the TARLib module
-    from TAR.TARLib import node_registry
+    # To access the registry from cmdo #
+    from cmdo.core import node_registry
 
-    # add to registry
-    node_registry.TarNodeRegistry()[NodeObjectType] = NodeObject
+    # add to registry #
+    node_registry.NodeRegistry()[NodeObjectType] = NodeObject
 
-    # get from registry
-    node_object = node_registry.TarNodeRegistry().get(NodeObjectType)
+    # get from registry #
+    node_object = node_registry.NodeRegistry().get(NodeObjectType, default=DefaultTypeClass)
+
+    # print/get a copy of the registry
+    print(cmdo.getCmdoNodeDict())
     ```
     """
 
     @staticmethod
-    def ___isSubClass(cls1, cls2):
+    def __isSubClass(cls1, cls2):
         """
         We have wierd import because of maya (and other stuff)
         So we can t use the built-in issubclass to check classes
@@ -46,7 +47,7 @@ class NodeRegistry(dict, metaclass=SingletonMeta):
         return default
 
     def __setitem__(self, key, value):
-        if not self.___isSubClass(value, node_lib.Node):
+        if not self.__isSubClass(value, node_lib.Node):
             raise TypeError(
                 f'Value must be a subclass of {node_lib.Node} got {type(value)}'
             )

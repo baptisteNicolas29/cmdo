@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from maya.api import OpenMaya as om
 
@@ -11,7 +11,7 @@ class MultMatrix(dg_lib.DGNode):
     _NODE_TYPE = "multMatrix"
     _API_TYPE = om.MFn.kMatrixMult
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
         """
         Initialize an instance of MultMatrix
 
@@ -45,7 +45,7 @@ class MultMatrix(dg_lib.DGNode):
 
         return self['matrixIn'][index].value
 
-    def setMatrixIn(self, index: int, value: List[float] | om.MPlug) -> None:
+    def setMatrixIn(self, index: int, value: Union[List[float], om.MPlug]) -> None:
         """
         Set the matrixIn from a target index value
 

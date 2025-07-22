@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from maya.api import OpenMaya as om
 
@@ -11,7 +11,7 @@ class AimMatrix(dg_lib.DGNode):
     _NODE_TYPE = "aimMatrix"
     _API_TYPE = om.MFn.kAimMatrix
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of AimMatrix
@@ -35,7 +35,7 @@ class AimMatrix(dg_lib.DGNode):
         return self['inputMatrix'].value
 
     @inputMatrix.setter
-    def inputMatrix(self, value: List[float] | om.MPlug) -> None:
+    def inputMatrix(self, value: Union[List[float], om.MPlug]) -> None:
 
         """
         Set the inputMatrix value
@@ -59,7 +59,7 @@ class AimMatrix(dg_lib.DGNode):
         return self['primaryInputAxis'].value
 
     @primaryInputAxis.setter
-    def primaryInputAxis(self, value: List[float] | om.MPlug) -> None:
+    def primaryInputAxis(self, value: Union[List[float], om.MPlug]) -> None:
 
         """
         Set the primaryInputAxis value
@@ -83,7 +83,7 @@ class AimMatrix(dg_lib.DGNode):
         return self['primaryInputAxisX'].asFloat()
 
     @primaryInputAxisX.setter
-    def primaryInputAxisX(self, value: List[float] | om.MPlug) -> None:
+    def primaryInputAxisX(self, value: Union[List[float], om.MPlug]) -> None:
 
         """
         Set the primaryInputAxisX value
@@ -107,7 +107,7 @@ class AimMatrix(dg_lib.DGNode):
         return self['primaryInputAxisY'].asFloat()
 
     @primaryInputAxisY.setter
-    def primaryInputAxisY(self, value: List[float] | om.MPlug) -> None:
+    def primaryInputAxisY(self, value: Union[List[float], om.MPlug]) -> None:
 
         """
         Set the primaryInputAxisY value
@@ -131,7 +131,7 @@ class AimMatrix(dg_lib.DGNode):
         return self['primaryInputAxisZ'].asFloat()
 
     @primaryInputAxisZ.setter
-    def primaryInputAxisZ(self, value: List[float] | om.MPlug) -> None:
+    def primaryInputAxisZ(self, value: Union[List[float], om.MPlug]) -> None:
 
         """
         Set the primaryInputAxisZ value
@@ -155,7 +155,7 @@ class AimMatrix(dg_lib.DGNode):
         return self['primaryMode'].asInt()
 
     @primaryMode.setter
-    def primaryMode(self, value: int | om.MPlug) -> None:
+    def primaryMode(self, value: Union[int, om.MPlug]) -> None:
 
         """
         Set the primaryMode value
@@ -179,7 +179,7 @@ class AimMatrix(dg_lib.DGNode):
         return self['primaryTargetMatrix'].value
 
     @primaryTargetMatrix.setter
-    def primaryTargetMatrix(self, value: List[float] | om.MPlug) -> None:
+    def primaryTargetMatrix(self, value: Union[List[float], om.MPlug]) -> None:
 
         """
         Set the primaryTargetMatrix value
@@ -203,7 +203,7 @@ class AimMatrix(dg_lib.DGNode):
         return self['secondaryInputAxis'].value
 
     @secondaryInputAxis.setter
-    def secondaryInputAxis(self, value: List[float] | om.MPlug) -> None:
+    def secondaryInputAxis(self, value: Union[List[float], om.MPlug]) -> None:
 
         """
         Set the secondaryInputAxis value
@@ -227,7 +227,7 @@ class AimMatrix(dg_lib.DGNode):
         return self['secondaryInputAxisX'].asFloat()
 
     @secondaryInputAxisX.setter
-    def secondaryInputAxisX(self, value: List[float] | om.MPlug) -> None:
+    def secondaryInputAxisX(self, value: Union[List[float], om.MPlug]) -> None:
 
         """
         Set the secondaryInputAxisX value
@@ -251,7 +251,7 @@ class AimMatrix(dg_lib.DGNode):
         return self['secondaryInputAxisY'].asFloat()
 
     @secondaryInputAxisY.setter
-    def secondaryInputAxisY(self, value: List[float] | om.MPlug) -> None:
+    def secondaryInputAxisY(self, value: Union[List[float], om.MPlug]) -> None:
 
         """
         Set the secondaryInputAxisY value
@@ -275,7 +275,7 @@ class AimMatrix(dg_lib.DGNode):
         return self['secondaryInputAxisZ'].asFloat()
 
     @secondaryInputAxisZ.setter
-    def secondaryInputAxisZ(self, value: List[float] | om.MPlug) -> None:
+    def secondaryInputAxisZ(self, value: Union[List[float], om.MPlug]) -> None:
 
         """
         Set the secondaryInputAxisZ value
@@ -299,7 +299,7 @@ class AimMatrix(dg_lib.DGNode):
         return self['secondaryMode'].asInt()
 
     @secondaryMode.setter
-    def secondaryMode(self, value: int | om.MPlug) -> None:
+    def secondaryMode(self, value: Union[int, om.MPlug]) -> None:
 
         """
         Set the secondaryMode value
@@ -323,7 +323,7 @@ class AimMatrix(dg_lib.DGNode):
         return self['secondaryTargetMatrix'].value
 
     @secondaryTargetMatrix.setter
-    def secondaryTargetMatrix(self, value: List[float] | om.MPlug) -> None:
+    def secondaryTargetMatrix(self, value: Union[List[float], om.MPlug]) -> None:
 
         """
         Set the secondaryTargetMatrix value
@@ -347,7 +347,7 @@ class AimMatrix(dg_lib.DGNode):
         return self['preSpaceMatrix'].value
 
     @preSpaceMatrix.setter
-    def preSpaceMatrix(self, value: List[float] | om.MPlug) -> None:
+    def preSpaceMatrix(self, value: Union[List[float], om.MPlug]) -> None:
         """
         Get the preSpaceMatrix value
 
@@ -369,7 +369,7 @@ class AimMatrix(dg_lib.DGNode):
         return self['postSpaceMatrix'].value
 
     @postSpaceMatrix.setter
-    def postSpaceMatrix(self, value: List[float] | om.MPlug) -> None:
+    def postSpaceMatrix(self, value: Union[List[float], om.MPlug]) -> None:
         """
         Get the postSpaceMatrix value
 

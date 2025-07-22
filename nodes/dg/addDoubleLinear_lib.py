@@ -11,7 +11,7 @@ class AddDoubleLinear(dg_lib.DGNode):
     _NODE_TYPE = "addDoubleLinear"
     _API_TYPE = om.MFn.kAddDoubleLinear
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of AddDoubleLinear
@@ -34,7 +34,7 @@ class AddDoubleLinear(dg_lib.DGNode):
         return self['input1'].asFloat()
 
     @input1.setter
-    def input1(self, value: float | om.MPlug) -> None:
+    def input1(self, value: Union[float, om.MPlug]) -> None:
         """
         Set the value of the input1 plug
 
@@ -57,7 +57,7 @@ class AddDoubleLinear(dg_lib.DGNode):
         return self['input2'].asFloat()
 
     @input2.setter
-    def input2(self, value: float | om.MPlug) -> None:
+    def input2(self, value: Union[float, om.MPlug]) -> None:
         """
         Set the value of the input2 plug
 

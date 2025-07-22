@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from maya import cmds as mc
 
@@ -12,7 +12,7 @@ __all__ = [
 ]
 
 
-def skinAs(source, destination, smooth=False, **kwargs) -> str | None:
+def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Union[str, None]:
     """
     Bind a destination mesh based on the influence list and weights of the 
     skinCluster of a source mesh.

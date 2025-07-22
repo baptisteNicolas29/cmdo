@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Union, List, Tuple, Dict
 
 import math
 
@@ -10,11 +10,11 @@ __all__ = [
 ]
 
 
-NumType = int | float
-NumList = tuple[NumType] | list[NumType]
+NumType = Union[int, float]
+NumList = Union[Tuple[NumType], List[NumType]]
 
 
-def angle_between(vector1: NumList, vector2: NumList) -> float | None:
+def angle_between(vector1: NumList, vector2: NumList) -> Union[float, None]:
     """
     Return the angle between two vectors
 
@@ -38,7 +38,7 @@ def angle_between(vector1: NumList, vector2: NumList) -> float | None:
     return math.acos(vector_sum / vector1_sqrt * vector2_sqrt)
 
 
-def get_barycenter(point_vectors):
+def get_barycenter(point_vectors: List):
 
     x_center, y_center, z_center = [], [], []
 
@@ -69,7 +69,7 @@ class Vector3(object):
     """
 
     @classmethod
-    def unit_vector(cls):
+    def unit_vector(cls) -> 'Vector3':
         return cls(1, 1, 1)
 
     @classmethod
@@ -109,7 +109,7 @@ class Vector3(object):
         return isinstance(number, NumType)
 
     @staticmethod
-    def from_dict(**kwargs) -> tuple:
+    def from_dict(**kwargs) -> Tuple:
         """
         Get vector3 components from a dictionary
         
@@ -125,7 +125,7 @@ class Vector3(object):
         return x, y, z
 
     @staticmethod
-    def from_list(*args) -> tuple:
+    def from_list(*args) -> Tuple:
         """
         Get vector3 components from a list
 
@@ -147,7 +147,7 @@ class Vector3(object):
         return tuple(list(args[:3]) + fill_list)
 
     @staticmethod
-    def get_components(*args: list, **kwargs: dict) -> tuple:
+    def get_components(*args, **kwargs) -> Tuple:
         """
         Get the xyz component from supported input type
 
@@ -282,7 +282,7 @@ class Vector3(object):
             f"\n\tValid index range : [{-len(self)}, {len(self)-1}]"
         )
 
-    def __add__(self, vector: Union[NumList, dict, 'Vector3']) -> 'Vector3':
+    def __add__(self, vector: Union[NumList, Dict, 'Vector3']) -> 'Vector3':
         """
         Add the input vector to the current Vector3
 
@@ -306,7 +306,7 @@ class Vector3(object):
             f"\n\t- {self.__class__.__name__}, {NumType}, dict"
         )
 
-    def __sub__(self, vector: Union[NumList, dict, 'Vector3']) -> 'Vector3':
+    def __sub__(self, vector: Union[NumList, Dict, 'Vector3']) -> 'Vector3':
         """
             Description:
                 Subtract the input Vector3 from the current Vector3
@@ -422,7 +422,7 @@ class Vector3(object):
             f"\n\t- {NumType} != 0"
         )
 
-    def add(self, vector: Union[NumList, dict, 'Vector3']) -> None:
+    def add(self, vector: Union[NumList, Dict, 'Vector3']) -> None:
         """
         Perform an in place addition (add to self)
 
@@ -442,7 +442,7 @@ class Vector3(object):
             f"\n\t- {self.__class__.__name__}, {NumType}, dict"
         )
 
-    def dot_product(self, vector: Union[NumList, dict, 'Vector3']) -> NumType:
+    def dot_product(self, vector: Union[NumList, Dict, 'Vector3']) -> NumType:
         """
         Gives the result of dot product
 
@@ -513,7 +513,7 @@ class Vector3(object):
             f"\n\t- {self.__class__.__name__}, {NumType}, dict"
         )
 
-    def scale(self, vector: Union[NumList, dict, 'Vector3']) -> None:
+    def scale(self, vector: Union[NumList, Dict, 'Vector3']) -> None:
         """
         Scale the current vector
 

@@ -21,7 +21,7 @@ def getDeformers(node: str, types: str) -> List[str]:
     return deformers
 
 
-def getNodeHistoryByType(node: str, **kwargs) -> list[str]:
+def getNodeHistoryByType(node: str, **kwargs) -> List[str]:
     """
 
     Args:

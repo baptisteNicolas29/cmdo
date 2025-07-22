@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from maya.api import OpenMaya as om
 
@@ -11,7 +11,7 @@ class QuatToEuler(dg_lib.DGNode):
     _NODE_TYPE = "quatToEuler"
     _API_TYPE = om.MFn.kPluginDependNode
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
         """
         Initialize an instance of QuatToEuler
 
@@ -46,7 +46,7 @@ class QuatToEuler(dg_lib.DGNode):
         return self['inputRotateOrder'].asInt()
 
     @inputRotateOrder.setter
-    def inputRotateOrder(self, value: int | str):
+    def inputRotateOrder(self, value: Union[int, str]):
 
         """
         Set the inputRotateOrder value

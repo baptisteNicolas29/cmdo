@@ -4,6 +4,7 @@ from maya import cmds as mc
 from maya.api import OpenMaya as om
 
 
+# TODO: Update PlugArray properties and dunders
 class PlugArray(om.MPlugArray):
 
     def __getitem__(self, *args, **kwargs) -> 'Plug':
@@ -105,8 +106,6 @@ class Plug(om.MPlug):
 
     def __setitem__(self, key: str, value: Any) -> None:
 
-        print(f'__setitem__ {key} - {value}')
-
         # TODO: need to fix this part with the * operator
         if isinstance(value, (tuple, list)):
             self[key].set(*value)
@@ -159,8 +158,6 @@ class Plug(om.MPlug):
                     f'- len: {len(value)} '
                     f'- value: {value}'
                 )
-
-        print('END SETTING ATTR')
 
     def __rshift__(self, other: 'Plug') -> None:
         self.connect(other)

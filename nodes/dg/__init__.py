@@ -24,6 +24,7 @@ from .pickMatrix_lib import *
 from .plusMinusAverage_lib import *
 from .pointMatrixMult_lib import *
 from .quatToEuler_lib import *
+from .reference_lib import *
 from .remapValue_lib import *
 from .objectSet_lib import *
 from .setRange_lib import *

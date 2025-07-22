@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from maya.api import OpenMaya as om
 
@@ -11,7 +11,7 @@ class AngleBetween(dg_lib.DGNode):
     _NODE_TYPE = "angleBetween"
     _API_TYPE = om.MFn.kAngleBetween
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of AngleBetween
@@ -35,7 +35,7 @@ class AngleBetween(dg_lib.DGNode):
         return self['vector1'].value
 
     @vector1.setter
-    def vector1(self, value: List[float] | om.MPlug) -> None:
+    def vector1(self, value: Union[List[float], om.MPlug]) -> None:
 
         """
         Set the vector1 value
@@ -59,7 +59,7 @@ class AngleBetween(dg_lib.DGNode):
         return self['vector1X'].asFloat()
 
     @vector1X.setter
-    def vector1X(self, value: float | om.MPlug) -> None:
+    def vector1X(self, value: Union[float, om.MPlug]) -> None:
 
         """
         Set the vector1X value
@@ -83,7 +83,7 @@ class AngleBetween(dg_lib.DGNode):
         return self['vector1Y'].asFloat()
 
     @vector1Y.setter
-    def vector1Y(self, value: float | om.MPlug) -> None:
+    def vector1Y(self, value: Union[float, om.MPlug]) -> None:
 
         """
         Set the vector1Y value
@@ -107,7 +107,7 @@ class AngleBetween(dg_lib.DGNode):
         return self['vector1Z'].asFloat()
 
     @vector1Z.setter
-    def vector1Z(self, value: float | om.MPlug) -> None:
+    def vector1Z(self, value: Union[float, om.MPlug]) -> None:
 
         """
         Set the vector1Z value
@@ -155,7 +155,7 @@ class AngleBetween(dg_lib.DGNode):
         return self['vector2X'].asFloat()
 
     @vector2X.setter
-    def vector2X(self, value: float | om.MPlug) -> None:
+    def vector2X(self, value: Union[float, om.MPlug]) -> None:
 
         """
         Set the vector2X value
@@ -179,7 +179,7 @@ class AngleBetween(dg_lib.DGNode):
         return self['vector2Y'].asFloat()
 
     @vector2Y.setter
-    def vector2Y(self, value: float | om.MPlug) -> None:
+    def vector2Y(self, value: Union[float, om.MPlug]) -> None:
 
         """
         Set the vector2Y value
@@ -203,7 +203,7 @@ class AngleBetween(dg_lib.DGNode):
         return self['vector2Z'].asFloat()
 
     @vector2Z.setter
-    def vector2Z(self, value: float | om.MPlug) -> None:
+    def vector2Z(self, value: Union[float, om.MPlug]) -> None:
 
         """
         Set the vector2Z value
