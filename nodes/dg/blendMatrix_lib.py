@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from maya.api import OpenMaya as om
 
@@ -11,7 +11,7 @@ class BlendMatrix(dg_lib.DGNode):
     _NODE_TYPE = "blendMatrix"
     _API_TYPE = om.MFn.kBlendMatrix
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of BlendMatrix
@@ -35,7 +35,7 @@ class BlendMatrix(dg_lib.DGNode):
         return self['inputMatrix'].value
 
     @inputMatrix.setter
-    def inputMatrix(self, value: List[float] | om.MPlug) -> None:
+    def inputMatrix(self, value: Union[List[float], om.MPlug]) -> None:
 
         """
         Set the inputMatrix value
@@ -83,7 +83,7 @@ class BlendMatrix(dg_lib.DGNode):
 
         return self['target'][index]['targetMatrix'].value
 
-    def setTargetMatrix(self, index: int, value: List[float] | om.MPlug) -> None:
+    def setTargetMatrix(self, index: int, value: Union[List[float], om.MPlug]) -> None:
         """
         Set the targetMatrix from a target index value
 
@@ -107,7 +107,7 @@ class BlendMatrix(dg_lib.DGNode):
 
         return self['target'][index]['useMatrix'].asBool()
 
-    def setTargetUseMatrix(self, index: int, value: bool | om.MPlug) -> None:
+    def setTargetUseMatrix(self, index: int, value: Union[bool, om.MPlug]) -> None:
         """
         Set the targetUseMatrix from a target index value
 
@@ -131,7 +131,7 @@ class BlendMatrix(dg_lib.DGNode):
 
         return self['target'][index]['weight'].asFloat()
 
-    def setTargetWeight(self, index: int, value: float | om.MPlug) -> None:
+    def setTargetWeight(self, index: int, value: Union[float, om.MPlug]) -> None:
         """
         Set the targetWeight from a target index value
 
@@ -155,7 +155,7 @@ class BlendMatrix(dg_lib.DGNode):
 
         return self['target'][index]['scaleWeight'].asFloat()
 
-    def setTargetScaleWeight(self, index: int, value: float | om.MPlug) -> None:
+    def setTargetScaleWeight(self, index: int, value: Union[float, om.MPlug]) -> None:
         """
         Set the targetScaleWeight from a target index value
 
@@ -179,7 +179,7 @@ class BlendMatrix(dg_lib.DGNode):
 
         return self['target'][index]['translateWeight'].asFloat()
 
-    def setTargetTranslateWeight(self, index: int, value: float | om.MPlug) -> None:
+    def setTargetTranslateWeight(self, index: int, value: Union[float, om.MPlug]) -> None:
         """
         Set the targetTranslateWeight from a target index value
 
@@ -203,7 +203,7 @@ class BlendMatrix(dg_lib.DGNode):
 
         return self['target'][index]['rotateWeight'].asFloat()
 
-    def setTargetRotateWeight(self, index: int, value: float | om.MPlug) -> None:
+    def setTargetRotateWeight(self, index: int, value: Union[float, om.MPlug]) -> None:
         """
         Set the targetRotateWeight from a target index value
 
@@ -227,7 +227,7 @@ class BlendMatrix(dg_lib.DGNode):
 
         return self['target'][index]['shearWeight'].asFloat()
 
-    def setTargetShearWeight(self, index: int, value: float | om.MPlug) -> None:
+    def setTargetShearWeight(self, index: int, value: Union[float, om.MPlug]) -> None:
         """
         Set the targetShearWeight from a target index value
 

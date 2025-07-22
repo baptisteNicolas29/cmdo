@@ -1,5 +1,6 @@
+from typing import Tuple, List
+
 import numpy as np
-from typing import Tuple
 
 
 __all__ = [
@@ -67,7 +68,7 @@ def mirrored_gaussian_profile(
 
 
 def retrieve_gaussian_profile(
-    values: list[float]
+    values: List[float]
 ) -> Tuple[int, float, int]:
 
     """

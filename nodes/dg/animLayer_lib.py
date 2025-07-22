@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List, Any, Union
 
 from maya.api import OpenMaya as om
 from maya import cmds as mc, mel
@@ -32,7 +32,7 @@ class AnimLayer(dg_lib.DGNode):
         )
         mel.eval(melCmd)
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
         """
         Initialize an instance of AnimLayer
 

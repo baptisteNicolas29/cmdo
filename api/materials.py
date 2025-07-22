@@ -1,3 +1,5 @@
+from typing import List, Dict, Union, Set, Tuple
+
 import os
 import random
 
@@ -23,11 +25,11 @@ __all__ = [
 
 MAYA_DEFAULT_MAT = 'lambert1'
 
-NumType = float | int
-ListType = list | set | tuple
+NumType = Union[float, int]
+ListType = Union[List, Set, Tuple]
 
 
-def getRandomColor(min_value: NumType = 0, max_value: NumType = 100) -> list[float]:
+def getRandomColor(min_value: NumType = 0, max_value: NumType = 100) -> List[float]:
     """
     Generate a random double3 color range for color purposes
 
@@ -51,7 +53,7 @@ def getRandomColor(min_value: NumType = 0, max_value: NumType = 100) -> list[flo
     ]
 
 
-def getSceneMaterials() -> list:
+def getSceneMaterials() -> List:
     """
     Get all materials in the current scene
 
@@ -61,7 +63,7 @@ def getSceneMaterials() -> list:
     return mc.ls(materials=True)
 
 
-def getShadersFromObjects(nodes: list[str] = None, **kwargs) -> dict[str: list[str]]:
+def getShadersFromObjects(nodes: List[str] = None, **kwargs) -> Dict[str, List[str]]:
     """
     Returns the shaders of the given or selected objects
     Args:
@@ -79,7 +81,7 @@ def getShadersFromObjects(nodes: list[str] = None, **kwargs) -> dict[str: list[s
     return materials
 
 
-def getShadersFromObject(node: str = None, **kwargs) -> list[str]:
+def getShadersFromObject(node: str = None, **kwargs) -> List[str]:
     """
     Returns the shaders of the given or selected objects
     Args:
@@ -95,7 +97,7 @@ def getShadersFromObject(node: str = None, **kwargs) -> list[str]:
     )
 
 
-def getObjectsFromShaders(materials: list[str] = None) -> dict[str: list[str]]:
+def getObjectsFromShaders(materials: List[str] = None) -> Dict[str, List[str]]:
     """
 
     Args:
@@ -114,7 +116,7 @@ def getObjectsFromShaders(materials: list[str] = None) -> dict[str: list[str]]:
     return objects
 
 
-def getObjectsFromShader(material: str = None) -> list[str]:
+def getObjectsFromShader(material: str = None) -> List[str]:
     """
 
     Args:
@@ -123,6 +125,7 @@ def getObjectsFromShader(material: str = None) -> list[str]:
     Returns:
 
     """
+
     return mc.hyperShade(material, listGeometries=True)
 
 
@@ -370,10 +373,10 @@ def assign_diffuse_to_material(material_list, diffuse_path):
 
 
 def addMaterialWithColor(
-        objects: list[str] = None,
+        objects: List[str] = None,
         random_color: bool = True,
-        color: tuple[float] | list[float] = (0.249, 0.123667, 0.047808),
-        color_range: tuple = (30, 60)
+        color: Union[Tuple[float], List[float]] = (0.249, 0.123667, 0.047808),
+        color_range: Tuple = (30, 60)
 ):
     """
     For each geometry in the current scene, assign new material

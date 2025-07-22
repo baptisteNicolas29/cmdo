@@ -27,7 +27,7 @@ class Container(dg_lib.DGNode):
 
         return container
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of Camera
@@ -184,7 +184,7 @@ class Container(dg_lib.DGNode):
         return Graph.ls(self.mfnContainer.getRootTransform())[0]
 
     @rootTransform.setter
-    def rootTransform(self, node: str | dg_lib.DGNode | None) -> None:
+    def rootTransform(self, node: Union[str, dg_lib.DGNode, None]) -> None:
 
         """
         Set the root transform of the container
@@ -219,7 +219,7 @@ class Container(dg_lib.DGNode):
 
         return node
 
-    def addNode(self, node: str | om.MObject) -> None:
+    def addNode(self, node: Union[str, om.MObject]) -> None:
 
         """
         Add given node to the container

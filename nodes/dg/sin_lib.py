@@ -23,7 +23,7 @@ class Sin(dg_lib.DGNode):
         super().__init__(name=name)
 
     @property
-    def input(self) -> list[float]:
+    def input(self) -> List[float]:
         """
         Get the input value
 
@@ -45,7 +45,7 @@ class Sin(dg_lib.DGNode):
         self['input'] = value
 
     @property
-    def output(self) -> list[float]:
+    def output(self) -> List[float]:
         """
         Get the output value
 

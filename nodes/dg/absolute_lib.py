@@ -11,7 +11,7 @@ class Absolute(dg_lib.DGNode):
     _NODE_TYPE = "absolute"
     _API_TYPE = om.MFn.kAbsolute
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of Absolute
@@ -35,7 +35,7 @@ class Absolute(dg_lib.DGNode):
         return self['input'].asFloat()
 
     @input.setter
-    def input(self, value: float | om.MPlug) -> None:
+    def input(self, value: Union[float, om.MPlug]) -> None:
 
         """
         Set the value of the input plus

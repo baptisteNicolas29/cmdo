@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Union
 
 from maya.api import OpenMaya as om
 
@@ -11,7 +11,7 @@ class Choice(dg_lib.DGNode):
     _NODE_TYPE = "choice"
     _API_TYPE = om.MFn.kChoice
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of Choice
@@ -35,7 +35,7 @@ class Choice(dg_lib.DGNode):
         return self['selector'].value
 
     @selector.setter
-    def selector(self, value: int | om.MPlug) -> None:
+    def selector(self, value: Union[int, om.MPlug]) -> None:
 
         """
         Set the selector value
@@ -80,7 +80,7 @@ class Choice(dg_lib.DGNode):
 
         return self['input'][index].value
 
-    def setInput(self, index: int, value: Any | om.MPlug) -> None:
+    def setInput(self, index: int, value: Union[Any, om.MPlug]) -> None:
 
         """
         Set the input value from index

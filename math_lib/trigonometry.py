@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import math
 
 from . import distance_between
@@ -155,9 +157,9 @@ def distances_to_degrees(dist_a: float, dist_b: float, dist_c: float) -> float:
 
 
 def points_to_radians(
-    start_point: tuple[float, float, float],
-    angle_point: tuple[float, float, float],
-    end_point: tuple[float, float, float]
+    start_point: Tuple[float, float, float],
+    angle_point: Tuple[float, float, float],
+    end_point: Tuple[float, float, float]
 ) -> float:
 
     """
@@ -175,9 +177,9 @@ def points_to_radians(
 
 
 def points_to_degrees(
-    start_point: tuple[float, float, float],
-    angle_point: tuple[float, float, float],
-    end_point: tuple[float, float, float]
+    start_point: Tuple[float, float, float],
+    angle_point: Tuple[float, float, float],
+    end_point: Tuple[float, float, float]
 ) -> float:
 
     """

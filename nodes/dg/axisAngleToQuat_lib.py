@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from maya.api import OpenMaya as om
 
@@ -11,7 +11,7 @@ class AxisAngleToQuat(dg_lib.DGNode):
     _NODE_TYPE = "axisAngleToQuat"
     _API_TYPE = om.MFn.kPluginDependNode
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of AxisAngleToQuat
@@ -35,7 +35,7 @@ class AxisAngleToQuat(dg_lib.DGNode):
         return self['inputAngle'].asFloat()
 
     @inputAngle.setter
-    def inputAngle(self, value: float | om.MPlug) -> None:
+    def inputAngle(self, value: Union[float, om.MPlug]) -> None:
         """
         Set the inputAngle value
 
@@ -57,7 +57,7 @@ class AxisAngleToQuat(dg_lib.DGNode):
         return self['inputAxis'].value
 
     @inputAxis.setter
-    def inputAxis(self, value: float | om.MPlug) -> None:
+    def inputAxis(self, value: Union[float, om.MPlug]) -> None:
         """
         Set the inputAxis value
 
@@ -79,7 +79,7 @@ class AxisAngleToQuat(dg_lib.DGNode):
         return self['inputAxisX'].value
 
     @inputAxisX.setter
-    def inputAxisX(self, value: float | om.MPlug) -> None:
+    def inputAxisX(self, value: Union[float, om.MPlug]) -> None:
         """
         Set the inputAxisX value
 
@@ -101,7 +101,7 @@ class AxisAngleToQuat(dg_lib.DGNode):
         return self['inputAxisY'].value
 
     @inputAxisY.setter
-    def inputAxisY(self, value: float | om.MPlug) -> None:
+    def inputAxisY(self, value: Union[float, om.MPlug]) -> None:
         """
         Set the inputAxisY value
 
@@ -123,7 +123,7 @@ class AxisAngleToQuat(dg_lib.DGNode):
         return self['inputAxisZ'].value
 
     @inputAxisZ.setter
-    def inputAxisZ(self, value: float | om.MPlug) -> None:
+    def inputAxisZ(self, value: Union[float, om.MPlug]) -> None:
         """
         Set the inputAxisZ value
 

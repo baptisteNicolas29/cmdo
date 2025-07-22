@@ -1,3 +1,5 @@
+from typing import Dict, List
+
 from maya import cmds as mc
 
 from .singleton_metaclass import SingletonMeta
@@ -9,24 +11,24 @@ __all__ = ['MayaFileInfo']
 class MayaFileInfo(dict, metaclass=SingletonMeta):
 
     @property
-    def raw_data(self) -> list:
+    def raw_data(self) -> List:
         return mc.fileInfo(query=True)
 
-    def get(self, key, default=None):
+    def get(self, key: str, default=None):
 
         return mc.fileInfo(key, query=True) or default
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str):
 
         return mc.fileInfo(key, query=True)
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: str):
         super().__setitem__(key, value)
         super().update({key: value})
 
         mc.fileInfo(str(key), str(value))
 
-    def update(self, other, **kwargs):
+    def update(self, other: Dict, **kwargs):
 
         if not isinstance(other, dict):
             raise TypeError(f'Need dict instance, got {type(other)}')

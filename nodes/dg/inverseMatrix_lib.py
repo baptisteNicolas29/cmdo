@@ -12,7 +12,7 @@ class InverseMatrix(dg_lib.DGNode):
     _NODE_TYPE = "inverseMatrix"
     _API_TYPE = om.MFn.kPluginDependNode
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
         """
         Initialize an instance of InverseMatrix
 

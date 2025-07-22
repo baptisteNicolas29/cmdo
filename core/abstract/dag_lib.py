@@ -1,4 +1,4 @@
-from typing import Optional, List, Type
+from typing import Optional, List, Type, Union
 
 from maya import cmds as mc
 from maya.api import OpenMaya as om
@@ -10,7 +10,7 @@ from ..node_registry import NodeRegistry
 
 class DAGNode(DGNode):
 
-    def __init__(self, name: str = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of DAGNode
@@ -32,7 +32,7 @@ class DAGNode(DGNode):
         transforms, geometries, lights, cameras ect
 
         Returns:
-            Optional[om.MDagPath]: the node s MDagPath
+            Optional[MDagPath]: the node s MDagPath
         """
 
         return om.MGlobal.getSelectionListByName(self.name).getDagPath(0)
@@ -80,7 +80,7 @@ class DAGNode(DGNode):
         Get the node s MFnDagNode
 
         Returns:
-            Optional[om.MFnDagNode]: the MFnDagNode of the current node
+            Optional[MFnDagNode]: the MFnDagNode of the current node
         """
 
         return om.MFnDagNode(self)
@@ -268,7 +268,7 @@ class DAGNode(DGNode):
         return self.dagPath.getDrawOverrideInfo()
 
     @property
-    def isOverrideEnabled(self) -> bool:
+    def overrideEnabled(self) -> bool:
 
         """
         Is draw override info enabled
@@ -279,8 +279,8 @@ class DAGNode(DGNode):
 
         return self.drawOverrideInfo.overrideEnabled
 
-    @isOverrideEnabled.setter
-    def isOverrideEnabled(self, value: bool) -> None:
+    @overrideEnabled.setter
+    def overrideEnabled(self, value: bool) -> None:
 
         """
         Enable or Disable the drawOverride state
@@ -349,7 +349,7 @@ class DAGNode(DGNode):
         self["overrideColorB"] = value[2]
 
     @property
-    def colorIndex(self) -> Optional[int]:
+    def overrideColor(self) -> Optional[int]:
 
         """
         The index of the color for the draw override
@@ -360,8 +360,8 @@ class DAGNode(DGNode):
 
         return self['overrideColor'].asInt()
 
-    @colorIndex.setter
-    def colorIndex(self, value: int) -> None:
+    @overrideColor.setter
+    def overrideColor(self, value: int) -> None:
 
         """
         Set the index for the draw override color
@@ -422,7 +422,7 @@ class DAGNode(DGNode):
         om.MFnTransform(self.dagPath).resetFromRestPosition()
 
     @property
-    def worldMatrix(self) -> Plug:
+    def worldMatrix(self) -> List[float]:
 
         """
         Get the current node s world matrix
@@ -434,23 +434,29 @@ class DAGNode(DGNode):
         return self['worldMatrix'].value
 
     @worldMatrix.setter
-    def worldMatrix(self, matrix: om.MMatrix) -> None:
+    def worldMatrix(self, value: Union[List[float], om.MMatrix]) -> None:
 
         """
         Définit la matrice du monde du node.
 
         Args:
-            matrix (om.MMatrix):
+            matrix (MMatrix):
                 La matrice du monde du node.
 
         Returns:
             None
         """
+        if len(value) == 16:
+            value = om.MMatrix(value)
 
-        # om.MFnTransform(self.dagPath).setTransformation(
-        #     om.MTransformationMatrix(matrix)
-        # )
-        self['worldMatrix'] = matrix
+        elif isinstance(value, om.MMatrix):
+            value = value
+
+        om.MFnTransform(self.dagPath).setTransformation(
+            om.MTransformationMatrix(
+                value * om.MMatrix(self['parentInverseMatrix'].value)
+            )
+        )
 
     @property
     def parentMatrix(self) -> om.MMatrix:
@@ -492,14 +498,37 @@ class DAGNode(DGNode):
     def visibility(self, value: bool) -> None:
 
         """
-        Définit la visibilité du node.
+        Set the visibility state of the current node
 
         Args:
-            value (bool):
-                La visibilité du node.
+            value: bool, the visibility state
 
-        Returns:
-            None
         """
 
         self['visibility'] = value
+
+    @property
+    def displayLocalAxis(self) -> bool:
+
+        """
+        Get the displayLocalAxis state of the current node
+
+        Returns:
+            bool: the displayLocalAxis state
+        """
+
+        return self['displayLocalAxis'].asBool()
+
+    @displayLocalAxis.setter
+    def displayLocalAxis(self, value: bool) -> None:
+
+        """
+        Set the displayLocalAxis state of the current node
+
+        Args:
+            value: bool, the displayLocalAxis state
+
+        """
+
+        self['displayLocalAxis'] = value
+

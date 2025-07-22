@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from maya import cmds as mc
 from maya.api import OpenMaya as om
@@ -12,7 +12,7 @@ class Mesh(dag_lib.DAGNode):
     _NODE_TYPE = "mesh"
     _API_TYPE = om.MFn.kMesh
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of Mesh

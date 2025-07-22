@@ -1,4 +1,4 @@
-from typing import List, Union, Type
+from typing import List, Union, Type, Dict
 
 import maya.cmds as mc
 import maya.api.OpenMaya as om
@@ -17,12 +17,7 @@ __all__ = [
 ]
 
 
-def getAllChildren(
-    node: Union[
-        str,
-        Type[dag_lib.DAGNode]
-    ]
-) -> List[str]:
+def getAllChildren(node: Union[str, Type[dag_lib.DAGNode]]) -> List[str]:
 
     """
     Get all children of the given node
@@ -64,7 +59,7 @@ def getAllChildren(
     return list(traversed)
 
 
-def getDirectChildren(node: str, **kwargs) -> list[str]:
+def getDirectChildren(node: str, **kwargs) -> List[str]:
     """
     Get the direct children of the given object
     Args:
@@ -78,10 +73,10 @@ def getDirectChildren(node: str, **kwargs) -> list[str]:
         mc.warning(f'Given obj does not exist : {node}. Aborting....')
         return []
 
-    return mc.listRelatives(node, c=True, **kwargs)
+    return mc.listRelatives(node, children=True, **kwargs)
 
 
-def getRootParent(node: str) -> str | None:
+def getRootParent(node: str) -> Union[str, None]:
     """
     Get the root parent of the object
     Args:
@@ -101,7 +96,7 @@ def getRootParent(node: str) -> str | None:
     return top_parent
 
 
-def getHierarchyRoot(node: str, **kwargs: dict) -> list[str]:
+def getHierarchyRoot(node: str, **kwargs) -> List[str]:
     """
        Makes a list of all the hierarchy leading to the given obj
        Args:
@@ -126,10 +121,10 @@ def getHierarchyRoot(node: str, **kwargs: dict) -> list[str]:
 
 
 def getShortestParent(
-        node: Union[str, om.MObject, node_lib.Node],
-        graph: Union[List[str], List[node_lib.Node], om.MSelectionList],
-        as_str=True,
-        ) -> node_lib.Node | str | None:
+    node: Union[str, om.MObject, node_lib.Node],
+    graph: Union[List[str], List[node_lib.Node], om.MSelectionList],
+    as_str: bool = True,
+) -> Union[node_lib.Node, str, None]:
     """
     return the first parent of specified node inside the given graph
 
@@ -171,8 +166,8 @@ def getShortestParent(
 
 def getDagRoots(
     nodes: Union[List[str], List[node_lib.Node], om.MSelectionList],
-    safe=True,
-) -> 'Graph':
+    safe: bool = True,
+) -> graph_lib.Graph:
     """
     get the dag nodes roots from a set of given nodes
 

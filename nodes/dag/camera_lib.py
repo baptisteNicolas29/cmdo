@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from maya import cmds as mc
 from maya.api import OpenMaya as om
@@ -14,7 +14,7 @@ class Camera(dag_lib.DAGNode):
     _NODE_TYPE = "camera"
     _API_TYPE = om.MFn.kCamera
 
-    def __init__(self, name: Optional[str] = None, *args, **kwargs) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None, *args, **kwargs) -> None:
 
         """
         Initialize an instance of Camera

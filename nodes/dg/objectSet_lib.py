@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List, Any, Union
 
 from maya.api import OpenMaya as om
 from maya import cmds as mc
@@ -13,7 +13,7 @@ class ObjectSet(dg_lib.DGNode):
     _API_TYPE = om.MFn.kSet
 
     @staticmethod
-    def __getObjectName(obj: str | om.MObject) -> str:
+    def __getObjectName(obj: Union[str, om.MObject]) -> str:
         """
         Get the name obj the given node
 
@@ -29,7 +29,7 @@ class ObjectSet(dg_lib.DGNode):
 
         return obj
 
-    def __filterObjects(self, objs: List | str | om.MObject) -> List[str]:
+    def __filterObjects(self, objs: Union[List, str, om.MObject]) -> List[str]:
         """
         Filter function to convert the input node to str name for maya commands
 
@@ -44,7 +44,7 @@ class ObjectSet(dg_lib.DGNode):
 
         return list(map(self.__getObjectName, objs))
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
         """
         Initialize an instance of Set
 
@@ -68,7 +68,7 @@ class ObjectSet(dg_lib.DGNode):
         otherSet = self.__getObjectName(other)
         return mc.sets(otherSet, union=self.name)
 
-    def __sub__(self, other: str | om.MObject) -> List[str]:
+    def __sub__(self, other: Union[str, om.MObject]) -> List[str]:
         """
         An operation between two sets which returns the members
         of the first set that are not in the second set
@@ -83,7 +83,7 @@ class ObjectSet(dg_lib.DGNode):
         otherSet = self.__getObjectName(other)
         return mc.sets(otherSet, subtract=self.name)
 
-    def __isub__(self, value: List | str | om.MObject):
+    def __isub__(self, value: Union[List, str, om.MObject]):
 
         if isinstance(value, self.__class__):
             value = value.members
@@ -91,7 +91,7 @@ class ObjectSet(dg_lib.DGNode):
         self.removeMembers(value)
         return self
 
-    def __iadd__(self, value: List | str | om.MObject):
+    def __iadd__(self, value: Union[List, str, om.MObject]):
 
         if isinstance(value, self.__class__):
             value = value.members
@@ -139,7 +139,7 @@ class ObjectSet(dg_lib.DGNode):
 
         mc.sets(flatten=self.name)
 
-    def split(self, value: List | str | om.MObject) -> om.MObject:
+    def split(self, value: Union[List, str, om.MObject]) -> om.MObject:
         """
         Get a new set with the given nodes
         and remove those nodes from the current set
@@ -155,7 +155,7 @@ class ObjectSet(dg_lib.DGNode):
             mc.sets(*self.__filterObjects(value), split=self.name)
         )
 
-    def isMember(self, value: List | str | om.MObject):
+    def isMember(self, value: Union[List, str, om.MObject]):
         """
         Check if the given node(s) are all part of this set
 
@@ -165,7 +165,7 @@ class ObjectSet(dg_lib.DGNode):
 
         mc.sets(*self.__filterObjects(value), isMember=self.name)
 
-    def anyMember(self, value: List | str | om.MObject):
+    def anyMember(self, value: Union[List, str, om.MObject]):
         """
         Check if any of the given node(s) are part of this set
 
@@ -175,7 +175,7 @@ class ObjectSet(dg_lib.DGNode):
 
         mc.sets(*self.__filterObjects(value), anyMember=self.name)
 
-    def addMembers(self, value: List | str | om.MObject) -> None:
+    def addMembers(self, value: Union[List, str, om.MObject]) -> None:
         """
         Add members to set
 
@@ -185,7 +185,7 @@ class ObjectSet(dg_lib.DGNode):
 
         mc.sets(*self.__filterObjects(value), addElement=self.name)
 
-    def removeMembers(self, value: List | str | om.MObject):
+    def removeMembers(self, value: Union[List, str, om.MObject]):
         """
         Remove members from set
 

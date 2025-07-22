@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from maya.api import OpenMaya as om
 
@@ -25,7 +25,7 @@ class PlusMinusAverage(dg_lib.DGNode):
     _NODE_TYPE = "plusMinusAverage"
     _API_TYPE = om.MFn.kPlusMinusAverage
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
         """
         Initialize an instance of PlusMinusAverage
 
@@ -59,7 +59,7 @@ class PlusMinusAverage(dg_lib.DGNode):
         return self['operation'].asInt()
 
     @operation.setter
-    def operation(self, value: int | str):
+    def operation(self, value: Union[int, str]):
 
         """
         Set the operation value
@@ -128,7 +128,7 @@ class PlusMinusAverage(dg_lib.DGNode):
 
         return self['input1D'][index].asFloat()
 
-    def setInput1D(self, index: int, value: float | om.MPlug) -> None:
+    def setInput1D(self, index: int, value: Union[float, om.MPlug]) -> None:
         """
         Set the input1D from a target index value
 
@@ -152,7 +152,7 @@ class PlusMinusAverage(dg_lib.DGNode):
 
         return self['input2D'][index].value
 
-    def setInput2D(self, index: int, value: List[float] | om.MPlug) -> None:
+    def setInput2D(self, index: int, value: Union[List[float], om.MPlug]) -> None:
         """
         Set the input2D from a target index value
 
@@ -176,7 +176,7 @@ class PlusMinusAverage(dg_lib.DGNode):
 
         return self['input2D'][index]['input2Dx'].asFloat()
 
-    def setInput2Dx(self, index: int, value: float | om.MPlug) -> None:
+    def setInput2Dx(self, index: int, value: Union[float, om.MPlug]) -> None:
         """
         Set the input2Dx from a target index value
 
@@ -200,7 +200,7 @@ class PlusMinusAverage(dg_lib.DGNode):
 
         return self['input2D'][index]['input2Dy'].asFloat()
 
-    def setInput2Dy(self, index: int, value: float | om.MPlug) -> None:
+    def setInput2Dy(self, index: int, value: Union[float, om.MPlug]) -> None:
         """
         Set the input2Dy from a target index value
 
@@ -224,7 +224,7 @@ class PlusMinusAverage(dg_lib.DGNode):
 
         return self['input3D'][index].value
 
-    def setInput3D(self, index: int, value: List[float] | om.MPlug) -> None:
+    def setInput3D(self, index: int, value: Union[List[float], om.MPlug]) -> None:
         """
         Set the input3D from a target index value
 
@@ -248,7 +248,7 @@ class PlusMinusAverage(dg_lib.DGNode):
 
         return self['input3D'][index]['input3Dx'].asFloat()
 
-    def setInput3Dx(self, index: int, value: float | om.MPlug) -> None:
+    def setInput3Dx(self, index: int, value: Union[float, om.MPlug]) -> None:
         """
         Set the input3Dx from a target index value
 
@@ -272,7 +272,7 @@ class PlusMinusAverage(dg_lib.DGNode):
 
         return self['input3D'][index]['input3Dy'].asFloat()
 
-    def setInput3Dy(self, index: int, value: float | om.MPlug) -> None:
+    def setInput3Dy(self, index: int, value: Union[float, om.MPlug]) -> None:
         """
         Set the input3Dy from a target index value
 
@@ -296,7 +296,7 @@ class PlusMinusAverage(dg_lib.DGNode):
 
         return self['input3D'][index]['input3Dz'].asFloat()
 
-    def setInput3Dz(self, index: int, value: float | om.MPlug) -> None:
+    def setInput3Dz(self, index: int, value: Union[float, om.MPlug]) -> None:
         """
         Set the input3Dz from a target index value
 

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from maya.api import OpenMaya as om
 
@@ -11,7 +11,7 @@ class SetRange(dg_lib.DGNode):
     _NODE_TYPE = "setRange"
     _API_TYPE = om.MFn.kSetRange
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
         """
         Initialize an instance of SetRange
 
@@ -22,7 +22,7 @@ class SetRange(dg_lib.DGNode):
         super().__init__(name=name)
 
     @property
-    def min(self) -> list[float]:
+    def min(self) -> List[float]:
         """
         Get the min value
 
@@ -114,7 +114,7 @@ class SetRange(dg_lib.DGNode):
         self['minZ'] = value
 
     @property
-    def max(self) -> list[float]:
+    def max(self) -> List[float]:
         """
         Get the max value
 
@@ -206,7 +206,7 @@ class SetRange(dg_lib.DGNode):
         self['maxZ'] = value
 
     @property
-    def oldMin(self) -> list[float]:
+    def oldMin(self) -> List[float]:
         """
         Get the oldMin value
 
@@ -298,7 +298,7 @@ class SetRange(dg_lib.DGNode):
         self['oldMinZ'] = value
 
     @property
-    def oldMax(self) -> list[float]:
+    def oldMax(self) -> List[float]:
         """
         Get the oldMax value
 
@@ -390,7 +390,7 @@ class SetRange(dg_lib.DGNode):
         self['oldMaxZ'] = value
 
     @property
-    def outValue(self) -> list[float]:
+    def outValue(self) -> List[float]:
         """
         Get the outValue value
 

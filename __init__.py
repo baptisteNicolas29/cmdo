@@ -1,3 +1,5 @@
+from typing import List, Dict, Union
+
 import os
 import sys
 import pkgutil
@@ -6,47 +8,25 @@ import importlib
 import traceback
 
 
-# TESTING ################################################################
-# __PACKAGE_NAME = 'cmdo'
-# def flush_imports(pckg_name=__PACKAGE_NAME):
-#     to_delete = []
-#
-#     for module in sys.modules:
-#         if not module.startswith(pckg_name):
-#             continue
-#
-#         to_delete.append(module)
-#
-#     for module in reversed(to_delete):
-#         del sys.modules[module]
-#
-#
-# flush_imports(pckg_name='TAR')
-#
-# cmdo.big_reload(feedback=False)
-
-# from maya.api import OpenMaya as om
-
-# container = om.MFnContainerNode()
-# container.type() == om.MFn.kContainerBase
-
-# sys.modules.get('TAR', ModuleNotFoundError('No Module Named TAR'))
-# TESTING ################################################################
-
 __all__ = [
     'big_reload',
     'math',
     'core',
     'nodes',
     'api',
+    'getCmdoNodeDict'
 ]
+
+# TODO: Add Undo/Redo in maya.api.OpenMaya... not looking forward to that...
+#  currently the library that implements OpenMaya behavior doesn't support
+#  undoing or redoing
 
 
 # <editor-fold desc="Package Reload">
 __PACKAGE_NAME = __name__
 
 
-def flush_imports(pckg_name=__PACKAGE_NAME):
+def flush_imports(pckg_name: str =__PACKAGE_NAME):
     to_delete = []
 
     for module in sys.modules:
@@ -61,7 +41,7 @@ def flush_imports(pckg_name=__PACKAGE_NAME):
         del sys.modules[module]
 
 
-def format_py_module_path(file_path: str, pckg_name=__PACKAGE_NAME) -> str:
+def format_py_module_path(file_path: str, pckg_name: str =__PACKAGE_NAME) -> str:
     """
     Takes a file path and returns a formatted python path
 
@@ -79,10 +59,10 @@ def format_py_module_path(file_path: str, pckg_name=__PACKAGE_NAME) -> str:
 
 
 def find_modules(
-    package_path: str | list[str],
-    extensions: list[str] = None,
-    exceptions: list[str] = None
-) -> list[str]:
+    package_path: Union[str, List[str]],
+    extensions: List[str] = None,
+    exceptions: List[str] = None
+) -> List[str]:
     """
     Find every file recursively in a python package
 
@@ -138,10 +118,10 @@ def find_modules(
 
 
 def big_reload(
-    package_path: list | str = None,
+    package_path: Union[str, List] = None,
     flush: bool = True,
-    extensions: list = None,
-    exceptions: list = None,
+    extensions: List = None,
+    exceptions: List = None,
     feedback: bool = False
 ) -> None:
     """
@@ -242,13 +222,14 @@ from .api.curves import *
 from .api.mesh import *
 from .api.bifrost import *
 
-# from . import external_apis
 
+def getCmdoNodeDict() -> Dict:
+    """
+    Get registered cmdo node classes
 
+    Returns:
+         dict: {id: data} multiple pairs per node representing different ids
+    """
+    from .core import node_registry
 
-
-
-
-
-
-
+    return node_registry.NodeRegistry().copy()

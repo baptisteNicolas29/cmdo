@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from maya.api import OpenMaya as om
 
@@ -11,7 +11,7 @@ class DecomposeMatrix(dg_lib.DGNode):
     _NODE_TYPE = "decomposeMatrix"
     _API_TYPE = om.MFn.kDecomposeMatrix
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of DecomposeMatrix
@@ -56,6 +56,17 @@ class DecomposeMatrix(dg_lib.DGNode):
         """
 
         return self['inputMatrix'].value
+
+    @inputMatrix.setter
+    def inputMatrix(self, value: Union[List[float], om.MPlug]) -> None:
+        """
+        Set the inputMatrix value
+
+        Args:
+            value: List[float] | om.MPlug, the inputMatrix value
+        """
+
+        self['inputMatrix'] = value
 
     @property
     def outputTranslate(self) -> List[float]:

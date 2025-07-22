@@ -79,7 +79,7 @@ def normalize_quaternion(
         qy: Optional[float] = 0.0,
         qz: Optional[float] = 0.0,
         qw: Optional[float] = 1.0
-) -> list[float]:
+) -> List[float]:
     """
     Normalize the given quaternion
 

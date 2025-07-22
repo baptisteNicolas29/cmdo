@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from maya.api import OpenMaya as om
 
@@ -11,7 +11,7 @@ class MultiplyDivide(dg_lib.DGNode):
     _NODE_TYPE = "multiplyDivide"
     _API_TYPE = om.MFn.kMultiplyDivide
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
         """
         Initialize an instance of MultiplyDivide
 
@@ -45,7 +45,7 @@ class MultiplyDivide(dg_lib.DGNode):
         return self['operation'].asInt()
 
     @operation.setter
-    def operation(self, value: int | str):
+    def operation(self, value: Union[int, str]):
 
         """
         Set the operation value

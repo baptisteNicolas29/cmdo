@@ -1,3 +1,5 @@
+from typing import Union
+
 from maya.api import OpenMaya as om
 
 from ...core.abstract import dg_lib
@@ -9,7 +11,7 @@ class Cos(dg_lib.DGNode):
     _NODE_TYPE = "cos"
     _API_TYPE = om.MFn.kCos
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of Cos

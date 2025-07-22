@@ -1,4 +1,4 @@
-from typing import List, Optional, Union, Any, Tuple
+from typing import List, Optional, Union, Any, Tuple, Dict
 
 from maya import cmds as mc
 from maya.api import OpenMaya as om
@@ -67,7 +67,7 @@ class Node(om.MObject):
 
         return cls(obj)
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of Node
@@ -77,6 +77,7 @@ class Node(om.MObject):
         """
 
         # print(f'{self.__class__.__name__}.__init__({name = })')
+        self._HASH = None
 
         if isinstance(name, str):
 
@@ -91,10 +92,16 @@ class Node(om.MObject):
 
     def __hash__(self) -> int:
         """
-        Make hash using long name and string to int function
+        Make hash using long name and uuid to try having a unique hash
+        We "cache" the hash to avoid it changing in the middle of maya operation
         """
+        if self._HASH is None:
+            self._HASH = (
+                    hash(self.dependencyNode.uniqueName().encode()) +
+                    hash(self.dependencyNode.uuid().asString())
+            )
 
-        return hash(self.dependencyNode.absoluteName().encode())
+        return self._HASH
 
     def __repr__(self) -> str:
 
@@ -146,7 +153,7 @@ class Node(om.MObject):
         else:
             self[plug].set(value)
 
-    def printClass(self) -> str:
+    def printClass(self) -> None:
         """
         Get a representation the class and all its members
 
@@ -154,17 +161,17 @@ class Node(om.MObject):
             str, string representation of the current class
         """
 
-        txt = "\n"
-        txt += "\n# ######################################"
-        txt += f"\n# - {self.__class__.__name__.upper()} MEMBERS:"
-        txt += "\n# ######################################"
+        text = "\n"
+        text += "\n# ######################################"
+        text += f"\n# - {self.__class__.__name__.upper()} MEMBERS:"
+        text += "\n# ######################################"
 
         for name, value in self.getData().items():
-            txt += f'\n\n\t- {str(name):<20}: {value}'
+            text += f'\n\n\t- {str(name):<20}: {value}'
 
-        return txt
+        print(text)
 
-    def getData(self) -> dict:
+    def getData(self) -> Dict:
         """
         Data representing the class and its members
 
@@ -192,19 +199,18 @@ class Node(om.MObject):
 
         return data
 
-    def setAttrFromDict(self, data: dict[str, Any]) -> None:
+    def setAttrFromDict(self, data: Dict[str, Any]) -> None:
         """
         Set multiple attributes from given dictionary
 
         Args:
             data: dict[str, Any], a dictionary of {attrName: attrValue} pairs
-
         """
 
         for attr, value in data.items():
             self[attr] = value
 
-    def getAttrFromList(self, data: List[str]) -> dict[str, Any]:
+    def getAttrFromList(self, data: List[str]) -> Dict[str, Any]:
         """
         Get multiple attribute values from a list of attribute names
 
@@ -371,7 +377,7 @@ class Node(om.MObject):
         return bool(self.connectedPlugs)
 
     @property
-    def incomingConnections(self) -> dict[Plug: Plug]:
+    def incomingConnections(self) -> Dict[Plug, Plug]:
 
         """
         Get a dictionary holding incoming connections
@@ -393,7 +399,7 @@ class Node(om.MObject):
         return connection_dict
 
     @property
-    def outgoingConnections(self) -> dict[Plug: Plug]:
+    def outgoingConnections(self) -> Dict[Plug, Plug]:
 
         """
         Get a dictionary holding outgoing connections

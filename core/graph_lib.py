@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Union, List
 
 from maya import cmds as mc
 from maya.api import OpenMaya as om
@@ -18,36 +18,64 @@ class Graph(om.MSelectionList):
     __nodeRegistry = NodeRegistry()
 
     @staticmethod
-    def __filter_objects(obj: str | om.MObject) -> str:
+    def __isSubClass(cls1, cls2):
+        """
+        We have wierd import because of maya (and other stuff)
+        So we can t use the built-in issubclass to check classes
+        """
+        # print(f'{repr(cls2)} - {repr(cls1.__class__.mro())}')
+        return repr(cls2) in repr(cls1.__class__.mro())
+
+    @staticmethod
+    def __filter_objects(obj: Union[str, om.MObject]) -> str:
         """
         Filter function to convert the input node to str name for maya commands
 
         Args:
-             obj: str | om.MObject, a maya node to convert
+             obj: str | MObject, a maya node to convert
 
         Returns:
             str: the name of the node
         """
-        if isinstance(obj, om.MObject):
+        if isinstance(obj, str):
+            return obj
+
+        if Graph.__isSubClass(obj, om.MObject):
             return om.MFnDependencyNode(obj).name()
 
-        return obj
+        return str(obj)
 
     @classmethod
-    def __initRegistered(cls, value: om.MObject | str, default=node_lib.Node, **kwargs) -> Any:
+    def __initRegistered(cls, value: Union[str, om.MObject], default: om.MObject = node_lib.Node, **kwargs) -> Any:
         """
         Get node class instance from type
 
         Args:
-            value: om.MObject | str, MObject or name
-            default: om.MObject, the default object if nothing is found in
+            value: MObject | str, MObject or name
+            default: MObject, the default object if nothing is found in
                 NodeRegistry
 
         Returns:
-            om.MObject: a subclass of node_lib.Node
+            MObject: a subclass of node_lib.Node
         """
 
         return cls.__nodeRegistry.get(value, default)(value, **kwargs)
+
+    @classmethod
+    def __createList(cls, data: List) -> 'Graph':
+        """
+
+        Args:
+            data: list, a list of data to add to the graph
+
+        Returns:
+            Graph: a graph containing the given data
+        """
+        lst = cls()
+        for item in data:
+            lst.add(item)
+
+        return lst
 
     @classmethod
     def ls(cls, *args, **kwargs) -> 'Graph':
@@ -61,12 +89,12 @@ class Graph(om.MSelectionList):
 
         objects = list(map(cls.__filter_objects, args))
 
-        result = mc.ls(*objects, **kwargs) or []
-        lst = cls()
-        for item in result:
-            lst.add(item)
+        # remove the long flag if it is present in kwargs
+        if (key := kwargs.get('long')) or (key := kwargs.get('l')):
+            kwargs.pop(key)
 
-        return lst
+        result = mc.ls(*objects, long=True, **kwargs) or []
+        return cls.__createList(result)
 
     def createNode(self, typ: str, name=None, parent=None, **kwargs) -> om.MObject:
         """
@@ -117,14 +145,12 @@ class Graph(om.MSelectionList):
         """
 
         objects = list(map(cls.__filter_objects, args))
+        # remove the fullNodeName flag if it is present in kwargs
+        if (key := kwargs.get('fullNodeName')) or (key := kwargs.get('fnn')):
+            kwargs.pop(key)
 
-        result = mc.listHistory(*objects, **kwargs) or []
-
-        lst = cls()
-        for item in result:
-            lst.add(item)
-
-        return lst
+        result = mc.listHistory(*objects, fullNodeName=True, **kwargs) or []
+        return cls.__createList(result)
 
     @classmethod
     def listRelatives(cls, *args, **kwargs) -> 'Graph':
@@ -136,13 +162,12 @@ class Graph(om.MSelectionList):
 
         objects = list(map(cls.__filter_objects, args))
 
-        result = mc.listRelatives(*objects, **kwargs) or []
+        # remove the fullPath flag if it is present in kwargs
+        if (key := kwargs.get('fullPath')) or (key := kwargs.get('f')):
+            kwargs.pop(key)
 
-        lst = cls()
-        for item in result:
-            lst.add(item)
-
-        return lst
+        result = mc.listRelatives(*objects, fullPath=True, **kwargs) or []
+        return cls.__createList(result)
 
     @classmethod
     def getDagRoots(cls, nodes, safe=True) -> 'Graph':
@@ -191,11 +216,11 @@ class Graph(om.MSelectionList):
         return roots
 
     @classmethod
-    def getChildren(cls, node, graph) -> 'Graph':
+    def getChildren(cls, node, graph) -> Union['Graph', None]:
 
         node = node_lib.Node(node)
         if not node.hasFn(om.MFn.kDagNode):
-            return
+            return None
 
         if isinstance(graph, om.MSelectionList):
             graph = cls(graph)
@@ -209,7 +234,7 @@ class Graph(om.MSelectionList):
             graph = tmp
 
         else:
-            raise TypeError('graph need to be list or om.MSelectionList')
+            raise TypeError('graph need to be list or MSelectionList')
 
         # clear graph
         if node in graph:
@@ -227,7 +252,7 @@ class Graph(om.MSelectionList):
         return childrens
 
     @classmethod
-    def getParents(cls, node, graph) -> 'Graph':
+    def getParents(cls, node, graph) -> Union['Graph', None]:
 
         node = node_lib.Node(node)
 
@@ -235,7 +260,7 @@ class Graph(om.MSelectionList):
             graph = cls(graph)
 
         elif not node.hasFn(om.MFn.kDagNode):
-            return
+            return None
 
         elif isinstance(graph, list):
             tmp = Graph()
@@ -246,8 +271,7 @@ class Graph(om.MSelectionList):
             graph = tmp
 
         else:
-            raise TypeError(
-                'second argument need to be list or om.MSelectionList')
+            raise TypeError('second argument need to be list or MSelectionList')
 
         # clear graph
         if node in graph:
@@ -323,8 +347,11 @@ class Graph(om.MSelectionList):
         return copy.merge(other, strategy=om.MSelectionList.kXORWithList)
 
     def __iter__(self) -> Union[Any, plugs_lib.Plug]:
+        # mc.undoInfo(openChunk=True)
         for idx in range(self.length()):
             yield self.get(idx)
+
+        # mc.undoInfo(closeChunk=True)
 
     def __contains__(self, item: Union[om.MObject, Any, str]) -> bool:
 

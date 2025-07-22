@@ -110,8 +110,8 @@ def to_mpointarray(
         pass
 
     elif (
-        isinstance(points, list | tuple)
-        and all(isinstance(p, list | tuple)
+        isinstance(points, (list, tuple))
+        and all(isinstance(p, (list, tuple))
                 and len(p) in (3, 4)
                 for p in points)
     ):
@@ -796,7 +796,7 @@ def geometries_to_mdagpath_array(
         )
 
 
-def check_remove_mesh_instances(obj: str) -> str | None:
+def check_remove_mesh_instances(obj: str) -> Union[str, None]:
     """
     Check the passed object makes it unique
     removes history and renames the shape

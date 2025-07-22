@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Union
 
 from maya import cmds as mc
 from maya.api import OpenMaya as om
@@ -37,7 +37,7 @@ class Transform(dag_lib.DAGNode):
         return om.MFnTransform(self)
 
     @property
-    def transformAttributes(self) -> list[Plug]:
+    def transformAttributes(self) -> List[Plug]:
         """
         The transform attribute plugs of the current node
         AKA: translate, rotate, scale
@@ -271,7 +271,7 @@ class Transform(dag_lib.DAGNode):
         self['rotateZ'] = om.MAngle(value).asRadians()
 
     @property
-    def scale(self) -> list[float]:
+    def scale(self) -> List[float]:
 
         """
         Get the scale value
@@ -381,7 +381,7 @@ class Transform(dag_lib.DAGNode):
         return self['rotateOrder'].asInt()
 
     @rotateOrder.setter
-    def rotateOrder(self, value: int | str) -> None:
+    def rotateOrder(self, value: Union[int, str]) -> None:
         """
         Set the current transform's rotate order
 

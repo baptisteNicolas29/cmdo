@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from maya.api import OpenMaya as om
 
@@ -12,7 +12,7 @@ class BlendShape(dg_lib.DGNode):
     _NODE_TYPE = 'blendShape'
     _API_TYPE = om.MFn.kBlendShape
 
-    def __init__(self, name: str | om.MObject = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
         """
         Initialize an instance of BlendShape
 
@@ -23,7 +23,7 @@ class BlendShape(dg_lib.DGNode):
         super().__init__(name=name)
 
     # TODO: move transfer to api
-    def transfer_to(self, arg: str | om.MObject):
+    def transfer_to(self, arg: Union[str, om.MObject]):
         return NotImplementedError(f'Transferring target to obj {arg}')
 
     @property
@@ -38,26 +38,26 @@ class BlendShape(dg_lib.DGNode):
     def targetNames(self) -> List[str]:
         return NotImplementedError(f'Getting target names')
 
-    def getTarget(self, arg: int | str):
+    def getTarget(self, arg: Union[int, str]):
         return NotImplementedError(f'Get target {arg}')
 
-    def addTarget(self, arg: str | om.MObject):
+    def addTarget(self, arg: Union[str, om.MObject]):
         return NotImplementedError(f'Adding target {arg}')
 
-    def removeTarget(self, target_index: int | str):
+    def removeTarget(self, target_index: Union[int, str]):
         return NotImplementedError(f'Removing target {target_index}')
 
     def resetAllTargetWeights(self):
         return NotImplementedError('resetting all targets')
 
-    def resetTargetWeight(self, arg: int | str):
+    def resetTargetWeight(self, arg: Union[int, str]):
         return NotImplementedError(f'Resetting target from idx {arg}')
 
     # TODO: maybe rebuild functions move to api as well
     def rebuildAllTargets(self):
         return NotImplementedError(f'Rebuilding all target')
 
-    def rebuildTarget(self, arg: int | str):
+    def rebuildTarget(self, arg: Union[int, str]):
         return NotImplementedError(f'Rebuilding target {arg}')
 
 

@@ -3,7 +3,6 @@ from typing import List, Union, Sequence, Optional, Callable, Tuple
 from maya import cmds as mc
 from maya.api import OpenMaya as om
 
-from ...core import convert
 from ...core.abstract import dag_lib
 from ...core.node_registry import NodeRegistry
 
@@ -22,11 +21,7 @@ class Surface(dag_lib.DAGNode):
             name: Optional[str], the name of the node
         """
 
-        self._is_shape = True
-
         super().__init__(name=name)
-
-        self._init_surface_properties()
 
     @property
     def mfnNurbsSurface(self) -> om.MFnNurbsSurface:
