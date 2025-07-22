@@ -48,6 +48,7 @@ newNode.name = 'newNodeName'
 unusedNamespaces = cmdo.getAllUnusedNamespaces()
 for namespace in unusedNamespaces:
     cmdo.removeNamespaces(namespace)
+
 ```
 
 ### nodes:
@@ -71,6 +72,7 @@ MMatrix and MVector to do math operations when possible
 
 If the operation does not exist in the maya library 
 it is implemented to return maya objects
+
 ---
 
 
@@ -195,6 +197,7 @@ ctrl.translate = [3, 5, 2]
 ctrl.rotate = [-30.2, 17.154, 23]
 ctrl.scale = [1.1, 1.2, 1]
 ```
+
 ---
 
 # TODO:
