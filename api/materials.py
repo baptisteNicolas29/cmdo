@@ -4,10 +4,13 @@ import os
 import random
 
 from maya import cmds as mc
+from ..core.graphLib import Graph
+from ..core.cmdoTyping import *
 
 
 __all__ = [
     'MAYA_DEFAULT_MAT',
+    'assignDefaultShader',
     'getRandomColor',
     'getSceneMaterials',
     'getShadersFromObject',
@@ -25,11 +28,22 @@ __all__ = [
 
 MAYA_DEFAULT_MAT = 'lambert1'
 
-NumType = Union[float, int]
-ListType = Union[List, Set, Tuple]
+
+def assignDefaultShader(nodes):
+    """
+    Assign given nodes to the initial shading engine
+
+    Args:
+        nodes: a collection of nodes/components to be add to the shading engine
+
+    """
+
+    initSG = Graph.ls('initialShadingGroup')[0]
+
+    initSG.addMembers(nodes)
 
 
-def getRandomColor(min_value: NumType = 0, max_value: NumType = 100) -> List[float]:
+def getRandomColor(min_value: CmdoNumber = 0, max_value: CmdoNumber = 100) -> List[float]:
     """
     Generate a random double3 color range for color purposes
 
@@ -274,7 +288,7 @@ def assignMaterialPerUdim(geometry_objs, exceptions=None):
     """
     materials = []
 
-    if not isinstance(geometry_objs, ListType):
+    if not isinstance(geometry_objs, CmdoList):
         geometry_objs = [geometry_objs]
 
     for mesh in geometry_objs:
@@ -334,7 +348,7 @@ def assign_diffuse_to_material(material_list, diffuse_path):
         'outUvFilterSize': 'uvFilterSize'
     }
 
-    if not isinstance(material_list, ListType):
+    if not isinstance(material_list, CmdoList):
         material_list = [material_list]
 
     diffuse_name = os.path.basename(diffuse_path).split('.')[0]

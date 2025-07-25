@@ -3,7 +3,7 @@ from typing import List, Union, Sequence, Optional, Type
 from maya import cmds as mc, mel
 from maya.api import OpenMaya as om
 
-from .abstract import dg_lib, dag_lib
+from .abstract import dgLib, dagLib
 
 
 # TODO: probably remove / rework all of this
@@ -384,7 +384,7 @@ def to_MPlugArrays_list(
     ):
         return [
             om.MPlugArray([
-                dg_lib.DGNode(plug.split(".")[0]).plugs.get_plug(
+                dgLib.DGNode(plug.split(".")[0]).plugs.get_plug(
                     ".".join(plug.split(".")[1:])
                 )
                 for plug in plugs
@@ -407,7 +407,7 @@ def to_MPlugArrays_list(
     ):
         return [
             om.MPlugArray([
-                dg_lib.DGNode(plug.split(".")[0]).plugs.get_plug(
+                dgLib.DGNode(plug.split(".")[0]).plugs.get_plug(
                     ".".join(plug.split(".")[1:])
                 )
                 for plug in output_plugs
@@ -417,7 +417,7 @@ def to_MPlugArrays_list(
     if isinstance(output_plugs, str):
         return [
             om.MPlugArray([
-                dg_lib.DGNode(
+                dgLib.DGNode(
                     output_plugs.split(".")[0]).plugs.get_plug(
                     ".".join(output_plugs.split(".")[1:])
                 )
@@ -470,7 +470,7 @@ def to_MPlugArray(
         and all(isinstance(plug, str) for plug in to_convert)
     ):
         return om.MPlugArray([
-            dg_lib.DGNode(plug.split(".")[0]).plugs.get_plug(
+            dgLib.DGNode(plug.split(".")[0]).plugs.get_plug(
                 ".".join(plug.split(".")[1:])
             )
             for plug in to_convert
@@ -481,7 +481,7 @@ def to_MPlugArray(
 
     if isinstance(to_convert, str):
         return om.MPlugArray([
-            dg_lib.DGNode(to_convert.split(".")[0]).plugs.get_plug(
+            dgLib.DGNode(to_convert.split(".")[0]).plugs.get_plug(
                 ".".join(to_convert.split(".")[1:])
             )
         ])
@@ -510,7 +510,7 @@ def to_MPlug(
         return to_convert
 
     if isinstance(to_convert, str):
-        return dg_lib.DGNode(to_convert.split(".")[0]).plugs.get_plug(
+        return dgLib.DGNode(to_convert.split(".")[0]).plugs.get_plug(
             ".".join(to_convert.split(".")[1:])
         )
 
@@ -520,10 +520,10 @@ def geometries_to_mObjectArray(
     geometries: Optional[Union[
         om.MObjectArray,
         List[om.MObject],
-        List[Type[dg_lib.DGNode]],
+        List[Type[dgLib.DGNode]],
         List[str],
         om.MObject,
-        Type[dg_lib.DGNode],
+        Type[dgLib.DGNode],
         str
     ]] = None
 ) -> om.MObjectArray:
@@ -535,10 +535,10 @@ def geometries_to_mObjectArray(
         geometries (Optional[Union[
             om.MObjectArray,
             List[om.MObject],
-            List[Type[dg_lib.DGNode]],
+            List[Type[dgLib.DGNode]],
             List[str],
             om.MObject,
-            Type[dg_lib.DGNode],
+            Type[dgLib.DGNode],
             str
         ]]):
             Les géométries à valider.
@@ -555,10 +555,10 @@ def geometries_to_mObjectArray(
     if isinstance(geometries, str):
 
         return om.MObjectArray(
-            [dag_lib.DAGNode(geometries).maya_object]
+            [dagLib.DAGNode(geometries).maya_object]
         )
 
-    elif isinstance(geometries, dg_lib.DGNode):
+    elif isinstance(geometries, dgLib.DGNode):
 
         return om.MObjectArray(
             [geometries.maya_object]
@@ -573,13 +573,13 @@ def geometries_to_mObjectArray(
     ):
 
         return om.MObjectArray(
-            [dg_lib.DGNode(geo).maya_object for geo in geometries]
+            [dgLib.DGNode(geo).maya_object for geo in geometries]
         )
 
     elif (
         isinstance(geometries, list)
         and all(
-            isinstance(geo, dg_lib.DGNode)
+            isinstance(geo, dgLib.DGNode)
             for geo in geometries
         )
     ):
@@ -651,7 +651,7 @@ def to_MObjectArray(
 
     if isinstance(list_mobjects, str):
         return om.MObjectArray(
-            [dg_lib.DGNode(list_mobjects).maya_object]
+            [dgLib.DGNode(list_mobjects).maya_object]
         )
 
     if (
@@ -665,7 +665,7 @@ def to_MObjectArray(
         and all(isinstance(mobject, str) for mobject in list_mobjects)
     ):
         return om.MObjectArray([
-            dg_lib.DGNode(mobject).maya_object
+            dgLib.DGNode(mobject).maya_object
             for mobject in list_mobjects
         ])
 
@@ -677,11 +677,11 @@ def geometries_to_mdagpath_array(
         om.MObjectArray,
         List[om.MDagPath],
         List[om.MObject],
-        List[Type[dag_lib.DAGNode]],
+        List[Type[dagLib.DAGNode]],
         List[str],
         om.MDagPath,
         om.MObject,
-        Type[dag_lib.DAGNode],
+        Type[dagLib.DAGNode],
         str
     ]
 ) -> om.MDagPathArray:
@@ -696,11 +696,11 @@ def geometries_to_mdagpath_array(
                 om.MObjectArray,
                 List[om.MDagPath],
                 List[om.MObject],
-                List[Type[dag_lib.DAGNode]],
+                List[Type[dagLib.DAGNode]],
                 List[str],
                 om.MDagPath,
                 om.MObject,
-                Type[dag_lib.DAGNode],
+                Type[dagLib.DAGNode],
                 str
             ]
         ):
@@ -713,10 +713,10 @@ def geometries_to_mdagpath_array(
     if isinstance(geometries, str):
 
         return om.MDagPathArray(
-            [dag_lib.DAGNode(geometries).maya_dagPath]
+            [dagLib.DAGNode(geometries).maya_dagPath]
         )
 
-    elif isinstance(geometries, dag_lib.DAGNode):
+    elif isinstance(geometries, dagLib.DAGNode):
 
         return om.MDagPathArray(
             [geometries.maya_dagPath]
@@ -731,7 +731,7 @@ def geometries_to_mdagpath_array(
     elif isinstance(geometries, om.MObject):
 
         return om.MDagPathArray([
-            dag_lib.DAGNode(
+            dagLib.DAGNode(
                 om.MFnDependencyNode(geometries).name()
             ).maya_dagPath
         ])
@@ -743,7 +743,7 @@ def geometries_to_mdagpath_array(
 
         return om.MDagPathArray(
             [
-                dag_lib.DAGNode(geo).maya_dagPath
+                dagLib.DAGNode(geo).maya_dagPath
                 for geo in geometries
             ]
         )
@@ -751,7 +751,7 @@ def geometries_to_mdagpath_array(
     elif (
         isinstance(geometries, list)
         and all(
-            isinstance(geo, dag_lib.DAGNode)
+            isinstance(geo, dagLib.DAGNode)
             for geo in geometries
         )
     ):
@@ -778,7 +778,7 @@ def geometries_to_mdagpath_array(
 
         return om.MDagPathArray(
             [
-                dag_lib.DAGNode(
+                dagLib.DAGNode(
                     om.MFnDependencyNode(geo).name()
                 ).maya_dagPath
                 for geo in geometries

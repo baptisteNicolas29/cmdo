@@ -2,7 +2,7 @@
 
 
 # WHAT IS CMDO (maya commands object)
-```cmdo``` is a oop python maya wrapperIt is mainly composed of a library of nodes (maya node wrappers)  
+`cmdo` is a oop python maya wrapperIt is mainly composed of a library of nodes (maya node wrappers)  
 and an api to enable high level operations on nodes (ie: lockAndHideTransforms).  
 At its core cmdo is built to operate on any kind of maya data, its nodes can be initialised with  
 object names, MObjects or cmdo custom nodes
@@ -10,7 +10,7 @@ object names, MObjects or cmdo custom nodes
 We can feed cmdo nodes to maya.cmds or maya.api.OpenMaya and get the native interaction and results.`*1`
 
 Its purpose is to facilitate the interaction between maya and programmers and to be able to interact with any       
-node type found in maya in an oop manner. To do this cmdo uses ```maya.api.OpenMaya``` for the base of its objects.
+node type found in maya in an oop manner. To do this cmdo uses `maya.api.OpenMaya` for the base of its objects.
 
 Furthermore, all cmdo nodes get data on demand most of the time, so we avoid heavy loading of the library and this  
 enables cmdo nodes to always be up to date with their maya counterpart.
@@ -18,17 +18,18 @@ enables cmdo nodes to always be up to date with their maya counterpart.
 ---
 
 ## Testing:
+
 ```python
 import cmdo
 
 # feedback is only for the reload function
 # it does not act as a logger
-cmdo.big_reload(feedback=False, flush=True)
+cmdo.bigReload(feedback=False, flush=True)
 ```
 
 ## SubModules:
 ### api:
-```cmdo.api``` subPackage is dumped into the main namespace of the master package.  
+`cmdo.api` subPackage is dumped into the main namespace of the master package.  
 This module is a wrapper of maya cmds/OpenMaya to return python objects  (for oop interaction).  
 It is easy to access all functionalities through the main namespace like we would maya.cmds
 ```python
@@ -51,34 +52,135 @@ for namespace in unusedNamespaces:
 
 ```
 
-### nodes:
-```cmdo.nodes``` is a subPackage holding all maya node wrappers.  
+### nodes :
+`cmdo.nodes` is a subPackage holding all maya node wrappers.  
 They enable oop interaction with maya nodes and are returned through the api.  
 They can take multiple input types such as, python types,  OpenMaya types or custom types
 
 
-### core:
-```cmdo.core``` is a subPackage holding some important objets and operations used throughout cmdo.
+### core :
+`cmdo.core` is a subPackage holding some important objets and operations used throughout cmdo.
 
 Notably all classes that serve as a node base and that do not represent specific nodes.
-The ```graph_lib```, which is used to interact with maya graphs (ie: ls, listRelatives ect).
-The ```node_registry``` that holds a reference to all node classes that cmdo can wrap.
-And some modules to help, like exceptions, decorators ect.
+The `graphLib`,  
+which is used to interact with maya graphs (ie: ls, listRelatives ect). The `nodeRegistry` that holds a reference to all node  
+classes that cmdo can wrap. And some modules to help, like exceptions, decorators ect.
 
 
-### math
-```cmdo.math``` is a library using ```maya.api.OpenMaya``` objects such as 
+### math :
+`cmdo.math` is a library using `maya.api.OpenMaya` objects such as 
 MMatrix and MVector to do math operations when possible
 
 If the operation does not exist in the maya library 
 it is implemented to return maya objects
 
 ---
+# Extensions :
+### node extensions :
+Adding new nodes to `cmdo` is an easy task.  
+All that is needed is to create a class that inherits from one of three bases or one of their subclasses.
+- `nodeLib.Node`
+> This is the most abstract class for cmdo nodes, it inherits directly from `maya.api.OpenMaya.MObject` 
+> and implements lots of basic functionality and properties. It does not represent any node type inside maya.
 
+- `dgLib.DGNode`
+> This node inherits of `nodeLib.Node`. It represents the base of all non-DAG nodes of maya 
+> (DG (Directed Graph): nodes without transforms and/or parenting hierarchy)
+
+- `dagLib.DAGNode`
+> This node inherits of `dgLib.DGNode`. It represents the base of all DAG nodes of maya. 
+> It implements transform and hierarchy related properties  
+> (DAG (Directed Acyclic Graph): nodes with transforms and/or parenting hierarchy)
+
+Then override the `_NODE_TYPE` (maya.cmds type str) and `_API_TYPE` (maya.api.OpenMaya type int)  
+class variables to the corresponding node.  
+And add the new class to the `nodeRegistry.NodeRegistry` singleton class.  
+
+This can be used to give access to third party nodes to cmdo, like plugin nodes
+
+<details>
+<summary> Exemple New Class: </summary>
+
+Create a new class and register it to cmdo NodeRegistry
+
+```python
+from typing import List
+
+from maya.api import OpenMaya as om
+
+from cmdo.core.nodeRegistry import NodeRegistry
+from cmdo.core.abstract import dagLib
+
+# Create class that inherits from DAGNode
+class Locator(dagLib.DAGNode):
+    _NODE_TYPE = "locator"  # the maya type from maya.cmds
+    _API_TYPE = om.MFn.kLocator  # see types in maya.api.OpenMaya.MFn doc
+
+    @property
+    def localScale(self) -> List[float]:
+        """
+        Get the localScale values
+        
+        Returns:
+            List[float]: the localScale values
+        """
+        return self['localScale'].value
+    
+    @localScale.setter
+    def localScale(self, value) -> None:
+        """
+        Set the localScale values
+        
+        Args:
+            value: List[float], the localScale values to set
+        """
+        self['localScale'] = value
+    
+    @property
+    def localPosition(self) -> List[float]:
+        """
+        Get the localPosition values
+        
+        Returns:
+            List[float]: the localPosition values
+        """
+        return self['localPosition'].value
+    
+    @localPosition.setter
+    def localPosition(self, value) -> None:
+        """
+        Set the localPosition values
+        
+        Args:
+            value: List[float], the localPosition values to set
+        """
+        self['localPosition'] = value
+
+        
+# Register the class so that cmdo can interact with it/create it
+NodeRegistry()[Locator.nodeType()] = Locator
+```
+
+Later cmdo will be able to wrap locator shapes with this class when they are query or created
+
+```python
+import cmdo
+
+trs = cmdo.createNode('locator')
+locator_instance = trs.shapes[0] # this will return a Locator class instance
+
+locator_instance.localScale = [5, 5, 5]
+
+```
+
+</details>
+
+---
 
 # Exemples:
+<details>
 
-- <u>Exemple 1: Create a transform and get/set its translate and rotate attributes</u>
+<summary>Exemple 1: Create a transform and get/set its translate and rotate attributes</summary>
 
 ```python
 import cmdo
@@ -94,7 +196,12 @@ trs = cmdo.createNode('transform', name='newTransform')
 trs.translate = pos
 trs.rotate = [3.5, 50, -24.1]
 ```
-- <u>Exemple 2: Get all the shapes and set their lineWidth attributes</u>
+
+</details>
+
+<details>
+
+<summary>Exemple 2: Get all the shapes and set their lineWidth attributes</summary>
 
 ```python
 import cmdo
@@ -114,12 +221,16 @@ for ctrl in ctrls:
         shape.lineWidth = 2
 ```
 
-- <u>Exemple 3: Create, parent and match world transform</u>
+</details>
+
+<details>
+
+<summary>Exemple 3: Create, parent and match world transform</summary>
 
 ```python
 import cmdo
 
-cmdo.big_reload(flush=True)
+cmdo.bigReload(flush=True)
 
 # initialize an identity matrix as MMatrix (openMaya object)
 my_matrix = cmdo.math.identityMatrix4
@@ -141,7 +252,11 @@ trs2.resetTransformationMatrix()
 trs2.worldMatrix = trs1.worldMatrix
 ```
 
-- <u>Exemple 4: Create nodes and connect them</u>
+</details>
+
+<details>
+
+<summary>Exemple 4: Create nodes and connect them</summary>
 
 ```python
 import cmdo
@@ -198,6 +313,8 @@ ctrl.rotate = [-30.2, 17.154, 23]
 ctrl.scale = [1.1, 1.2, 1]
 ```
 
+</details>
+
 ---
 
 # TODO:
@@ -206,6 +323,13 @@ ctrl.scale = [1.1, 1.2, 1]
 # TODO: Add Undo/Redo in maya.api.OpenMaya... not looking forward to that... 
 #  currently the library that implements OpenMaya behavior doesn't support 
 #  undoing or redoing
+```
+
+- Add lazy imports to bypass circular/partial import problems
+```python
+# TODO: Plug.__hash__ need to remove the node hashing and find a way
+#  to get the cmdo node without circular import
+#  one of the ways would be to add lazy imports to cmdo
 ```
 
 - Add bifrost node/api:
@@ -228,7 +352,7 @@ ctrl.scale = [1.1, 1.2, 1]
 # TODO: probably remove / rework all of this
 ```
 
-- Update/Remove core.export_lib (move to department specific code)
+- Update/Remove core.exportLib (move to department specific code)
 ```python
 # TODO: MOVE TO ANOTHER LIBRARY "RIG"
 ```

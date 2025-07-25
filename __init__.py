@@ -9,7 +9,7 @@ import traceback
 
 
 __all__ = [
-    'big_reload',
+    'bigReload',
     'math',
     'core',
     'nodes',
@@ -26,7 +26,10 @@ __all__ = [
 __PACKAGE_NAME = __name__
 
 
-def flush_imports(pckg_name: str =__PACKAGE_NAME):
+# TODO: bigReload could be better it usually take two calls to really
+#  reload the whole package
+
+def flushImports(pckg_name: str = __PACKAGE_NAME):
     to_delete = []
 
     for module in sys.modules:
@@ -41,7 +44,7 @@ def flush_imports(pckg_name: str =__PACKAGE_NAME):
         del sys.modules[module]
 
 
-def format_py_module_path(file_path: str, pckg_name: str =__PACKAGE_NAME) -> str:
+def formatPyModulePath(file_path: str, pckg_name: str = __PACKAGE_NAME) -> str:
     """
     Takes a file path and returns a formatted python path
 
@@ -54,11 +57,11 @@ def format_py_module_path(file_path: str, pckg_name: str =__PACKAGE_NAME) -> str
     """
 
     file_components = os.path.splitext(file_path)[0].split(os.sep)
-
+    # print(f'{file_components = }')
     return '.'.join(file_components[file_components.index(pckg_name):])
 
 
-def find_modules(
+def findModules(
     package_path: Union[str, List[str]],
     extensions: List[str] = None,
     exceptions: List[str] = None
@@ -81,10 +84,12 @@ def find_modules(
         exceptions = ['']
 
     modules = []
+
     if not isinstance(package_path, list):
         package_path = [package_path]
 
-    modules.append(format_py_module_path(package_path[0]))
+    # pckg_name = package_path[0].split(os.sep)[-1]
+    modules.append(formatPyModulePath(package_path[0]))
 
     spec = pkgutil.walk_packages(path=package_path)
 
@@ -102,12 +107,12 @@ def find_modules(
                 os.path.splitext(file)[-1] in extensions and
                     d not in exceptions):
 
-                modules.append(format_py_module_path(file))
+                modules.append(formatPyModulePath(file))
 
-        modules.append(format_py_module_path(path))
+        modules.append(formatPyModulePath(path))
 
         modules.extend(
-            find_modules(
+            findModules(
                 [path],
                 extensions=extensions,
                 exceptions=exceptions
@@ -117,7 +122,7 @@ def find_modules(
     return modules
 
 
-def big_reload(
+def bigReload(
     package_path: Union[str, List] = None,
     flush: bool = True,
     extensions: List = None,
@@ -137,13 +142,21 @@ def big_reload(
 
     """
 
+    # print(
+    #     f'{package_path = }\n'
+    #     f'{flush = }\n'
+    #     f'{extensions = }\n'
+    #     f'{exceptions = }\n'
+    #     f'{feedback = }\n'
+    # )
+
     if package_path is None:
         current_frame = inspect.currentframe()
         package_path = os.path.dirname(inspect.getfile(current_frame))
 
     if flush:
         package_name = os.path.splitext(package_path)[0].split(os.sep)[-1]
-        flush_imports(package_name)
+        flushImports(package_name)
 
     extensions = [] if extensions is None else extensions
     exceptions = [] if exceptions is None else exceptions
@@ -151,7 +164,7 @@ def big_reload(
     extensions += ['.py']
     exceptions += ['__init__.py']
 
-    modules = find_modules(
+    modules = findModules(
         package_path,
         extensions=extensions,
         exceptions=exceptions
@@ -209,6 +222,8 @@ from . import core
 from . import nodes
 from . import api
 
+from .core.exceptions import *
+
 from .api import *
 from .api.hierarchy import *
 from .api.history import *
@@ -230,6 +245,6 @@ def getCmdoNodeDict() -> Dict:
     Returns:
          dict: {id: data} multiple pairs per node representing different ids
     """
-    from .core import node_registry
+    from .core import nodeRegistry
 
-    return node_registry.NodeRegistry().copy()
+    return nodeRegistry.NodeRegistry().copy()
