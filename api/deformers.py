@@ -1,8 +1,9 @@
 from typing import List, Union
 
 from maya import cmds as mc
+from maya.api import OpenMaya as om
 
-from . import history, hierarchy
+from . import history, hierarchy, graph
 
 
 __all__ = [
@@ -12,7 +13,7 @@ __all__ = [
 ]
 
 
-def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Union[str, None]:
+def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Union[om.MObject, None]:
     """
     Bind a destination mesh based on the influence list and weights of the 
     skinCluster of a source mesh.
@@ -32,21 +33,19 @@ def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Uni
         raise Exception(f'Destination object "{destination}" does not exist!')
 
     # Get source skinCluster
-    source_skin = history.get_deformers(source, deformer_type="skinCluster")
+    source_skin = history.getDeformers(source, types="skinCluster")
 
     if mc.objectType(destination) == 'mesh':
         destination = mc.listRelatives(destination, parent=True)[0]
 
     if not source_skin:
         mc.warning(f'Could not find skinCluster on {source = }')
-        return
+        return None
 
     source_skin = source_skin[0]
 
     # Check destination skinCluster
-    destination_skin = history.get_deformers(
-        destination, deformer_type="skinCluster"
-    )
+    destination_skin = history.getDeformers(destination, types="skinCluster")
     if destination_skin:
         destination_skin = destination_skin[0]
 
@@ -61,7 +60,7 @@ def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Uni
             dest
             for dest in mc.listRelatives(destination, shapes=True)
             if not mc.getAttr(f'{dest}.intermediateObject')
-        ]
+        ][0]
 
         destination_skin = mc.skinCluster(
             source_influences,
@@ -76,7 +75,7 @@ def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Uni
     mc.copySkinWeights(
         sourceSkin=str(source_skin),
         destinationSkin=str(destination_skin),
-        surfaceAssociation='closestPoint',
+        surfaceAssociation=kwargs.get('surfaceAssociation', 'closestPoint'),
         influenceAssociation='name',
         noMirror=True,
         smooth=smooth,
@@ -84,7 +83,7 @@ def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Uni
     )
 
     # Return result
-    return destination_skin
+    return graph.ls(destination_skin)[0]
 
 
 def resetSkin(nodes: List[str]) -> None:
@@ -101,7 +100,7 @@ def resetSkin(nodes: List[str]) -> None:
         nodes = [nodes]
 
     for node in nodes:
-        skin_clusters = history.get_deformers(node, 'skinCluster')
+        skin_clusters = history.getDeformers(node, 'skinCluster')
 
         if not skin_clusters:
             print(f'No skinCluster found for : {node}')
@@ -110,7 +109,8 @@ def resetSkin(nodes: List[str]) -> None:
         for skin_cluster in skin_clusters:
             connections = mc.listConnections(
                 f"{skin_cluster}.matrix",
-                source=True, destination=False, plugs=True, connections=True
+                source=True, destination=False,
+                plugs=True, connections=True
             )
             destinations = connections[0::2]
             sources = connections[1::2]
@@ -123,7 +123,7 @@ def resetSkin(nodes: List[str]) -> None:
                 )
 
 
-def getJointsNotInSkinHierarchy(obj_list=None, joint_wildcard='*_skn'):
+def getJointsNotInSkinHierarchy(obj_list: List[str]=None, joint_wildcard: str = '*_skn'):
     """
     Get a list of joints not in any skin of given meshes
 
@@ -160,11 +160,11 @@ def getJointsNotInSkinHierarchy(obj_list=None, joint_wildcard='*_skn'):
                 continue
 
             skin_hierarchy.update(
-                set(hierarchy.get_hierarchy_to_root(influence))
+                set(hierarchy.getHierarchyRoot(influence))
             )
 
     skeleton = mc.ls(joint_wildcard, type='joint')
 
     joints_not_in_skin = list(filter(filter_func, skeleton))
 
-    return joints_not_in_skin
+    return graph.ls(joints_not_in_skin)

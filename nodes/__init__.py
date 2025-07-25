@@ -1,46 +1,46 @@
-from .dg.absolute_lib import *
-from .dg.addDoubleLinear_lib import *
-from .dg.aimMatrix_lib import *
-from .dg.angleBetween_lib import *
-from .dg.animCurve_lib import *
-from .dg.animLayer_lib import *
-from .dg.axisAngleToQuat_lib import *
-from .dg.blendMatrix_lib import *
-from .dg.choice_lib import *
-from .dg.clampRange_lib import *
-from .dg.composeMatrix_lib import *
-from .dg.condition_lib import *
-from .dg.cos_lib import *
-from .dg.dagPose_lib import *
-from .dg.decomposeMatrix_lib import *
-from .dg.distanceBetween_lib import *
-from .dg.divide_lib import *
-from .dg.eulerToQuat_lib import *
-from .dg.holdMatrix_lib import *
-from .dg.inverseMatrix_lib import *
-from .dg.multDoubleLinear_lib import *
-from .dg.multiplyDivide_lib import *
-from .dg.multMatrix_lib import *
-from .dg.normalize_lib import *
-from .dg.pickMatrix_lib import *
-from .dg.plusMinusAverage_lib import *
-from .dg.pointMatrixMult_lib import *
-from .dg.quatToEuler_lib import *
-from .dg.reference_lib import *
-from .dg.remapValue_lib import *
-from .dg.objectSet_lib import *
-from .dg.setRange_lib import *
-from .dg.sin_lib import *
-from .dg.subtract_lib import *
-from .dg.wtAddMatrix_lib import *
+from .dg.absoluteLib import *
+from .dg.addDoubleLinearLib import *
+from .dg.aimMatrixLib import *
+from .dg.angleBetweenLib import *
+from .dg.animCurveLib import *
+from .dg.animLayerLib import *
+from .dg.axisAngleToQuatLib import *
+from .dg.blendMatrixLib import *
+from .dg.choiceLib import *
+from .dg.clampRangeLib import *
+from .dg.composeMatrixLib import *
+from .dg.conditionLib import *
+from .dg.cosLib import *
+from .dg.dagPoseLib import *
+from .dg.decomposeMatrixLib import *
+from .dg.distanceBetweenLib import *
+from .dg.divideLib import *
+from .dg.eulerToQuatLib import *
+from .dg.holdMatrixLib import *
+from .dg.inverseMatrixLib import *
+from .dg.multDoubleLinearLib import *
+from .dg.multiplyDivideLib import *
+from .dg.multMatrixLib import *
+from .dg.normalizeLib import *
+from .dg.pickMatrixLib import *
+from .dg.plusMinusAverageLib import *
+from .dg.pointMatrixMultLib import *
+from .dg.quatToEulerLib import *
+from .dg.referenceLib import *
+from .dg.remapValueLib import *
+from .dg.objectSetLib import *
+from .dg.setRangeLib import *
+from .dg.sinLib import *
+from .dg.subtractLib import *
+from .dg.wtAddMatrixLib import *
 
-from .dag.transform_lib import *  # dag_lib
-from .dag.curve_lib import *  # convert, export_lib, dag_lib
-from .dag.joint_lib import *  # transform_lib
-from .dag.mesh_lib import *  # dag_lib
-from .dag.surface_lib import *  # convert, dag_lib
-from .dag.container_lib import *  # convert, dag_lib
+from .dag.transformLib import *  # dagLib
+from .dag.curveLib import *  # convert, exportLib, dagLib
+from .dag.jointLib import *  # transformLib
+from .dag.meshLib import *  # dagLib
+from .dag.surfaceLib import *  # convert, dagLib
+from .dag.containerLib import *  # convert, dagLib
 
-from .dg.skinCluster_lib import *
-from .dg.blendshape_lib import *
-from .dg.uvpin_lib import *
+from .dg.skinClusterLib import *
+from .dg.blendshapeLib import *
+from .dg.uvpinLib import *

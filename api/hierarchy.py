@@ -3,8 +3,8 @@ from typing import List, Union, Type, Dict
 import maya.cmds as mc
 import maya.api.OpenMaya as om
 
-from ..core import graph_lib
-from ..core.abstract import node_lib, dag_lib
+from . import graph
+from ..core.abstract import nodeLib, dagLib
 
 
 __all__ = [
@@ -17,13 +17,13 @@ __all__ = [
 ]
 
 
-def getAllChildren(node: Union[str, Type[dag_lib.DAGNode]]) -> List[str]:
+def getAllChildren(node: Union[str, Type[dagLib.DAGNode]]) -> List[str]:
 
     """
     Get all children of the given node
 
     Args:
-        node: Union[str, Type[dag_lib.DAGNode]]:
+        node: Union[str, Type[dagLib.DAGNode]]:
             Le noeud à partir duquel on veut récupérer les enfants.
 
     Returns:
@@ -90,7 +90,7 @@ def getRootParent(node: str) -> Union[str, None]:
         return None
 
     top_parent = node
-    while (parent := mc.listRelatives(top_parent, p=True)) is not None:
+    while (parent := mc.listRelatives(top_parent, parent=True)) is not None:
         top_parent = parent[0]
 
     return top_parent
@@ -113,7 +113,7 @@ def getHierarchyRoot(node: str, **kwargs) -> List[str]:
     joint_hierarchy = [node]
     parent = node
 
-    while (prt := mc.listRelatives(parent, p=True, **kwargs)) is not None:
+    while (prt := mc.listRelatives(parent, parent=True, **kwargs)) is not None:
         parent = prt[0]
         joint_hierarchy.append(parent)
 
@@ -121,40 +121,37 @@ def getHierarchyRoot(node: str, **kwargs) -> List[str]:
 
 
 def getShortestParent(
-    node: Union[str, om.MObject, node_lib.Node],
-    graph: Union[List[str], List[node_lib.Node], om.MSelectionList],
+    node: Union[str, om.MObject],
+    graph_list: Union[List[str], List[om.MObject], om.MSelectionList],
     as_str: bool = True,
-) -> Union[node_lib.Node, str, None]:
+) -> Union[nodeLib.Node, str, None]:
     """
-    return the first parent of specified node inside the given graph
+    Get the first parent of specified node inside the given graph
 
     Args:
-        node (Union[str, Node, MObject]):
-            le node d'on on cherche le parent
+        node (Union[str, Node, MObject]): the node to get the parent for
 
-        graph (Union[List[str], List[Node], MSelectionList]):
-            le graph ou on cherche le parent theorique
+        graph_list (Union[List[str], List[Node], MSelectionList]):
+            the graph to search in for the parent
 
-        as_str (bool):
-            Vrais pour retourner une chaine de caractere Faut pour retourner un Node object
+        as_str (bool): get a string of nodeLib.Node
 
     Returns:
-        str si asStr et vrais sinon Node
+        Union[nodeLib.Node, str, None]: the parent if found
     """
 
-    if isinstance(graph, om.MSelectionList):
-        graph = graph_lib.Graph().copy(graph)
+    if isinstance(graph_list, om.MSelectionList):
+        graph_list = graph.Graph().copy(graph_list)
 
     else:
-        # just clear the inputs data
-        graph = graph_lib.Graph.ls(graph)
+        graph_list = graph.ls(graph_list)
 
     if isinstance(node, (str, om.MObject)):
-        node = node_lib.Node(node)
+        node = graph.ls(node)[0]
 
     item = node
     while not item.maya_object.isNull():
-        for other in graph:
+        for other in graph_list:
             if item.maya_object == other.maya_object:
                 if item.maya_object != node.maya_object:
                     return other.name if as_str else other
@@ -165,9 +162,9 @@ def getShortestParent(
 
 
 def getDagRoots(
-    nodes: Union[List[str], List[node_lib.Node], om.MSelectionList],
+    nodes: Union[List[str], List[nodeLib.Node], om.MSelectionList],
     safe: bool = True,
-) -> graph_lib.Graph:
+) -> graph.Graph:
     """
     get the dag nodes roots from a set of given nodes
 
@@ -182,33 +179,26 @@ def getDagRoots(
         Graph: void one if source graph has no DagNode else return graph who contain the dagRootNodes
     """
 
-    if isinstance(nodes, list):
-        tmp = graph_lib.Graph()
+    if isinstance(nodes, list) or isinstance(nodes, om.MSelectionList):
+        nodes = graph.ls(nodes)
 
-        for node in nodes:
-            tmp.add(node)
+    previous = graph.emptyGraph()
+    roots = graph.emptyGraph()
 
-        nodes = tmp
-
-    elif isinstance(nodes, om.MSelectionList):
-        nodes = graph_lib.Graph(nodes)
-
-    previous = graph_lib.Graph()
-    roots = graph_lib.Graph()
     for item in nodes:
-        item_obj = item.maya_object if isinstance(item, node_lib.Node) else item
+        item_obj = item if isinstance(item, nodeLib.Node) else item
         previous.add(item_obj)
 
-        if (not safe) and (not item_obj.hasFn(om.MFn.MFnDagNode)):
-            raise TypeError(f'{node} is not a dagNode')
+        if (not safe) and item_obj.isDagNode:
+            raise TypeError(f'{item_obj} is not a dagNode')
 
-        if safe and (not item_obj.hasFn(om.MFn.kDagNode)):
+        if safe and item_obj.isDagNode:
             continue
 
         is_child = False
-        mfnDagNode = om.MFnDagNode(item_obj)
+        mfnDagNode = item_obj.mfnDagNode
         for other in nodes - previous:
-            is_child |= mfnDagNode.isChildOf(other.maya_object)
+            is_child |= mfnDagNode.isChildOf(other)
 
         if not is_child:
             roots.add(item_obj)

@@ -1,6 +1,9 @@
-from typing import List
+from typing import List, Union
 
 from maya import cmds as mc
+from maya.api import OpenMaya as om
+
+from . import graph
 
 
 __all__ = [
@@ -9,16 +12,29 @@ __all__ = [
 ]
 
 
-def getDeformers(node: str, types: str) -> List[str]:
+def getDeformers(node: Union[str, om.MObject], types: Union[str, List[str]]) -> graph.Graph:
+    """
+    Get deformers from node history
 
-    history = mc.listHistory(node)
+    Args:
+        node: Union[str, om.MObject], node to get deformers for
+        types: Union[str, List[str]], types of deformers to search for
+
+    Returns:
+        graph.Graph: a list of found deformers
+    """
+
+    if not isinstance(types, list):
+        types = [types]
+
+    history = graph.listHistory(node)
     deformers = [
         deformer
         for deformer in history
-        if mc.nodeType(deformer) in types
+        if deformer.type in types
     ] or []
 
-    return deformers
+    return graph.ls(*deformers)
 
 
 def getNodeHistoryByType(node: str, **kwargs) -> List[str]:

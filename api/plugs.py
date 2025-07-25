@@ -1,4 +1,4 @@
-from ..core.graph_lib import Graph
+from ..core.graphLib import Graph
 
 
 # * import list

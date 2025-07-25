@@ -5,8 +5,10 @@ __all__ = [
 
 
 class CmdoException(Exception):
-    ...
+    pass
 
 
 class CmdoPlugException(Exception):
-    ...
+    pass
+
+

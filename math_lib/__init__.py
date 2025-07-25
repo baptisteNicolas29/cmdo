@@ -1,5 +1,5 @@
-from .complex_numbers import *
-from .linear_algebra import *
+from .complexNumbers import *
+from .linearAlgebra import *
 from .matrices import *
 from .statistics import *
 from .trigonometry import *

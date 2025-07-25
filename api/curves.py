@@ -4,8 +4,8 @@ import maya.cmds as mc
 import maya.api.OpenMaya as om
 
 from . import graph
-from ..nodes.dag.curve_lib import Curve
-from ..core.abstract import node_lib, dag_lib
+from ..nodes.dag.curveLib import Curve
+from ..core.abstract import nodeLib, dagLib
 
 
 __all__ = [

@@ -3,8 +3,8 @@ from typing import List, Union, Type
 import maya.cmds as mc
 import maya.api.OpenMaya as om
 
-from ..nodes.dag.mesh_lib import Mesh
-from ..core.abstract import node_lib, dag_lib
+from ..nodes.dag.meshLib import Mesh
+from ..core.abstract import nodeLib, dagLib
 
 
 __all__ = [
