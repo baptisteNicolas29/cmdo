@@ -22,9 +22,7 @@ enables cmdo nodes to always be up to date with their maya counterpart.
 ```python
 import cmdo
 
-# feedback is only for the reload function
-# it does not act as a logger
-cmdo.bigReload(feedback=False, flush=True)
+cmdo.bigReload()
 ```
 
 ## SubModules:
@@ -230,7 +228,7 @@ for ctrl in ctrls:
 ```python
 import cmdo
 
-cmdo.bigReload(flush=True)
+cmdo.bigReload()
 
 # initialize an identity matrix as MMatrix (openMaya object)
 my_matrix = cmdo.math.identityMatrix4
