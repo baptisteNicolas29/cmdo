@@ -13,6 +13,7 @@ __all__ = [
 ]
 
 
+# ------------------------------------------------------------- SKINCLUSTER
 def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Union[om.MObject, None]:
     """
     Bind a destination mesh based on the influence list and weights of the 
@@ -123,7 +124,7 @@ def resetSkin(nodes: List[str]) -> None:
                 )
 
 
-def getJointsNotInSkinHierarchy(obj_list: List[str]=None, joint_wildcard: str = '*_skn'):
+def getJointsNotInSkinHierarchy(obj_list: List[str] = None, joint_wildcard: str = '*_skn'):
     """
     Get a list of joints not in any skin of given meshes
 
