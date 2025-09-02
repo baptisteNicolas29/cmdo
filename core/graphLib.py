@@ -90,7 +90,7 @@ class Graph(om.MSelectionList):
         objects = list(map(cls.__filter_objects, args))
 
         # remove the long flag if it is present in kwargs
-        if (key := kwargs.get('long')) or (key := kwargs.get('l')):
+        if kwargs.get(key := 'long') or kwargs.get(key := 'l'):
             kwargs.pop(key)
 
         result = mc.ls(*objects, long=True, **kwargs) or []
@@ -147,7 +147,7 @@ class Graph(om.MSelectionList):
 
         objects = list(map(cls.__filter_objects, args))
         # remove the fullNodeName flag if it is present in kwargs
-        if (key := kwargs.get('fullNodeName')) or (key := kwargs.get('fnn')):
+        if kwargs.get(key := 'fullNodeName') or kwargs.get(key := 'fnn'):
             kwargs.pop(key)
 
         result = mc.listHistory(*objects, fullNodeName=True, **kwargs) or []
@@ -164,7 +164,7 @@ class Graph(om.MSelectionList):
         objects = list(map(cls.__filter_objects, args))
 
         # remove the fullPath flag if it is present in kwargs
-        if (key := kwargs.get('fullPath')) or (key := kwargs.get('f')):
+        if kwargs.get(key := 'fullPath') or kwargs.get(key := 'f'):
             kwargs.pop(key)
 
         result = mc.listRelatives(*objects, fullPath=True, **kwargs) or []
@@ -175,7 +175,7 @@ class Graph(om.MSelectionList):
         objects = list(map(cls.__filter_objects, args))
 
         # remove the fullNodeName flag if it is present in kwargs
-        if (key := kwargs.get('fullNodeName')) or (key := kwargs.get('fnn')):
+        if kwargs.get(key := 'fullNodeName') or kwargs.get(key := 'fnn'):
             kwargs.pop(key)
 
         result = mc.listConnections(*objects, fullNodeName=True, **kwargs) or []
@@ -320,7 +320,7 @@ class Graph(om.MSelectionList):
         objects = list(map(cls.__filter_objects, args))
 
         # remove the fullPath flag if it is present in kwargs
-        if (key := kwargs.get('fullPath')) or (key := kwargs.get('f')):
+        if kwargs.get(key := 'fullPath') or kwargs.get(key := 'f'):
             kwargs.pop(key)
 
         result = mc.duplicate(*objects, fullPath=True, **kwargs)

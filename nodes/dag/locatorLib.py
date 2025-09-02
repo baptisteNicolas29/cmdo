@@ -53,44 +53,87 @@ class Locator(dagLib.DAGNode):
 
     @property
     def worldPosition(self) -> List[float]:
+        """
+        Set the worldPosition values
+
+        Returns:
+            List[float], the worldPosition values to set
+        """
 
         return self['worldPosition'][0].value
 
     @property
     def worldPositionX(self) -> float:
+        """
+        Set the worldPositionX values
+
+        Returns:
+            float, the worldPositionX values to set
+        """
 
         return self['worldPosition'][0]['worldPositionX'].asFloat()
 
     @property
     def worldPositionY(self) -> float:
+        """
+        Set the worldPositionY values
+
+        Returns:
+            float, the worldPositionY values to set
+        """
 
         return self['worldPosition'][0]['worldPositionY'].asFloat()
 
     @property
     def worldPositionZ(self) -> float:
+        """
+        Set the worldPositionZ values
+
+        Returns:
+            float, the worldPositionZ values to set
+        """
 
         return self['worldPosition'][0]['worldPositionZ'].asFloat()
 
     @property
     def center(self) -> List[float]:
+        """
+        Set the center values
 
+        Returns:
+            List[float], the center values to set
+        """
         return self['center'].value
 
     @property
     def centerX(self) -> float:
+        """
+        Set the centerX values
 
+        Returns:
+            float, the centerX values to set
+        """
         return self['center'][0]['boundingBoxCenterX'].asFloat()
 
     @property
     def centerY(self) -> float:
+        """
+        Set the centerY values
 
+        Returns:
+            float, the centerY values to set
+        """
         return self['center'][0]['boundingBoxCenterY'].asFloat()
 
     @property
     def centerZ(self) -> float:
+        """
+        Set the centerZ values
 
+        Returns:
+            float, the centerZ values to set
+        """
         return self['center'][0]['boundingBoxCenterZ'].asFloat()
 
 
-# Register the class so that cmdo can interact with it/create it
 NodeRegistry()[Locator.nodeType()] = Locator
