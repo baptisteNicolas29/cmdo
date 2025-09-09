@@ -2,12 +2,12 @@
 
 
 # WHAT IS CMDO (maya commands object)
-`cmdo` is a oop python maya wrapperIt is mainly composed of a library of nodes (maya node wrappers)  
-and an api to enable high level operations on nodes (ie: lockAndHideTransforms).  
+`cmdo` is an oop python maya wrapper. It is mainly composed of a library of nodes (maya node wrappers classes)  
+and an api to enable high level operations on nodes (ie: lockAndHideTransforms ect).  
 At its core cmdo is built to operate on any kind of maya data, its nodes can be initialised with  
 object names, MObjects or cmdo custom nodes
 
-We can feed cmdo nodes to maya.cmds or maya.api.OpenMaya and get the native interaction and results.`*1`
+`cmdo` integrates all `maya.cmds` functions in its namespace, through a wrapper to convert data between the two
 
 Its purpose is to facilitate the interaction between maya and programmers and to be able to interact with any       
 node type found in maya in an oop manner. To do this cmdo uses `maya.api.OpenMaya` for the base of its objects.
@@ -27,9 +27,9 @@ cmdo.bigReload()
 
 ## SubModules:
 ### api:
-`cmdo.api` subPackage is dumped into the main namespace of the master package.  
+`cmdo.api` subPackage is dumped into the main namespace of the master package (cmdo).  
 This module is a wrapper of maya cmds/OpenMaya to return python objects  (for oop interaction).  
-It is easy to access all functionalities through the main namespace like we would maya.cmds
+It is easy to access all functionalities through the main namespace like we would `maya.cmds`
 ```python
 import cmdo
 
@@ -51,7 +51,7 @@ for namespace in unusedNamespaces:
 ```
 
 ### nodes :
-`cmdo.nodes` is a subPackage holding all maya node wrappers.  
+`cmdo.nodes` is a subPackage holding all maya node wrapper classes.  
 They enable oop interaction with maya nodes and are returned through the api.  
 They can take multiple input types such as, python types,  OpenMaya types or custom types
 
@@ -62,15 +62,13 @@ They can take multiple input types such as, python types,  OpenMaya types or cus
 Notably all classes that serve as a node base and that do not represent specific nodes.
 The `graphLib`,  
 which is used to interact with maya graphs (ie: ls, listRelatives ect). The `nodeRegistry` that holds a reference to all node  
-classes that cmdo can wrap. And some modules to help, like exceptions, decorators ect.
+classes that `cmdo` can wrap. And some modules to help, like exceptions, decorators ect.
 
 
-### math :
-`cmdo.math` is a library using `maya.api.OpenMaya` objects such as 
-MMatrix and MVector to do math operations when possible
+### mathLib :
+!Warning: This library will be remove once all maths use `maya.api.OpenMaya`    
+`cmdo.mathLib` is a library implementing some math operations and returning either python or `maya.api.OpenMaya` objects
 
-If the operation does not exist in the maya library 
-it is implemented to return maya objects
 
 ---
 # Extensions :
@@ -78,7 +76,7 @@ it is implemented to return maya objects
 Adding new nodes to `cmdo` is an easy task.  
 All that is needed is to create a class that inherits from one of three bases or one of their subclasses.
 - `nodeLib.Node`
-> This is the most abstract class for cmdo nodes, it inherits directly from `maya.api.OpenMaya.MObject` 
+> This is the most abstract class for cmdo nodes, it inherits directly from `maya.api.OpenMaya.MObject`  
 > and implements lots of basic functionality and properties. It does not represent any node type inside maya.
 
 - `dgLib.DGNode`

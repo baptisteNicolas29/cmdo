@@ -1,14 +1,20 @@
-from typing import List, Dict, Union, Callable, Any
+from typing import Dict, Any
 from collections import OrderedDict
 
-import os
 import sys
-import pkgutil
 import inspect
 import importlib
-import traceback
 
+# cmds functions are added to the cmdo namespace to handle cmdo objects in & out
+# mel is imported to be accessible through the cmdo namespace like: cmdo.mel
+# OpenMaya, OpenMayaAnim and OpenMayaUI are imported to be accessible
+#  through the cmdo namespace
 from maya import cmds, mel
+from maya.api import (
+    OpenMaya as om,
+    OpenMayaAnim as oma,
+    OpenMayaUI as omui
+)
 
 
 __all__ = [
@@ -22,16 +28,19 @@ __all__ = [
 
 
 # TODO: Add Undo/Redo in maya.api.OpenMaya... not looking forward to that...
-#  currently the library that implements OpenMaya behavior doesn't support
-#  undoing or redoing
+#  currently the libraries that implements OpenMaya behavior doesn't support
+#  undoing or redoing (so a lot of libraries)
 
 
 __PACKAGE_NAME = __name__
 
 
-# TODO: try to add reloading dependencies
+# TODO: try to add reloading dependencies.
+#  bigReload is a debugging function
 def bigReload(module_to_reload=__PACKAGE_NAME):
-
+    cmds.warning(
+        'bigReload is a debugging function and should not be used in production'
+    )
     to_reload = []
     for name, module in sys.modules.items():
         if name.startswith(module_to_reload):
@@ -47,7 +56,7 @@ def bigReload(module_to_reload=__PACKAGE_NAME):
 """
 Import modules to package root for easier access
 
-WARNING:
+! WARNING !:
     Order of import is important to avoid circular imports
     or partial import errors
 """

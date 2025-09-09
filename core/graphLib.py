@@ -13,6 +13,9 @@ from .nodeRegistry import NodeRegistry
 from .exceptions import CmdoException
 
 
+# TODO: add pop methods etc
+
+
 class Graph(om.MSelectionList):
 
     __nodeRegistry = NodeRegistry()
@@ -42,6 +45,9 @@ class Graph(om.MSelectionList):
 
         if Graph.__isSubClass(obj, om.MObject):
             return om.MFnDependencyNode(obj).name()
+
+        if isinstance(obj, Graph):
+            return obj.getSelectionStrings()
 
         return str(obj)
 
@@ -172,6 +178,10 @@ class Graph(om.MSelectionList):
 
     @classmethod
     def listConnections(cls, *args, **kwargs) -> 'Graph':
+        """
+        Reimplementation of the listConnections command
+
+        """
         objects = list(map(cls.__filter_objects, args))
 
         # remove the fullNodeName flag if it is present in kwargs
@@ -229,6 +239,16 @@ class Graph(om.MSelectionList):
 
     @classmethod
     def getChildren(cls, node, graph) -> Union['Graph', None]:
+        """
+        Get all children of node
+
+        Args:
+            node: node to get children for
+            graph: the graph to search in
+
+        Returns:
+            Graph: a Graph object holding node children
+        """
 
         node = nodeLib.Node(node)
         if not node.hasFn(om.MFn.kDagNode):
@@ -254,18 +274,27 @@ class Graph(om.MSelectionList):
             node_graph.add(node)
             graph = graph - node_graph
 
-        childrens = cls()
+        children = cls()
         for other in graph:
             otherDagNode = om.MFnDagNode(other)
 
             if otherDagNode.isChildOf(node):
-                childrens.add(other)
+                children.add(other)
 
-        return childrens
+        return children
 
     @classmethod
     def getParents(cls, node, graph) -> Union['Graph', None]:
+        """
+        Get all parents of node
 
+        Args:
+            node: node to get parents for
+            graph: the graph to search in
+
+        Returns:
+            Graph: a Graph object holding node parents
+        """
         node = nodeLib.Node(node)
 
         if isinstance(graph, om.MSelectionList):
@@ -327,6 +356,8 @@ class Graph(om.MSelectionList):
 
         return cls.__createList(result)
 
+    def pop(self, idx) -> om.MObject: ...
+
     def __str__(self) -> str:
         args = ', '.join([f'"{x}"' for x in self])
         return f'{self.__class__.__name__} [{args}]'
@@ -356,6 +387,12 @@ class Graph(om.MSelectionList):
             default_object = dgLib.DGNode
 
         return self.__initRegistered(name, default=default_object)
+
+    def __setitem__(self, key, value):
+
+        item = self.ls(value)[0]
+
+        self.replace(key, item)
 
     def __and__(self, other: om.MSelectionList) -> 'Graph':
         """

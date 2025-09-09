@@ -3,13 +3,15 @@ from typing import List, Union
 # import math
 # import numpy
 
+from maya.api import OpenMaya as om
+
 
 __all__ = [
     'identityMatrix4',
     'isSameLengthMatrix',
     'isIdentityMatrix4',
     'isAlmostSameMatrix',
-    'mtx_multiply',
+    'multiplyMatrices',
 ]
 
 
@@ -71,8 +73,10 @@ def isAlmostSameMatrix(
     )
 
 
-def mtx_multiply(mtx1: List[Union[int, float]], mtx2: List[Union[int, float]]):
+def multiplyMatrices(mtx1: List[Union[int, float]], mtx2: List[Union[int, float]]):
+    print(f'{len(mtx1)=} x {len(mtx2)=}')
+
     if not isSameLengthMatrix(mtx1, mtx2):
         raise Exception('Cannot multiply matrices of different lengths')
 
-    raise NotImplementedError('This function is not implemented yet')
+    return om.MMatrix(mtx1) * om.MMatrix(mtx2)
