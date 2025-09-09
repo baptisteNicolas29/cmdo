@@ -166,6 +166,8 @@ def getJointsNotInSkinHierarchy(obj_list: List[str] = None, joint_wildcard: str 
 
     skeleton = mc.ls(joint_wildcard, type='joint')
 
-    joints_not_in_skin = list(filter(filter_func, skeleton))
+    joints_not_in_skin = list(
+        filter(filter_func, skeleton)
+    )
 
     return graph.ls(joints_not_in_skin)
