@@ -48,6 +48,8 @@ class PlugArray(om.MPlugArray):
     def setLength(): ...
     """
 
+# TODO: implement += -= and more dunders
+
 
 class Plug(om.MPlug):
 
@@ -95,6 +97,57 @@ class Plug(om.MPlug):
                 return self.__class__(self.child(value))
 
         return self.__class__()
+
+    def __str__(self) -> str:
+        selList = om.MSelectionList()
+        selList.add(self)
+
+        return selList.getSelectionStrings()[0]
+
+    def __iadd__(self, other: Any):
+
+        if isinstance(other, self.__class__):
+            other = other.value
+
+        self.value = self.value + other
+
+        return self.value
+
+    def __isub__(self, other: Any):
+
+        if isinstance(other, self.__class__):
+            other = other.value
+
+        self.value = self.value - other
+        return self.value
+
+    def __imul__(self, other: Any):
+
+        if isinstance(other, self.__class__):
+            other = other.value
+
+        self.value = self.value * other
+        return self.value
+
+    def __add__(self, other):
+
+        if isinstance(other, self.__class__):
+            other = other.value
+
+        return self.value + other
+
+    def __sub__(self, other):
+
+        if isinstance(other, self.__class__):
+            other = other.value
+        return self.value - other
+
+    def __mul__(self, other):
+
+        if isinstance(other, self.__class__):
+            other = other.value
+
+        return self.value * other
 
     def get(self, keyname: Union[int, str]) -> 'Plug':
         """
@@ -273,7 +326,6 @@ class Plug(om.MPlug):
 
     @property
     def value(self) -> Any:
-
         """
         Yeah... it s maya commands to get the value of the plug
         This is more flexible than OpenMaya and isn't too demanding
@@ -281,11 +333,29 @@ class Plug(om.MPlug):
         Returns:
              Any: the value of the current plug
         """
+
+        # TODO: start with check for the attribute and thene check for multiInstances
+        apiType = self.attribute().apiType()
+
+        # search for matrices
+        if apiType == om.MFn.kTypedAttribute:
+            fn_typed = om.MFnTypedAttribute(self.attribute())
+            attr_type = fn_typed.attrType()
+
+            if attr_type == om.MFnData.kMatrix:
+                return self.asMDataHandle().asMatrix()
+
+        elif apiType == om.MFn.kMatrixAttribute:
+            return self.asMDataHandle().asMatrix()
+
+        # search for vectors
+        elif apiType in [om.MFn.kAttribute3Float, om.MFn.kAttribute3Double]:
+            return self.asMDataHandle().asVector()
+
         return mc.getAttr(self.name())
 
     @value.setter
     def value(self, value: Any) -> None:
-
         """
         Set the value of the current plug
 
@@ -298,7 +368,6 @@ class Plug(om.MPlug):
 
     @property
     def type(self):
-
         """
         Get the type of attribute this plug represents
 
