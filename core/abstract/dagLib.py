@@ -21,6 +21,9 @@ class DAGNode(DGNode):
 
         super().__init__(name=name)
 
+    def __str__(self) -> str:
+        return self.fullName
+
     @property
     def dagPath(self) -> om.MDagPath:
 
