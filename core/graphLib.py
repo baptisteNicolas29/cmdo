@@ -356,7 +356,7 @@ class Graph(om.MSelectionList):
 
         return cls.__createList(result)
 
-    def pop(self, idx) -> om.MObject: ...
+    def pop(self, idx) -> om.MObject: ...  # TODO
 
     def __str__(self) -> str:
         args = ', '.join([f'"{x}"' for x in self])

@@ -235,7 +235,7 @@ class Node(om.MObject):
             om.MFnDependencyNode: the dependency node
         """
 
-        return om.MFnDependencyNode(self)
+        return self.__dependencyNode
 
     @property
     def hash(self) -> int:
@@ -477,3 +477,14 @@ class Node(om.MObject):
         """
 
         return not self.isNull()
+
+    @property
+    def isReferenced(self) -> bool:
+        """
+        Check if the current node is referenced
+
+        Returns:
+            bool: Is the current node is referenced
+        """
+
+        return self.dependencyNode.isFromReferencedFile

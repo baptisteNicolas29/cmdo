@@ -98,7 +98,7 @@ class Transform(dagLib.DAGNode):
         Get the translateX value
 
         Returns:
-            List[float]: the translateX value
+            float: the translateX value
         """
 
         return self['translateX'].asFloat()
@@ -110,7 +110,7 @@ class Transform(dagLib.DAGNode):
         Set the translateX value
 
         Args:
-            value: List[float], the translateX value
+            value: float, the translateX value
         """
 
         self['translateX'] = value
@@ -122,7 +122,7 @@ class Transform(dagLib.DAGNode):
         Get the translateY value
 
         Returns:
-            List[float]: the translateY value
+            float: the translateY value
         """
 
         return self['translateY'].asFloat()
@@ -134,7 +134,7 @@ class Transform(dagLib.DAGNode):
         Set the translateY value
 
         Args:
-            value: List[float], the translateY value
+            value: float, the translateY value
         """
 
         self['translateY'] = value
@@ -146,7 +146,7 @@ class Transform(dagLib.DAGNode):
         Get the translateZ value
 
         Returns:
-            List[float]: the translateZ value
+            float: the translateZ value
         """
 
         return self['translateZ'].asFloat()
@@ -158,7 +158,7 @@ class Transform(dagLib.DAGNode):
         Set the translateZ value
 
         Args:
-            value: List[float], the translateZ value
+            value: float, the translateZ value
         """
         
         self['translateZ'] = value

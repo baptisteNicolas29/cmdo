@@ -27,30 +27,105 @@ class Reference(dgLib.DGNode):
     @property
     def mfnReference(self) -> om.MFnReference:
         """
-        Get mfnReference of the om.MObject
+        Get MFnReference of the om.MObject
 
         Returns:
-            om.mfnReference: the skinCluster object
+            om.MFnReference: the Reference object
         """
+
         return om.MFnReference(self)
 
     @property
     def filePath(self) -> str:
+        """
+        Get the referenced file path
+
+        Returns:
+            str: the referenced file path
+        """
 
         return self.mfnReference.fileName(True, False, False)
 
     @property
     def namespace(self) -> str:
+        """
+        Get the namespace associated with this reference
+
+        Returns:
+             str: the namespace associated with this reference
+        """
 
         return self.mfnReference.associatedNamespace(True)
 
     @property
-    def nodes(self):
-        graph = Graph()
-        for obj in self.mfnReference.nodes():
-            graph.add(obj)
+    def isValid(self) -> bool:
+        """
+        Check if the reference is valid
 
-        return graph
+        Returns:
+            bool: is the reference valid
+        """
+
+        return self.mfnReference.isValidReference()
+
+    @property
+    def isLoaded(self) -> bool:
+        """
+        Check if the reference is loaded
+
+        Returns:
+            bool: is the reference loaded
+        """
+
+        return self.mfnReference.isLoaded()
+
+    @property
+    def isLocked(self):
+        """
+        Check if the reference is locked
+
+        Returns:
+            bool: is the reference locked
+        """
+
+        return self.mfnReference.isLocked()
+
+    @property
+    def nodes(self) -> Graph:
+        """
+        Retrieve the referenced nodes
+
+        Returns:
+            Graph: a list of referenced nodes
+        """
+
+        return Graph.ls(*self.mfnReference.nodes())
+
+    def containsNode(self, node: om.MObject) -> bool:
+        """
+        Check if the node is contained in this reference
+         and its children references
+
+        Args:
+            node: om.MObject, the node to check
+
+        Returns:
+             bool: is the node contained in this reference
+        """
+        return self.mfnReference.containsNode(node)
+
+    def containsNodeExactly(self, node: om.MObject) -> bool:
+        """
+        Check if the node is contained in this reference
+         without its children references
+
+        Args:
+            node: om.MObject, the node to check
+
+        Returns:
+             bool: is the node contained in this reference
+        """
+        return self.mfnReference.containsNodeExactly(node)
 
 
 NodeRegistry()[Reference.nodeType()] = Reference
