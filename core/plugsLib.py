@@ -1,5 +1,7 @@
 from typing import Union, Any
 
+import math
+
 from maya import cmds as mc
 from maya.api import OpenMaya as om
 
@@ -142,6 +144,10 @@ class Plug(om.MPlug):
 
                 if self.isArray:
                     self.elementByLogicalIndex(idx).set(val)
+
+        elif self.type == 'doubleAngle':
+            radians = math.radians(value[0])
+            self.setDouble(radians)
 
         elif isinstance(value[0], int):
             self.setInt(value[0])
