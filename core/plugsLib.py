@@ -4,53 +4,6 @@ from maya import cmds as mc
 from maya.api import OpenMaya as om
 
 
-# TODO: Update PlugArray properties and dunders
-class PlugArray(om.MPlugArray):
-
-    def __getitem__(self, *args, **kwargs) -> 'Plug':
-        return Plug(super().__getitem__(*args, **kwargs))
-
-    """
-    def __add__(): ...
-
-    def __contains__(): ...
-
-    def __delitem__(): ...
-
-    def __iadd__(): ...
-
-    def __imul__(): ...
-
-    def __init__(): ...
-
-    def __len__(): ...
-
-    def __mul__(): ...
-
-    def __repr__(): ...
-
-    def __rmul__(): ...
-
-    def __setitem__(): ...
-
-    def __str__(): ...
-
-    def append(): ...
-
-    def clear(): ...
-
-    def copy(): ...
-
-    def insert(): ...
-
-    def remove(): ...
-
-    def setLength(): ...
-    """
-
-# TODO: implement += -= and more dunders
-
-
 class Plug(om.MPlug):
 
     def __hash__(self) -> int:
@@ -334,23 +287,26 @@ class Plug(om.MPlug):
              Any: the value of the current plug
         """
 
-        # TODO: start with check for the attribute and thene check for multiInstances
+        # TODO: start with check for the attribute
+        #  and then check for multiInstances
         apiType = self.attribute().apiType()
 
         # search for matrices
         if apiType == om.MFn.kTypedAttribute:
-            fn_typed = om.MFnTypedAttribute(self.attribute())
-            attr_type = fn_typed.attrType()
-
-            if attr_type == om.MFnData.kMatrix:
-                return self.asMDataHandle().asMatrix()
+            fn_typed = om.MFnTypedAttribute(self.attribute()).attrType()
+            # print(f'{fn_typed = } - {om.MFnData.kMatrix}')
+            if fn_typed == om.MFnData.kMatrix:
+                matrix = mc.getAttr(self.name())
+                # print(f'{self.name()} - {len(matrix)} - {matrix = }')
+                return om.MMatrix(matrix)
 
         elif apiType == om.MFn.kMatrixAttribute:
-            return self.asMDataHandle().asMatrix()
+            # print(f'{apiType = } - {om.MFn.kMatrixAttribute}')
+            return om.MMatrix(mc.getAttr(self.name()))
 
         # search for vectors
         elif apiType in [om.MFn.kAttribute3Float, om.MFn.kAttribute3Double]:
-            return self.asMDataHandle().asVector()
+            return om.MVector(*mc.getAttr(self.name()))
 
         return mc.getAttr(self.name())
 
@@ -376,3 +332,48 @@ class Plug(om.MPlug):
         """
 
         return mc.getAttr(self.name(), type=True)
+
+
+# TODO: Update PlugArray properties and dunders
+class PlugArray(om.MPlugArray):
+
+    def __getitem__(self, *args, **kwargs) -> 'Plug':
+        return Plug(super().__getitem__(*args, **kwargs))
+
+    """
+    def __add__(): ...
+
+    def __contains__(): ...
+
+    def __delitem__(): ...
+
+    def __iadd__(): ...
+
+    def __imul__(): ...
+
+    def __init__(): ...
+
+    def __len__(): ...
+
+    def __mul__(): ...
+
+    def __repr__(): ...
+
+    def __rmul__(): ...
+
+    def __setitem__(): ...
+
+    def __str__(): ...
+
+    def append(): ...
+
+    def clear(): ...
+
+    def copy(): ...
+
+    def insert(): ...
+
+    def remove(): ...
+
+    def setLength(): ...
+    """

@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Tuple, Any, Callable
 from collections import OrderedDict
 
 import sys
@@ -8,7 +8,7 @@ import importlib
 # cmds functions are added to the cmdo namespace to handle cmdo objects in & out
 # mel is imported to be accessible through the cmdo namespace like: cmdo.mel
 # OpenMaya, OpenMayaAnim and OpenMayaUI are imported to be accessible
-#  through the cmdo namespace
+#  through the cmdo namespace as om, oma and omui
 from maya import cmds, mel
 from maya.api import (
     OpenMaya as om,
@@ -29,7 +29,9 @@ __all__ = [
 
 # TODO: Add Undo/Redo in maya.api.OpenMaya... not looking forward to that...
 #  currently the libraries that implements OpenMaya behavior doesn't support
-#  undoing or redoing (so a lot of libraries)
+#  undoing or redoing (so a lot of libraries),
+#  in OpenMaya, Undo/Redo is managed through om.MPxCommands,
+#  see a possible implementation -> https://github.com/mottosso/apiundo
 
 
 __PACKAGE_NAME = __name__
@@ -50,17 +52,16 @@ def bigReload(module_to_reload=__PACKAGE_NAME):
         importlib.import_module(module.__name__)
         importlib.reload(module)
 
-    importlib.reload(sys.modules.get(module_to_reload))
+    parent_module = sys.modules.get(module_to_reload)
+    importlib.import_module(parent_module.__name__)
+    importlib.reload(parent_module)
 
 
-"""
-Import modules to package root for easier access
-
-! WARNING !:
-    Order of import is important to avoid circular imports
-    or partial import errors
-"""
-
+# Import modules to package root for easier access
+#
+# !!!!!!!!!! WARNING !!!!!!!!!!:
+#     Order of import is important to avoid circular imports
+#     or partial import errors
 
 from . import mathLib
 from . import core
@@ -86,6 +87,14 @@ from .api.bifrost import *
 def getCmdoNodeDict() -> Dict:
     """
     Get registered cmdo node classes
+    Data is stored in three different ways for each node class:
+        - str(mayaType): CmdoClass
+        - int(mayaApiType): CmdoClass
+        - CmdoClass: {"NODE_TYPE": str(mayaType), "API_TYPE": int(mayaApiType)}
+
+    One exception is mayaApiType : om.MFn.KPluginShape->712, which will
+     always default to cmdo.core.abstract.nodelib.Node because the type
+     is shared across all plugin shapes
 
     Returns:
          dict: {id: data} multiple pairs per node representing different ids
@@ -98,6 +107,8 @@ def getCmdoNodeDict() -> Dict:
 def __addMayaCmdsToCmdoNamespace():
     """
     Dump all maya.cmds functions that do not exist in cmdo namespace
+    Convert inputs from cmdo types to maya types
+    Convert outputs from maya types to cmdo types
 
     """
 
@@ -122,8 +133,16 @@ def __addMayaCmdsToCmdoNamespace():
 
         return args_list
 
-    def _convertOutputArguments(result):
+    def _convertOutputArguments(result: Any) -> core.abstract.nodeLib.Node | core.graphLib.Graph | Any:
+        """
+        Convert the maya.cmds function output to cmdo types if possible
 
+        Args:
+            result: the result of maya.cmds function
+
+        Returns:
+
+        """
         if isinstance(result, str) and mc.objExists(result):
             return ls(result)[0]
 
@@ -134,7 +153,7 @@ def __addMayaCmdsToCmdoNamespace():
 
         return result
 
-    def _cmdsWrapperFunction(func):
+    def _cmdsWrapperFunction(func: Callable) -> Callable:
         """
         A function wrapper to enable easier interaction with cmdo
 
@@ -153,13 +172,13 @@ def __addMayaCmdsToCmdoNamespace():
 
             result = func(*args_list, **kwargs)
 
-            # debug print
-            print(
-                f'{func.__name__} - '
-                f'\n\t{args_list = }'
-                f'\n\t{kwargs = }'
-                f'\n\t{result = }'
-            )
+            # TODO: remove debug print on release, for performance issues
+            # print(
+            #     f'{func.__name__} - '
+            #     f'\n\t{args_list = }'
+            #     f'\n\t{kwargs = }'
+            #     f'\n\t{result = }'
+            # )
 
             return _convertOutputArguments(result)
 
@@ -167,8 +186,8 @@ def __addMayaCmdsToCmdoNamespace():
 
     # Filtering of cmds functions
     # islower() serves to filter out mel macros, we only want python compatible
-    # functions in the forme of function(*args, **kwargs) and not Function()
-    def _filterCmds(key):
+    # functions in the form of function(*args, **kwargs) and not Function()
+    def _filterCmds(key: Tuple) -> bool:
         """
         Filter cmds functions by key
 
@@ -199,3 +218,7 @@ def __addMayaCmdsToCmdoNamespace():
 
 
 __addMayaCmdsToCmdoNamespace()
+
+# Delete the function after using it to make it not accessible by user
+# after one run of the function it has no further use for the package
+del __addMayaCmdsToCmdoNamespace

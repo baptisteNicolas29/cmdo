@@ -9,6 +9,8 @@ __all__ = [
 ]
 
 
+# TODO: add entry override security
+#  (ie: register a new Transform class that overrides the existing one)
 class NodeRegistry(dict, metaclass=SingletonMeta):
     """
     This class is a singleton and only one instance will exist in cmdo
@@ -21,7 +23,10 @@ class NodeRegistry(dict, metaclass=SingletonMeta):
     nodeRegistry.NodeRegistry()[NodeObjectType] = NodeObject
 
     # get from registry #
-    node_object = nodeRegistry.NodeRegistry().get(NodeObjectType, default=DefaultTypeClass)
+    node_object = nodeRegistry.NodeRegistry().get(
+        NodeObjectType,
+        default=DefaultReturnTypeClass
+    )
 
     # print/get a copy of the registry
     print(cmdo.getCmdoNodeDict())
@@ -57,9 +62,16 @@ class NodeRegistry(dict, metaclass=SingletonMeta):
         self.setdefault(value.__name__, {})
         self[value.__name__]['NODE_TYPE'] = key
 
-        if value.openMayaType() is not None:
-            super().__setitem__(value.openMayaType(), value)
-            self[value.__name__]['API_TYPE'] = value.openMayaType()
+        if value.openMayaType() is None:
+            return
+
+        match value.openMayaType():
+            case om.MFn.kPluginShape:
+                super().__setitem__(value.openMayaType(), nodeLib.Node)
+            case _:
+                super().__setitem__(value.openMayaType(), value)
+
+        self[value.__name__]['API_TYPE'] = value.openMayaType()
 
     def show_data(self):
         for typ, obj in self.items():

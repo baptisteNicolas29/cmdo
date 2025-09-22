@@ -175,25 +175,38 @@ class Mesh(dagLib.DAGNode):
 
         return self.mfnMesh.displayColors
 
-    # @staticmethod
-    # def check_point_have_transform(self):
-    #
-    #     indices = []
-    #
-    #     if not self.shape_orig.exists:
-    #         return False
-    #
-    #     mfn_mesh = self.mesh_fn
-    #     mfn_orig = self.shape_orig.mesh_fn
-    #
-    #     mesh_points = mfn_mesh.getPoints(om.MSpace.kObject)
-    #     orig_points = mfn_orig.getPoints(om.MSpace.kObject)
-    #
-    #     for i in range(len(mesh_points)):
-    #         if not mesh_points[i].isEquivalent(orig_points[i]):
-    #             indices.append(i)
-    #
-    #     return True, indices
+    def checkDifferenceWithOrigShape(self):
+
+        indices = []
+        mesh = self.parents[0]
+
+        shape_deform = [
+            shape
+            for shape in mesh.shapes
+            if not shape.intermediateObject
+        ]
+        shape_orig = [
+            shape
+            for shape in mesh.shapes
+            if shape.intermediateObject
+        ]
+
+        if not shape_orig:
+            return []
+
+        mfn_mesh = shape_deform[0].mfnMesh
+        mfn_orig = shape_orig[0].mfnMesh
+
+        mesh_points = mfn_mesh.getPoints(space=om.MSpace.kObject)
+        orig_points = mfn_orig.getPoints(space=om.MSpace.kObject)
+
+        for i in range(len(mesh_points)):
+            if mesh_points[i].isEquivalent(orig_points[i], tol=0.0001):
+                continue
+
+            indices.append(i)
+
+        return indices
 
 # -- Mesh Properties ----------------------------------------------------------
 # -----------------------------------------------------------------------------

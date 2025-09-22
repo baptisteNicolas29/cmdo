@@ -38,7 +38,8 @@ def int_to_form(
         return om.MFnNurbsSurface.kPeriodic
     else:
         raise RuntimeError(
-            "La forme de la surface n'est pas valide.")
+            "La forme de la surface n'est pas valide."
+        )
 
 
 #  MVectors

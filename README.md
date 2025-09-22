@@ -294,6 +294,7 @@ jnt['displayLocalAxis'] = True
 # connect the setup using "=" or ">>" 
 # "=" connects destination_plug = source_plug (can be used with properties)
 # ">>" connects source_plug >> destination_plug
+# "<<" connects destination_plug << source_plug
 jntRoot.offsetParentMatrix = trs['worldMatrix'][0]
 
 ctrl['worldMatrix'][0] >> mltMtx['matrixIn'][0]

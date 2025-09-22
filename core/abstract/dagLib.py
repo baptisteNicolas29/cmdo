@@ -22,7 +22,7 @@ class DAGNode(DGNode):
         super().__init__(name=name)
 
     def __str__(self) -> str:
-        return self.fullName
+        return self.name
 
     @property
     def dagPath(self) -> om.MDagPath:
@@ -192,7 +192,7 @@ class DAGNode(DGNode):
         return NotImplementedError('"isOrig" property is not implemented yet')
 
     @property
-    def parents(self) -> list:
+    def parents(self) -> List:
         """
         Get the parent nodes of the current node
 
@@ -203,7 +203,7 @@ class DAGNode(DGNode):
         for idx in range(self.mfnDagNode.parentCount()):
             parent_obj = self.mfnDagNode.parent(idx)
             parent_name = om.MFnDagNode(parent_obj).partialPathName()
-            items.append(NodeRegistry().get(parent_name, DAGNode))
+            items.append(NodeRegistry().get(parent_name, DAGNode)(parent_obj))
 
         return items
 
