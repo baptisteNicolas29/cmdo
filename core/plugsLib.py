@@ -177,9 +177,9 @@ class Plug(om.MPlug):
                 raise AttributeError(
                     f'{self.name()}, Wrong input type to set matrix attribute'
                     f'Got:'
-                    f'- type: {type(value)} '
-                    f'- len: {len(value)} '
-                    f'- value: {value}'
+                    f'\t- type: {type(value)} '
+                    f'\t- len: {len(value)} '
+                    f'\t- value: {value}'
                 )
 
     def __rshift__(self, other: 'Plug') -> None:

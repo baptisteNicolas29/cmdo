@@ -6,7 +6,8 @@ from ...core.abstract import dgLib
 from ...core.nodeRegistry import NodeRegistry
 
 
-# TODO: I don t want to do it yet... is such an annoying deformer in maya script
+# TODO: I don t want to do it yet...
+#  it's such an annoying deformer in maya commands
 class BlendShape(dgLib.DGNode):
 
     _NODE_TYPE = 'blendShape'

@@ -5,7 +5,7 @@ import math
 from maya import cmds as mc
 from maya.api import OpenMaya as om
 
-from ...core import convert
+from ...core import cmdoTyping as cmdoT
 from ...core.nodeRegistry import NodeRegistry
 from ...core.abstract import dagLib
 
@@ -51,7 +51,7 @@ class Curve(dagLib.DAGNode):
         return self.mfnNurbsCurve.cvPositions()
 
     @cvs.setter
-    def cvs(self, points) -> None:
+    def cvs(self, points: Union[om.MPointArray, cmdoT.CmdoList]) -> None:
 
         """
         Define curve cvs
@@ -63,7 +63,7 @@ class Curve(dagLib.DAGNode):
             None
         """
 
-        points = convert.to_mpointarray(points)
+        points = om.MPointArray(list(points))
 
         self.mfnNurbsCurve.setCVPositions(points)
         self.mfnNurbsCurve.updateCurve()
@@ -119,7 +119,7 @@ class Curve(dagLib.DAGNode):
         return self.mfnNurbsCurve.knots()
 
     @knots.setter
-    def knots(self, knots) -> None:
+    def knots(self, knots: Union[om.MDoubleArray, cmdoT.CmdoList]) -> None:
 
         """
         Set the curve knots
@@ -130,7 +130,7 @@ class Curve(dagLib.DAGNode):
         Returns
             None
         """
-        knots = convert.to_MDoubleArray(knots)
+        knots = om.MDoubleArray(list(knots))
 
         self.mfnNurbsCurve.setKnots(knots)
         self.mfnNurbsCurve.updateCurve()
@@ -276,21 +276,21 @@ class Curve(dagLib.DAGNode):
 
         self.update()
 
-    def setCVPositions(self, array: List[Union[float, int]], space: int = om.MSpace.kObject) -> None:
+    def setCVPositions(self, pointList: Union[om.MPointArray, cmdoT.CmdoList], space: int = om.MSpace.kObject) -> None:
 
         """
         Set all cv positions
 
         Args:
-            array: List[int, float], the new cv positions
+            pointList: List[List[int, float]], the new cv positions
             space: int, the space in which to set the cvs
 
         Returns
             None
         """
 
-        array = convert.to_mpointarray(array)
-        self.mfnNurbsCurve.setCVPositions(array, space)
+        mPointArray = om.MPointArray(pointList)
+        self.mfnNurbsCurve.setCVPositions(mPointArray, space)
         self.update()
 
     def getClosestPoint(self, point, **kwargs):
@@ -429,8 +429,8 @@ class Curve(dagLib.DAGNode):
     #         "form": self.form,
     #         "is_2d": self.is_2d,
     #         "is_rational": self.is_rational,
-    #         "knots": convert.mdoublearray_to_list(self.knots),
-    #         "cvs": convert.mpointarray_to_list(self.cvs)
+    #         "knots": listself.knots),
+    #         "cvs": list(self.cvs)
     #     }
     #
     # def _generate_knots(self, num_cvs: int, degree: int) -> List[float]:

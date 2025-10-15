@@ -1,7 +1,7 @@
 from typing import Optional, Union, List
 
 from maya import cmds as mc
-from maya.api import OpenMaya as om
+from maya.api import OpenMaya as om, OpenMayaAnim as oma
 
 from ...core.nodeRegistry import NodeRegistry
 from .transformLib import Transform
@@ -22,6 +22,17 @@ class Joint(Transform):
         """
 
         super().__init__(name=name)
+
+    @property
+    def mfnIkJoint(self) -> oma.MFnIkJoint:
+        """
+            Get MFnIkJoint of the om.MObject
+
+            Returns:
+                om.MFnIkJoint: the joint object
+            """
+
+        return oma.MFnIkJoint(self)
 
     @property
     def radius(self) -> float:
@@ -152,6 +163,19 @@ class Joint(Transform):
         """
 
         self["segmentScaleCompensate"] = value
+
+    @property
+    def orientJointAxisList(self) -> List[str]:
+
+        return ['xyz', 'yzx', 'zxy', 'zyx', 'yxz', 'xzy', 'none']
+
+    @property
+    def orientJointSecondaryAxisList(self) -> List[str]:
+
+        return ['xup', 'xdown', 'yup', 'ydown', 'zup', 'zdown', 'none']
+
+    # TODO: add orientJoint function
+    def orientJointAxis(self, primAxis, secondAxis) -> None: ...
 
 
 NodeRegistry()[Joint.nodeType()] = Joint

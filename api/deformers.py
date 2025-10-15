@@ -14,6 +14,8 @@ __all__ = [
 
 
 # ------------------------------------------------------------- SKINCLUSTER
+
+# TODO: wierd things are going on when trying to use skinAs
 def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Union[om.MObject, None]:
     """
     Bind a destination mesh based on the influence list and weights of the 
@@ -72,12 +74,14 @@ def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Uni
             name=f'{destination_prefix}_skinCluster'
         )[0]
 
+    # print(f'- {source_skin = }\n- {destination_skin = }')
+
     # Copy skin weights
     mc.copySkinWeights(
         sourceSkin=str(source_skin),
         destinationSkin=str(destination_skin),
-        surfaceAssociation=kwargs.get('surfaceAssociation', 'closestPoint'),
-        influenceAssociation='name',
+        surfaceAssociation=kwargs.pop('surfaceAssociation', 'closestPoint'),
+        influenceAssociation=kwargs.pop('influenceAssociation', 'name'),
         noMirror=True,
         smooth=smooth,
         **kwargs

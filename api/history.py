@@ -28,11 +28,10 @@ def getDeformers(node: Union[str, om.MObject], types: Union[str, List[str]]) -> 
         types = [types]
 
     history = graph.listHistory(node)
-    deformers = [
-        deformer
-        for deformer in history
-        if deformer.type in types
-    ] or []
+    deformers = list(filter(
+        lambda d: d.type in types,
+        history
+    ))
 
     return graph.ls(*deformers)
 

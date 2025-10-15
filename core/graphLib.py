@@ -26,11 +26,11 @@ class Graph(om.MSelectionList):
         We have wierd import because of maya (and other stuff)
         So we can t use the built-in issubclass to check classes
         """
-        # print(f'{repr(cls2)} - {repr(cls1.__class__.mro())}')
+
         return repr(cls2) in repr(cls1.__class__.mro())
 
     @staticmethod
-    def __filter_objects(obj: Union[str, om.MObject]) -> str:
+    def __filter_objects(obj: Union[str, om.MObject, om.MFnDependencyNode, om.MPlug]) -> str:
         """
         Filter function to convert the input node to str name for maya commands
 
@@ -43,8 +43,14 @@ class Graph(om.MSelectionList):
         if isinstance(obj, str):
             return obj
 
+        if Graph.__isSubClass(obj, om.MPlug):
+            return obj.name()
+
         if Graph.__isSubClass(obj, om.MObject):
             return om.MFnDependencyNode(obj).name()
+
+        if Graph.__isSubClass(obj, om.MFnDependencyNode):
+            return obj.name()
 
         if isinstance(obj, Graph):
             return obj.getSelectionStrings()
@@ -116,7 +122,6 @@ class Graph(om.MSelectionList):
 
         try:
             if parent:
-
                 obj = om.MFnDagNode().create(typ, name=name, parent=parent)
                 default_object = dagLib.DAGNode
             else:

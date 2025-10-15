@@ -1,4 +1,4 @@
-from typing import Dict, Tuple, Any, Callable
+from typing import Dict, Tuple, Any, Callable, List
 from collections import OrderedDict
 
 import sys
@@ -17,7 +17,7 @@ from maya.api import (
 )
 
 
-__all__ = [
+__all__: List[str] = [
     'bigReload',
     'mathLib',
     'core',
@@ -34,27 +34,39 @@ __all__ = [
 #  see a possible implementation -> https://github.com/mottosso/apiundo
 
 
-__PACKAGE_NAME = __name__
+# current package name
+__PACKAGE_NAME: str = __name__
+
+# True/False, print cmds function name/input/output/result
+__CMDS_DEBUG_PRINT: bool = False
 
 
 # TODO: try to add reloading dependencies.
 #  bigReload is a debugging function
-def bigReload(module_to_reload=__PACKAGE_NAME):
+def bigReload(moduleToReload: str = __PACKAGE_NAME) -> None:
+    """
+    Reload the given package from name and all its children modules
+
+    :param moduleToReload: str, the name of the package/module to reload
+
+    :return:
+    """
+
     cmds.warning(
         'bigReload is a debugging function and should not be used in production'
     )
-    to_reload = []
+    toReload = []
     for name, module in sys.modules.items():
-        if name.startswith(module_to_reload):
-            to_reload.append(module)
+        if name.startswith(moduleToReload):
+            toReload.append(module)
 
-    for module in to_reload:
+    for module in toReload:
         importlib.import_module(module.__name__)
         importlib.reload(module)
 
-    parent_module = sys.modules.get(module_to_reload)
-    importlib.import_module(parent_module.__name__)
-    importlib.reload(parent_module)
+    parentModule = sys.modules.get(moduleToReload)
+    importlib.import_module(parentModule.__name__)
+    importlib.reload(parentModule)
 
 
 # Import modules to package root for easier access
@@ -104,34 +116,64 @@ def getCmdoNodeDict() -> Dict:
     return nodeRegistry.NodeRegistry().copy()
 
 
-def __addMayaCmdsToCmdoNamespace():
+def setDebugMode(state: bool = False) -> None:
+    """
+    Set the debug mode on/off
+
+    !!!! WARNING !!!! - __debugPrints on every use of maya.cmds functions
+     Should not be use outside of dev contexts
+
+    :param state: bool, the state of the debug mode
+
+    """
+    global __CMDS_DEBUG_PRINT
+
+    __CMDS_DEBUG_PRINT = state
+
+
+def __debugPrint(message: str) -> None:
+    """
+    Print the given message if the debug mode is True
+
+    :param message: str, the message to print
+
+    """
+    global __CMDS_DEBUG_PRINT
+
+    if __CMDS_DEBUG_PRINT:
+        print(message)
+
+
+def __addMayaCmdsToCmdoNamespace() -> None:
     """
     Dump all maya.cmds functions that do not exist in cmdo namespace
-    Convert inputs from cmdo types to maya types
-    Convert outputs from maya types to cmdo types
+
+    Wrap the functions to:
+        Convert inputs from cmdo types to maya types
+        Convert outputs from maya types to cmdo types
 
     """
 
-    def _isNodeSubclass(item):
+    def _isNodeSubclass(item: Any) -> bool:
         return issubclass(type(item), core.abstract.nodeLib.Node)
 
-    def _isGraphSubclass(item):
+    def _isGraphSubclass(item: Any) -> bool:
         return issubclass(type(item), core.graphLib.Graph)
 
-    def _convertInputArguments(args):
-        args_list = list(args)
+    def _convertInputArguments(args) -> List:
+        argsList = list(args)
 
-        for i, arg in enumerate(args_list):
+        for i, arg in enumerate(argsList):
             if _isNodeSubclass(arg):
-                args_list[i] = arg.name
+                argsList[i] = arg.name
 
             elif _isGraphSubclass(arg):
-                args_list[i] = arg.getSelectionStrings()
+                argsList[i] = arg.getSelectionStrings()
 
             elif isinstance(arg, (list, tuple, set)):
-                args_list[i] = _convertInputArguments(arg)
+                argsList[i] = _convertInputArguments(arg)
 
-        return args_list
+        return argsList
 
     def _convertOutputArguments(result: Any) -> core.abstract.nodeLib.Node | core.graphLib.Graph | Any:
         """
@@ -168,17 +210,16 @@ def __addMayaCmdsToCmdoNamespace():
             Wrapper function for cmds function to return cmdo type if possible
 
             """
-            args_list = _convertInputArguments(args)
+            argsList = _convertInputArguments(args)
 
-            result = func(*args_list, **kwargs)
+            result = func(*argsList, **kwargs)
 
-            # TODO: remove debug print on release, for performance issues
-            # print(
-            #     f'{func.__name__} - '
-            #     f'\n\t{args_list = }'
-            #     f'\n\t{kwargs = }'
-            #     f'\n\t{result = }'
-            # )
+            __debugPrint(
+                f'{func.__name__} - '
+                f'\n\t{argsList = }'
+                f'\n\t{kwargs = }'
+                f'\n\t{result = }'
+            )
 
             return _convertOutputArguments(result)
 
@@ -203,20 +244,21 @@ def __addMayaCmdsToCmdoNamespace():
                 and key[0] not in cmdoFunctionKeys
         )
 
-    cmdo_module = sys.modules[__name__]
-    cmdoFunctionKeys = list(cmdo_module.__dict__.keys())
+    cmdoModule = sys.modules[__name__]
+    cmdoFunctionKeys = list(cmdoModule.__dict__.keys())
 
-    cmds_dict = OrderedDict(sorted(filter(
+    cmdsDict = OrderedDict(sorted(filter(
         _filterCmds,
         dict(inspect.getmembers(cmds)).items()
     )))
 
-    for k, v in cmds_dict.items():
-        setattr(cmdo_module, k, _cmdsWrapperFunction(v))
+    for key, value in cmdsDict.items():
+        setattr(cmdoModule, key, _cmdsWrapperFunction(value))
 
-    print('finished adding cmds functions')
+    __debugPrint('finished adding cmds functions')
 
 
+# Add wrapped maya.cmds functions to cmdo package
 __addMayaCmdsToCmdoNamespace()
 
 # Delete the function after using it to make it not accessible by user
