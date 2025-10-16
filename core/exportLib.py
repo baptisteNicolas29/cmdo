@@ -3,15 +3,15 @@ from typing import Union
 # import json
 # import numpy as np
 
+
+from maya import cmds as mc
 from maya.api import OpenMaya as om
 
 
-# TODO: MOVE TO ANOTHER LIBRARY "RIG"
-print(
-    DeprecationWarning(
-        'exportLib is deprecated in cmdo, '
-        'it will be moved to a specific library'
-    )
+# TODO: MOVE TO ANOTHER LIBRARY "RIG" OR DELETE
+mc.warning(
+    'exportLib is deprecated in cmdo, '
+    'it will be moved to a specific library'
 )
 
 # def export_list_to_json(

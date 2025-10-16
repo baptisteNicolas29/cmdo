@@ -361,7 +361,7 @@ class Graph(om.MSelectionList):
 
         return cls.__createList(result)
 
-    def pop(self, idx) -> om.MObject: ...  # TODO
+    def pop(self, value) -> om.MObject: ...  # TODO
 
     def __str__(self) -> str:
         args = ', '.join([f'"{x}"' for x in self])
@@ -381,6 +381,21 @@ class Graph(om.MSelectionList):
         return self[value]
 
     def __getitem__(self, value):
+        if isinstance(value, slice):
+            newGraph = self.__class__()
+            for index in range(*value.indices(len(self))):
+                newGraph.add(self[index])
+
+            return newGraph
+
+        mItSel = om.MItSelectionList(self)
+        for i in range(value + 1):
+            if i != value:
+                mItSel.iternext()
+                continue
+
+            if mItSel.itemType() == mItSel.kPlugSelectionItem:
+                return plugsLib.Plug(mItSel.getPlug())
 
         item = self.getDependNode(value)
         if item.hasFn(om.MFn.kDagNode):
@@ -429,12 +444,9 @@ class Graph(om.MSelectionList):
         copy = self.__class__().copy(self)
         return copy.merge(other, strategy=om.MSelectionList.kXORWithList)
 
-    def __iter__(self) -> Union[Any, plugsLib.Plug]:
-        # mc.undoInfo(openChunk=True)
-        for idx in range(self.length()):
-            yield self.get(idx)
-
-        # mc.undoInfo(closeChunk=True)
+    def __iter__(self) -> Any:
+        for value in range(self.length()):
+            yield self.get(value)
 
     def __contains__(self, item: Union[om.MObject, Any, str]) -> bool:
 

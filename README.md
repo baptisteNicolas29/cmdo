@@ -23,6 +23,8 @@ enables cmdo nodes to always be up to date with their maya counterpart.
 import cmdo
 
 cmdo.bigReload()
+# use debugMode to print all cmds command input/outputs
+cmdo.setDebugMode(True)
 ```
 
 ## SubModules:

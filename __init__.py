@@ -1,9 +1,10 @@
-from typing import Dict, Tuple, Any, Callable, List
+from typing import Dict, Tuple, Any, Callable, List, Generator
 from collections import OrderedDict
 
 import sys
 import inspect
 import importlib
+import contextlib
 
 # cmds functions are added to the cmdo namespace to handle cmdo objects in & out
 # mel is imported to be accessible through the cmdo namespace like: cmdo.mel
@@ -80,6 +81,7 @@ from . import core
 from . import nodes
 from . import api
 
+from .core.cmdoTyping import *
 from .core.exceptions import *
 
 from .api import *
@@ -116,19 +118,68 @@ def getCmdoNodeDict() -> Dict:
     return nodeRegistry.NodeRegistry().copy()
 
 
-def setDebugMode(state: bool = False) -> None:
+def getDebugMode() -> bool:
     """
-    Set the debug mode on/off
+    Get the debug mode state
 
-    !!!! WARNING !!!! - __debugPrints on every use of maya.cmds functions
+    !!!! WARNING !!!! - prints on every use of maya.cmds functions
      Should not be use outside of dev contexts
 
     :param state: bool, the state of the debug mode
 
     """
+
+    global __CMDS_DEBUG_PRINT
+
+    return __CMDS_DEBUG_PRINT
+
+
+def setDebugMode(state: bool = False) -> None:
+    """
+    Set the debug mode on/off
+
+    !!!! WARNING !!!! - prints on every use of maya.cmds functions
+     Should not be use outside of dev contexts
+
+    :param state: bool, the state of the debug mode
+
+    """
+
+    cmds.warning(
+        'setDebugMode is a debugging function and '
+        f'should not be used in production: {state = }'
+    )
+
     global __CMDS_DEBUG_PRINT
 
     __CMDS_DEBUG_PRINT = state
+
+
+@contextlib.contextmanager
+def debugContext(state: bool = False) -> Generator:
+    """
+    Set the debug mode on/off
+
+    !!!! WARNING !!!! - prints on every use of maya.cmds functions
+     Should not be use outside of dev contexts
+
+    :param state: bool, the state of the debug mode
+
+    """
+
+    cmds.warning(
+        'debugContext is a debugging function and '
+        f'should not be used in production: {state = }'
+    )
+
+    global __CMDS_DEBUG_PRINT
+
+    tempDebugValue = __CMDS_DEBUG_PRINT
+    __CMDS_DEBUG_PRINT = state
+
+    yield
+
+    __CMDS_DEBUG_PRINT = tempDebugValue
 
 
 def __debugPrint(message: str) -> None:
