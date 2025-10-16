@@ -3,7 +3,7 @@ from typing import Tuple, List
 import numpy as np
 
 
-__all__ = [
+__all__: List[str] = [
     'mirrored_gaussian_profile',
     'retrieve_gaussian_profile',
 ]

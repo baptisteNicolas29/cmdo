@@ -8,7 +8,7 @@ from ..core.graphLib import Graph
 from ..core.cmdoTyping import *
 
 
-__all__ = [
+__all__: List[str] = [
     'MAYA_DEFAULT_MAT',
     'assignDefaultShader',
     'getRandomColor',

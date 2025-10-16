@@ -1,3 +1,5 @@
+from typing import List
+
 from . import hierarchy
 from . import history
 from . import materials
@@ -11,7 +13,7 @@ from . import namespace
 from . import plugs
 
 
-__all__ = [
+__all__: List[str] = [
     'hierarchy',
     'history',
     'materials',

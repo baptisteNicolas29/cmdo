@@ -1,10 +1,12 @@
+from typing import List
+
 from maya.api import OpenMaya as om
 
 from .singletonMetaclass import SingletonMeta
 from .abstract import nodeLib
 
 
-__all__ = [
+__all__: List[str] = [
     'NodeRegistry',
 ]
 

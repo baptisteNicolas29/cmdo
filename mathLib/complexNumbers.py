@@ -3,7 +3,7 @@ from typing import Optional, List
 import math
 
 
-__all__ = [
+__all__: List[str] = [
     'euler_to_quaternions',
     'quaternions_to_euler',
     'normalize_quaternion'

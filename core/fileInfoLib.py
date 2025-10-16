@@ -5,7 +5,7 @@ from maya import cmds as mc
 from .singletonMetaclass import SingletonMeta
 
 
-__all__ = [
+__all__: List[str] = [
     'MayaFileInfo'
 ]
 

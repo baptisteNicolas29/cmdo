@@ -1,13 +1,16 @@
+from typing import List
+
 from maya import cmds as mc
 from maya.api import OpenMaya as om
 
 from ..core.graphLib import Graph
 
 
-__all__ = [
+__all__: List[str] = [
     'ls',
     'listRelatives',
     'listHistory',
+    'listConnections',
     'createNode',
     'delete',
     'emptyGraph',
@@ -54,12 +57,26 @@ def listRelatives(*args, **kwargs) -> Graph:
     """
     Get a list of cmdo objects from input node hierarchy
      depending on args, kwargs
+
     Imitate the maya.cmds.listRelatives command
 
     Returns:
         Graph: a list of cmdo objects
     """
     return Graph.listRelatives(*args, **kwargs)
+
+
+def listConnections(*args, **kwargs) -> Graph:
+    """
+    Get a list of cmdo plugs from input plugs
+     depending on args, kwargs
+
+    Imitate the maya.cmds.listConnections command
+
+    Returns:
+        Graph: a list of cmdo plugs
+    """
+    return Graph.listConnections(*args, **kwargs)
 
 
 def createNode(nodeType: str, name: str = None, parent: om.MObject = None, **kwargs) -> om.MObject:

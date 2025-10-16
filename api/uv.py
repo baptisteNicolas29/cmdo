@@ -1,7 +1,9 @@
+from typing import List
+
 from maya import cmds as mc
 
 
-__all__ = [
+__all__: List[str] = [
     'duplicateUVSet',
     'transferUVSets',
     'checkOverlappingUVs',

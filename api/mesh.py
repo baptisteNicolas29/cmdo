@@ -7,7 +7,7 @@ from ..nodes.dag.meshLib import Mesh
 from ..core.abstract import nodeLib, dagLib
 
 
-__all__ = [
+__all__: List[str] = [
     'createCube'
 ]
 

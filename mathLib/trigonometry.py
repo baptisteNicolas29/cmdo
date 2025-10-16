@@ -1,11 +1,11 @@
-from typing import Tuple
+from typing import Tuple, List
 
 import math
 
 from . import distance_between
 
 
-__all__ = [
+__all__: List[str] = [
     'sin', 'cos', 'tan',
     'asin', 'acos', 'atan',
     'radians_to_degrees',

@@ -223,12 +223,20 @@ class Plug(om.MPlug):
         return NodeRegistry().get(mObject)(mObject)
 
     def child(self, *args, **kwargs):
+        """
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
         return self.__class__(super().child(*args, **kwargs))
 
     def source(self) -> 'Plug':
         """
+        Get the source of the plug
 
         Returns:
+            Plug: source of the plug
 
         """
         return self.__class__(super().source())

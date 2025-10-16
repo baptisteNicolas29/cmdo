@@ -6,7 +6,7 @@ from maya.api import OpenMaya as om
 from . import graph
 
 
-__all__ = [
+__all__: List[str] = [
     'getDeformers',
     'getNodeHistoryByType',
 ]

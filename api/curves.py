@@ -7,7 +7,7 @@ from . import graph
 from ..nodes.dag.curveLib import Curve
 from ..core.abstract import nodeLib, dagLib
 
-__all__ = [
+__all__: List[str] = [
     'createCircle',
     'createLine',
     'createBox',

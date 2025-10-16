@@ -30,7 +30,7 @@ class Graph(om.MSelectionList):
         return repr(cls2) in repr(cls1.__class__.mro())
 
     @staticmethod
-    def __filter_objects(obj: Union[str, om.MObject, om.MFnDependencyNode, om.MPlug]) -> str:
+    def __filterObjects(obj: Union[str, om.MObject, om.MFnDependencyNode, om.MPlug]) -> str:
         """
         Filter function to convert the input node to str name for maya commands
 
@@ -83,11 +83,11 @@ class Graph(om.MSelectionList):
         Returns:
             Graph: a graph containing the given data
         """
-        lst = cls()
+        graph = cls()
         for item in data:
-            lst.add(item)
+            graph.add(item)
 
-        return lst
+        return graph
 
     @classmethod
     def ls(cls, *args, **kwargs) -> 'Graph':
@@ -99,7 +99,7 @@ class Graph(om.MSelectionList):
 
         """
 
-        objects = list(map(cls.__filter_objects, args))
+        objects = list(map(cls.__filterObjects, args))
 
         # remove the long flag if it is present in kwargs
         if kwargs.get(key := 'long') or kwargs.get(key := 'l'):
@@ -123,10 +123,10 @@ class Graph(om.MSelectionList):
         try:
             if parent:
                 obj = om.MFnDagNode().create(typ, name=name, parent=parent)
-                default_object = dagLib.DAGNode
+                defaultObject = dagLib.DAGNode
             else:
                 obj = om.MFnDependencyNode().create(typ, name)
-                default_object = dgLib.DGNode
+                defaultObject = dgLib.DGNode
 
         except RuntimeError as re:
             raise CmdoException(
@@ -135,7 +135,7 @@ class Graph(om.MSelectionList):
 
         self.add(obj)
 
-        return self.__initRegistered(obj, default=default_object, **kwargs)
+        return self.__initRegistered(obj, default=defaultObject, **kwargs)
 
     @classmethod
     def delete(cls, *args, **kwargs) -> None:
@@ -144,8 +144,8 @@ class Graph(om.MSelectionList):
 
         """
 
-        objs_to_delete = cls.ls(*args, **kwargs)
-        for obj in objs_to_delete:
+        objsToDelete = cls.ls(*args, **kwargs)
+        for obj in objsToDelete:
             om.MGlobal.deleteNode(obj)
 
     @classmethod
@@ -156,7 +156,7 @@ class Graph(om.MSelectionList):
         args and kwargs work like mc.listHistory command
         """
 
-        objects = list(map(cls.__filter_objects, args))
+        objects = list(map(cls.__filterObjects, args))
         # remove the fullNodeName flag if it is present in kwargs
         if kwargs.get(key := 'fullNodeName') or kwargs.get(key := 'fnn'):
             kwargs.pop(key)
@@ -172,7 +172,7 @@ class Graph(om.MSelectionList):
         args and kwargs work like mc.listHistory command
         """
 
-        objects = list(map(cls.__filter_objects, args))
+        objects = list(map(cls.__filterObjects, args))
 
         # remove the fullPath flag if it is present in kwargs
         if kwargs.get(key := 'fullPath') or kwargs.get(key := 'f'):
@@ -187,7 +187,7 @@ class Graph(om.MSelectionList):
         Reimplementation of the listConnections command
 
         """
-        objects = list(map(cls.__filter_objects, args))
+        objects = list(map(cls.__filterObjects, args))
 
         # remove the fullNodeName flag if it is present in kwargs
         if kwargs.get(key := 'fullNodeName') or kwargs.get(key := 'fnn'):
@@ -231,13 +231,13 @@ class Graph(om.MSelectionList):
             if safe and (not item.hasFn(om.MFn.kDagNode)):
                 continue
 
-            is_child = False
+            isChild = False
             mfnDagNode = om.MFnDagNode(item)
             for other in nodes - previous:
                 if other.hasFn(om.MFn.kDagNode):
-                    is_child |= mfnDagNode.isChildOf(other)
+                    isChild |= mfnDagNode.isChildOf(other)
 
-            if not is_child:
+            if not isChild:
                 roots.add(item)
 
         return roots
@@ -263,21 +263,21 @@ class Graph(om.MSelectionList):
             graph = cls(graph)
 
         elif isinstance(graph, list):
-            tmp = Graph()
+            tempGraph = Graph()
 
             for node in graph:
-                tmp.add(node)
+                tempGraph.add(node)
 
-            graph = tmp
+            graph = tempGraph
 
         else:
             raise TypeError('graph need to be list or MSelectionList')
 
         # clear graph
         if node in graph:
-            node_graph = Graph()
-            node_graph.add(node)
-            graph = graph - node_graph
+            nodeGraph = Graph()
+            nodeGraph.add(node)
+            graph = graph - nodeGraph
 
         children = cls()
         for other in graph:
@@ -321,9 +321,9 @@ class Graph(om.MSelectionList):
 
         # clear graph
         if node in graph:
-            node_graph = Graph()
-            node_graph.add(node)
-            graph = graph - node_graph
+            nodeGraph = Graph()
+            nodeGraph.add(node)
+            graph = graph - nodeGraph
 
         dagNode = om.MFnDagNode(node)
 
@@ -341,7 +341,7 @@ class Graph(om.MSelectionList):
         Reimplementation of the select command
 
         """
-        objects = list(map(cls.__filter_objects, args))
+        objects = list(map(cls.__filterObjects, args))
 
         mc.select(*objects, **kwargs)
 
@@ -351,7 +351,7 @@ class Graph(om.MSelectionList):
         Reimplementation of the duplicate command
 
         """
-        objects = list(map(cls.__filter_objects, args))
+        objects = list(map(cls.__filterObjects, args))
 
         # remove the fullPath flag if it is present in kwargs
         if kwargs.get(key := 'fullPath') or kwargs.get(key := 'f'):
@@ -361,7 +361,11 @@ class Graph(om.MSelectionList):
 
         return cls.__createList(result)
 
-    def pop(self, value) -> om.MObject: ...  # TODO
+    def pop(self, value) -> om.MObject:
+        itemToReturn = self[value]
+        self.remove(value)
+
+        return itemToReturn
 
     def __str__(self) -> str:
         args = ', '.join([f'"{x}"' for x in self])
@@ -381,6 +385,8 @@ class Graph(om.MSelectionList):
         return self[value]
 
     def __getitem__(self, value):
+
+        # Implement slicing in Graph
         if isinstance(value, slice):
             newGraph = self.__class__()
             for index in range(*value.indices(len(self))):
@@ -388,6 +394,7 @@ class Graph(om.MSelectionList):
 
             return newGraph
 
+        # check for plugs
         mItSel = om.MItSelectionList(self)
         for i in range(value + 1):
             if i != value:
@@ -395,18 +402,19 @@ class Graph(om.MSelectionList):
                 continue
 
             if mItSel.itemType() == mItSel.kPlugSelectionItem:
-                return plugsLib.Plug(mItSel.getPlug())
+                return plugsLib.Plug(self.getPlug(i))
 
+        # convert to DAGNode or DGNode
         item = self.getDependNode(value)
         if item.hasFn(om.MFn.kDagNode):
             name = om.MFnDagNode(item).partialPathName()
-            default_object = dagLib.DAGNode
+            defaultObject = dagLib.DAGNode
 
         else:
             name = om.MFnDependencyNode(item).name()
-            default_object = dgLib.DGNode
+            defaultObject = dgLib.DGNode
 
-        return self.__initRegistered(name, default=default_object)
+        return self.__initRegistered(name, default=defaultObject)
 
     def __setitem__(self, key, value):
 
@@ -431,10 +439,10 @@ class Graph(om.MSelectionList):
         if not isinstance(other, om.MSelectionList):
             raise TypeError(f'can not unify Graph and {type(other)}')
 
-        self_copy = self.__class__().copy(self)
-        other_copy = self.__class__().copy(other)
+        selfCopy = self.__class__().copy(self)
+        otherCopy = self.__class__().copy(other)
 
-        return self_copy.merge(other_copy)
+        return selfCopy.merge(otherCopy)
 
     def __xor__(self, other: om.MSelectionList) -> 'Graph':
         """
@@ -450,23 +458,21 @@ class Graph(om.MSelectionList):
 
     def __contains__(self, item: Union[om.MObject, Any, str]) -> bool:
 
-        item_obj = None
+        itemObj = None
         if isinstance(item, om.MObject):
-            item_obj = item
+            itemObj = item
 
         elif isinstance(item, self.__nodeRegistry.get('default')):
-            item_obj = item
+            itemObj = item
 
         elif isinstance(item, str):
-            tmp_graph = self.__class__.ls(item)
-            if tmp_graph and tmp_graph[0].exists:
-                item_obj = tmp_graph.getDependNode(0)
+            tempGraph = self.__class__.ls(item)
+            if tempGraph and tempGraph[0].exists:
+                itemObj = tempGraph.getDependNode(0)
         else:
             raise TypeError(f'can not get MObject from {item}')
 
-        return self.hasItem(item_obj) if item_obj else False
-
-        # return self.hasItem(item_obj)
+        return self.hasItem(itemObj) if itemObj else False
 
     def __add__(self, other: om.MSelectionList) -> 'Graph':
 
@@ -493,7 +499,7 @@ class Graph(om.MSelectionList):
         # if isinstance(other, om.MSelectionList):
         #     other = [obj for obj in self.__class__.ls(other)]
 
-        objects = list(map(self.__filter_objects, other))
+        objects = list(map(self.__filterObjects, other))
 
         result = mc.ls(*objects) or []
         for item in result:

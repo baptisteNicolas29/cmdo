@@ -3,7 +3,7 @@ from typing import Any, Union, List, Tuple, Dict
 import math
 
 
-__all__ = [
+__all__: List[str] = [
     'angle_between',
     'get_barycenter',
     'Vector3'

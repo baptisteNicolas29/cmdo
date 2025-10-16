@@ -3,7 +3,7 @@ from typing import Union, List, Type, Tuple, Set
 
 from maya.api import OpenMaya as om, OpenMayaAnim as oma
 
-__all__ = [
+__all__: List[str] = [
     'CmdoObject',
     'CmdoList',
     'CmdoNumber'

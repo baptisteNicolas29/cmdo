@@ -6,7 +6,7 @@ from maya.api import OpenMaya as om
 from . import history, hierarchy, graph
 
 
-__all__ = [
+__all__: List[str] = [
     'skinAs',
     'resetSkin',
     'getJointsNotInSkinHierarchy',

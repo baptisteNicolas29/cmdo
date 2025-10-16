@@ -7,7 +7,7 @@ from . import graph
 from ..core.abstract import nodeLib, dagLib
 
 
-__all__ = [
+__all__: List[str] = [
     'getAllChildren',
     'getDirectChildren',
     'getRootParent',

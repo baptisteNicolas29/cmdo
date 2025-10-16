@@ -1,8 +1,10 @@
+from typing import List
+
 from ..core.graphLib import Graph
 
 
 # * import list
-__all__ = [
+__all__: List[str] = [
     'lockTransforms',
     'hideTransforms',
     'lockAndHideTransforms'

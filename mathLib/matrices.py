@@ -6,7 +6,7 @@ from typing import List, Union
 from maya.api import OpenMaya as om
 
 
-__all__ = [
+__all__: List[str] = [
     'identityMatrix4',
     'isSameLengthMatrix',
     'isIdentityMatrix4',

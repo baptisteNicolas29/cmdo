@@ -4,7 +4,7 @@ from maya import cmds as mc
 from maya.api import OpenMaya as om
 
 # * import list
-__all__ = [
+__all__: List[str] = [
     'ROOT_NAMESPACE',
     'BASE_NAMESPACES',
     'namespaceExists',

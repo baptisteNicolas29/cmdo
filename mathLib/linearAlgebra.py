@@ -1,9 +1,9 @@
-from typing import Tuple
+from typing import Tuple, List
 
 import math
 
 
-__all__ = [
+__all__: List[str] = [
     'distance_between',
 ]
 

@@ -6,10 +6,13 @@ import inspect
 import importlib
 import contextlib
 
-# cmds functions are added to the cmdo namespace to handle cmdo objects in & out
-# mel is imported to be accessible through the cmdo namespace like: cmdo.mel
-# OpenMaya, OpenMayaAnim and OpenMayaUI are imported to be accessible
-#  through the cmdo namespace as om, oma and omui
+# - cmds functions are added to the cmdo namespace
+#    to handle cmdo objects in & out
+# - mel is imported to be accessible through the cmdo namespace
+#    like: cmdo.mel
+# - OpenMaya, OpenMayaAnim and OpenMayaUI are imported to be accessible
+#    through the cmdo namespace as om, oma and omui
+#    like: cmdo.om, cmdo.oma, cmdo.omui
 from maya import cmds, mel
 from maya.api import (
     OpenMaya as om,
@@ -19,12 +22,15 @@ from maya.api import (
 
 
 __all__: List[str] = [
-    'bigReload',
     'mathLib',
     'core',
     'nodes',
     'api',
-    'getCmdoNodeDict'
+    'getCmdoNodeDict',
+    'bigReload',
+    'getDebugMode',
+    'setDebugMode',
+    'debugContext'
 ]
 
 
@@ -38,12 +44,13 @@ __all__: List[str] = [
 # current package name
 __PACKAGE_NAME: str = __name__
 
-# True/False, print cmds function name/input/output/result
+# True/False, print maya.cmds function's name/input/output/result
 __CMDS_DEBUG_PRINT: bool = False
 
 
 # TODO: try to add reloading dependencies.
-#  bigReload is a debugging function
+#  bigReload is a debugging function and
+#  should not be used in production
 def bigReload(moduleToReload: str = __PACKAGE_NAME) -> None:
     """
     Reload the given package from name and all its children modules
@@ -54,7 +61,8 @@ def bigReload(moduleToReload: str = __PACKAGE_NAME) -> None:
     """
 
     cmds.warning(
-        'bigReload is a debugging function and should not be used in production'
+        'cmdo.bigReload is a debugging function and '
+        'should not be used in production'
     )
     toReload = []
     for name, module in sys.modules.items():
@@ -72,9 +80,9 @@ def bigReload(moduleToReload: str = __PACKAGE_NAME) -> None:
 
 # Import modules to package root for easier access
 #
-# !!!!!!!!!! WARNING !!!!!!!!!!:
+# !!!!!!!!!! WARNING !!!!!!!!!!
 #     Order of import is important to avoid circular imports
-#     or partial import errors
+#     or partial import errors, until we get lazy imports
 
 from . import mathLib
 from . import core
@@ -129,6 +137,11 @@ def getDebugMode() -> bool:
 
     """
 
+    cmds.warning(
+        'cmdo.getDebugMode is a debugging function and '
+        f'should not be used in production'
+    )
+
     global __CMDS_DEBUG_PRINT
 
     return __CMDS_DEBUG_PRINT
@@ -146,7 +159,7 @@ def setDebugMode(state: bool = False) -> None:
     """
 
     cmds.warning(
-        'setDebugMode is a debugging function and '
+        'cmdo.setDebugMode is a debugging function and '
         f'should not be used in production: {state = }'
     )
 
@@ -168,7 +181,7 @@ def debugContext(state: bool = False) -> Generator:
     """
 
     cmds.warning(
-        'debugContext is a debugging function and '
+        'cmdo.debugContext is a debugging function and '
         f'should not be used in production: {state = }'
     )
 
@@ -208,6 +221,9 @@ def __addMayaCmdsToCmdoNamespace() -> None:
     def _isNodeSubclass(item: Any) -> bool:
         return issubclass(type(item), core.abstract.nodeLib.Node)
 
+    def _isPlugSubclass(item: Any) -> bool:
+        return issubclass(type(item), core.plugsLib.Plug)
+
     def _isGraphSubclass(item: Any) -> bool:
         return issubclass(type(item), core.graphLib.Graph)
 
@@ -217,6 +233,9 @@ def __addMayaCmdsToCmdoNamespace() -> None:
         for i, arg in enumerate(argsList):
             if _isNodeSubclass(arg):
                 argsList[i] = arg.name
+
+            elif _isPlugSubclass(arg):
+                argsList[i] = arg.name()
 
             elif _isGraphSubclass(arg):
                 argsList[i] = arg.getSelectionStrings()
@@ -236,12 +255,11 @@ def __addMayaCmdsToCmdoNamespace() -> None:
         Returns:
 
         """
+        __debugPrint(f'[_convertOutputArguments] - Raw {result = }')
         if isinstance(result, str) and mc.objExists(result):
             return ls(result)[0]
 
-        elif isinstance(result, (list, tuple, set)) and all(
-                mc.objExists(res) for res in result):
-
+        elif isinstance(result, (list, tuple, set)) and all(mc.objExists(res) for res in result):
             return ls(*result)
 
         return result
