@@ -46,6 +46,7 @@ __PACKAGE_NAME: str = __name__
 
 # True/False, print maya.cmds function's name/input/output/result
 __CMDS_DEBUG_PRINT: bool = False
+__CMDS_DEBUG_MAX_PRINT: int = 1000
 
 
 # TODO: try to add reloading dependencies.
@@ -139,7 +140,7 @@ def getDebugMode() -> bool:
 
     cmds.warning(
         'cmdo.getDebugMode is a debugging function and '
-        f'should not be used in production'
+        'should not be used in production'
     )
 
     global __CMDS_DEBUG_PRINT
@@ -147,7 +148,7 @@ def getDebugMode() -> bool:
     return __CMDS_DEBUG_PRINT
 
 
-def setDebugMode(state: bool = False) -> None:
+def setDebugMode(state: bool = False, maxCharCount: int = __CMDS_DEBUG_MAX_PRINT) -> None:
     """
     Set the debug mode on/off
 
@@ -164,12 +165,17 @@ def setDebugMode(state: bool = False) -> None:
     )
 
     global __CMDS_DEBUG_PRINT
+    global __CMDS_DEBUG_MAX_PRINT
 
     __CMDS_DEBUG_PRINT = state
+    __CMDS_DEBUG_MAX_PRINT = maxCharCount
+
+    cmds.warning(f'{__CMDS_DEBUG_PRINT = }')
+    cmds.warning(f'{__CMDS_DEBUG_MAX_PRINT = }')
 
 
 @contextlib.contextmanager
-def debugContext(state: bool = False) -> Generator:
+def debugContext(state: bool = False, maxCharCount: int = __CMDS_DEBUG_MAX_PRINT) -> Generator:
     """
     Set the debug mode on/off
 
@@ -186,13 +192,20 @@ def debugContext(state: bool = False) -> Generator:
     )
 
     global __CMDS_DEBUG_PRINT
+    global __CMDS_DEBUG_MAX_PRINT
 
     tempDebugValue = __CMDS_DEBUG_PRINT
+    tempDebugMaxCount = __CMDS_DEBUG_MAX_PRINT
+
     __CMDS_DEBUG_PRINT = state
+    __CMDS_DEBUG_MAX_PRINT = maxCharCount
+    cmds.warning(f'{__CMDS_DEBUG_PRINT = }')
+    cmds.warning(f'{__CMDS_DEBUG_MAX_PRINT = }')
 
     yield
 
     __CMDS_DEBUG_PRINT = tempDebugValue
+    __CMDS_DEBUG_MAX_PRINT = tempDebugMaxCount
 
 
 def __debugPrint(message: str) -> None:
@@ -200,11 +213,13 @@ def __debugPrint(message: str) -> None:
     Print the given message if the debug mode is True
 
     :param message: str, the message to print
+    :param maxCharCount: int, the maximum number of characters to print
 
     """
     global __CMDS_DEBUG_PRINT
 
-    if __CMDS_DEBUG_PRINT:
+    if __CMDS_DEBUG_PRINT and __CMDS_DEBUG_MAX_PRINT != -1 and len(message) > __CMDS_DEBUG_MAX_PRINT:
+        message = f'{message[:__CMDS_DEBUG_MAX_PRINT]}....'
         print(message)
 
 
@@ -255,7 +270,6 @@ def __addMayaCmdsToCmdoNamespace() -> None:
         Returns:
 
         """
-        __debugPrint(f'[_convertOutputArguments] - Raw {result = }')
         if isinstance(result, str) and mc.objExists(result):
             return ls(result)[0]
 

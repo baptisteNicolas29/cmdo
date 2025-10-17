@@ -34,11 +34,14 @@ class DAGNode(DGNode):
         This corresponds mainly to nodes visible in the outliner such as
         transforms, geometries, lights, cameras ect
 
+        MFnDagNode.dagPath() method, does not work
+         because we initialize our MFnDagNode with an MObject
+
         Returns:
             Optional[MDagPath]: the node s MDagPath
         """
 
-        return om.MGlobal.getSelectionListByName(self.name).getDagPath(0)
+        return self.mfnDagNode.getAllPaths()[0]
 
     @property
     def isDagPathValid(self) -> bool:
@@ -201,9 +204,13 @@ class DAGNode(DGNode):
         """
         items = []
         for idx in range(self.mfnDagNode.parentCount()):
-            parent_obj = self.mfnDagNode.parent(idx)
-            parent_name = om.MFnDagNode(parent_obj).partialPathName()
-            items.append(NodeRegistry().get(parent_name, DAGNode)(parent_obj))
+            parentObj = self.mfnDagNode.parent(idx)
+            parentName = om.MFnDagNode(parentObj).partialPathName()
+
+            if parentObj.apiType() == om.MFn.kWorld:
+                return []
+
+            items.append(NodeRegistry().get(parentName, DAGNode)(parentObj))
 
         return items
 
@@ -229,13 +236,24 @@ class DAGNode(DGNode):
 
         om.MDagModifier().reparentNode(self, parent).doIt()
 
-        # if (
-        #     self.is_shape
-        #     and not self.is_orig
-        #     and self.shape_orig is not None
-        # ):
-        #     self.shape_orig.parent = parent
+    @property
+    def dagRoot(self) -> 'DAGNode':
 
+        """
+        Get the root parent node of the current node or self if it is the root
+
+        Returns:
+             DAGNode: The root parent of the current node
+        """
+
+        parentNodePath = self.dagPath.pop(self.dagPath.length()-1)
+
+        if parentNodePath == self.dagPath:
+            return self
+
+        mObj = parentNodePath.node()
+        return NodeRegistry().get(mObj, DAGNode)(mObj)
+        
     @property
     def isTransform(self) -> bool:
 

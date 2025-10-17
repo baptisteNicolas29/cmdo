@@ -3,7 +3,6 @@ from . import convert
 from . import decorators
 from . import exceptions
 from . import singletonMetaclass
-from . import exportLib
 from . import fileInfoLib
 from . import fileLib
 from . import plugsLib

@@ -3,7 +3,7 @@ from typing import Any, Union, List, Type
 from maya import cmds as mc
 from maya.api import OpenMaya as om
 
-from . import plugsLib
+from . import plugsLib, cmdoTyping as cmdoT
 
 from .abstract import nodeLib
 from .abstract import dgLib
@@ -361,7 +361,7 @@ class Graph(om.MSelectionList):
 
         return cls.__createList(result)
 
-    def pop(self, value) -> om.MObject:
+    def pop(self, value: cmdoT.CmdoObject) -> om.MObject:
         itemToReturn = self[value]
         self.remove(value)
 
