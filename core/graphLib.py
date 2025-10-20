@@ -197,9 +197,9 @@ class Graph(om.MSelectionList):
         return cls.__createList(result)
 
     @classmethod
-    def getDagRoots(cls, nodes, safe=True) -> 'Graph':
+    def getHighestNodesInList(cls, nodes, safe=True) -> 'Graph':
         """
-        This method get dag root from given nodes
+        This method get hightest nodes in given nodes
 
         Args:
             nodes: nodes you want dag roots on
@@ -243,7 +243,7 @@ class Graph(om.MSelectionList):
         return roots
 
     @classmethod
-    def getChildren(cls, node, graph) -> Union['Graph', None]:
+    def getChildren(cls, node, graph) -> 'Graph':
         """
         Get all children of node
 

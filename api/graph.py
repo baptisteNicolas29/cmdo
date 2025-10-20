@@ -4,9 +4,12 @@ from maya import cmds
 from maya.api import OpenMaya as om
 
 from ..core.graphLib import Graph
+from ..nodes.dag.containerLib import Container
+from ..core.cmdoTyping import CmdoList
 
 
 __all__: List[str] = [
+    'Graph',
     'ls',
     'listRelatives',
     'listHistory',
@@ -15,7 +18,8 @@ __all__: List[str] = [
     'delete',
     'emptyGraph',
     'select',
-    'duplicate'
+    'duplicate',
+    'duplicateWithInternalConnections',
 ]
 
 
@@ -123,3 +127,38 @@ def duplicate(*args, **kwargs) -> Graph:
     """
 
     return Graph.duplicate(*args, **kwargs)
+
+
+def duplicateWithInternalConnections(
+        graph: CmdoList,
+        inputConnections: bool = False
+        ) -> Graph:
+    """
+    This function duplicate given nodes,
+    inside connections and setted attributes
+
+    :param graph: List[str] node compose the graph to be duplicated
+    :param inputConnections: bool allow the graph to keep input connections
+    :return: List[str] of the new nodes created
+    """
+
+    if len(graph) == 0:
+        return
+    graph = Graph.ls(graph)
+    sourceContainer = Container.containerize(graph)
+    duplicatedContainer = Container(
+            cmds.duplicate(
+                str(sourceContainer),
+                inputConnections=inputConnections
+            )[0]
+        )
+
+    toLock = sourceContainer.nodes + duplicatedContainer.nodes
+    toReturn = duplicatedContainer.nodes
+
+    cmds.lockNode(toLock, lock=True)
+    cmds.container(str(sourceContainer), removeContainer=True, edit=True)
+    cmds.container(str(duplicatedContainer), removeContainer=True, edit=True)
+    cmds.lockNode(toLock, lock=False)
+
+    return toReturn
