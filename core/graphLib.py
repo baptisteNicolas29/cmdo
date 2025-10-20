@@ -385,7 +385,7 @@ class Graph(om.MSelectionList):
         return self[value]
 
     def __getitem__(self, value):
-
+        # TODO: add reverse count (eg: graph[-1])
         # Implement slicing in Graph
         if isinstance(value, slice):
             newGraph = self.__class__()

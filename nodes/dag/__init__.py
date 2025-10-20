@@ -6,3 +6,4 @@ from . import surfaceLib
 from . import containerLib
 from . import cameraLib
 from . import mayaUsdProxyShape
+from . import ikHandleLib

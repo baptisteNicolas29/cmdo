@@ -492,6 +492,18 @@ class DAGNode(DGNode):
         return self['parentMatrix'].value
 
     @property
+    def offsetParentMatrix(self) -> om.MMatrix:
+
+        """
+        Get the offset parent matrix of the current node
+
+        Returns:
+            om.MMatrix: the offset parent matrix
+        """
+
+        return self['offsetParentMatrix'].value
+
+    @property
     def visibilityPlug(self) -> Plug:
 
         """
