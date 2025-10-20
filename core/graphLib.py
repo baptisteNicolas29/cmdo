@@ -394,6 +394,9 @@ class Graph(om.MSelectionList):
 
             return newGraph
 
+        # check negative indices
+        value = value if value >= 0 else len(self) + value
+
         # check for plugs
         mItSel = om.MItSelectionList(self)
         for i in range(value + 1):
