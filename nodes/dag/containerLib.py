@@ -41,6 +41,21 @@ class Container(dgLib.DGNode):
     def __str__(self) -> str:
         return self.name
 
+    def __getitem__(self, value) -> Plug:
+        """
+        Convenient implementations to retrieve a plug from the current node
+
+        Returns:
+            Plug: the wanted plug
+        """
+
+        plugs, names = self.mfnContainer.getPublishedPlugs()
+        for plug, name in zip(plugs, names):
+            if value == name:
+                return Plug(plug)
+
+        return Plug(self.dependencyNode.findPlug(value, True))
+
     @property
     def mfnContainer(self):
 

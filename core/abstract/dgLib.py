@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from maya.api import OpenMaya as om
 
@@ -7,7 +7,7 @@ from . import nodeLib
 
 class DGNode(nodeLib.Node):
 
-    def __init__(self, name: Optional[str] = None) -> None:
+    def __init__(self, name: Union[str, om.MObject] = None) -> None:
 
         """
         Initialize an instance of DGNode

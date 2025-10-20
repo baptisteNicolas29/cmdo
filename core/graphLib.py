@@ -3,7 +3,8 @@ from typing import Any, Union, List, Type
 from maya import cmds
 from maya.api import OpenMaya as om
 
-from . import plugsLib, cmdoTyping as cmdoT
+from . import plugsLib
+from .cmdoTyping import CmdoObject
 
 from .abstract import nodeLib
 from .abstract import dgLib
@@ -108,7 +109,7 @@ class Graph(om.MSelectionList):
         result = cmds.ls(*objects, long=True, **kwargs) or []
         return cls.__createList(result)
 
-    def createNode(self, typ: str, name=None, parent=None, **kwargs) -> om.MObject:
+    def createNode(self, typ: str, name: str = None, parent: CmdoObject = None, **kwargs) -> om.MObject:
         """
         This function allow node creation from Graph
         created node will be added to graph
@@ -361,7 +362,7 @@ class Graph(om.MSelectionList):
 
         return cls.__createList(result)
 
-    def pop(self, value: cmdoT.CmdoObject) -> om.MObject:
+    def pop(self, value: CmdoObject) -> om.MObject:
         itemToReturn = self[value]
         self.remove(value)
 

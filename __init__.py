@@ -270,10 +270,10 @@ def __addMayaCmdsToCmdoNamespace() -> None:
         Returns:
 
         """
-        if isinstance(result, str) and mc.objExists(result):
+        if isinstance(result, str) and cmds.objExists(result):
             return ls(result)[0]
 
-        elif isinstance(result, (list, tuple, set)) and all(mc.objExists(res) for res in result):
+        elif isinstance(result, (list, tuple, set)) and all(cmds.objExists(res) for res in result):
             return ls(*result)
 
         return result

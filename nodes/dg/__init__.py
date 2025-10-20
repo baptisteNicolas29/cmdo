@@ -2,6 +2,8 @@ from .absoluteLib import *
 from .addDoubleLinearLib import *
 from .aimMatrixLib import *
 from .angleBetweenLib import *
+from .animCurveLib import *
+from .animLayerLib import *
 from .axisAngleToQuatLib import *
 from .blendMatrixLib import *
 from .choiceLib import *
@@ -20,13 +22,13 @@ from .multDoubleLinearLib import *
 from .multiplyDivideLib import *
 from .multMatrixLib import *
 from .normalizeLib import *
+from .objectSetLib import *
 from .pickMatrixLib import *
 from .plusMinusAverageLib import *
 from .pointMatrixMultLib import *
 from .quatToEulerLib import *
 from .referenceLib import *
 from .remapValueLib import *
-from .objectSetLib import *
 from .setRangeLib import *
 from .sinLib import *
 from .subtractLib import *

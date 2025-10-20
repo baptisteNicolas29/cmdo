@@ -1,6 +1,6 @@
 from typing import Optional, Union, List
 
-from maya import cmds
+from maya import cmds, mel
 from maya.api import OpenMaya as om, OpenMayaAnim as oma
 
 from ...core.nodeRegistry import NodeRegistry
@@ -313,10 +313,41 @@ class IkSolver(DGNode):
 
     @property
     def solverType(self):
-        return NotImplementedError(
-            f'{self.__class__.__name__}.solverType is not implemented'
-        )
+        return cmds.nodeType(self.name)
+
+
+class IkSCSolver(IkSolver):
+
+    _NODE_TYPE = "ikSCsolver"
+    _API_TYPE = om.MFn.kIkSolver
+
+
+class IkRPSolver(IkSolver):
+
+    _NODE_TYPE = "ikRPsolver"
+    _API_TYPE = om.MFn.kIkSolver
+
+
+class IkSplineSolver(IkSolver):
+
+    _NODE_TYPE = "ikSplineSolver"
+    _API_TYPE = om.MFn.kIkSolver
+
+
+class IkSpringSolver(IkSolver):
+
+    _NODE_TYPE = "ikSpringSolver"
+    _API_TYPE = om.MFn.kIkSolver
+
+    def __init__(self, name: Union[str, om.MObject] = None):
+        super().__init__(name)
+
+        mel.eval('ikSpringSolver')
 
 
 NodeRegistry()[IkHandle.nodeType()] = IkHandle
 NodeRegistry()[IkSolver.nodeType()] = IkSolver
+NodeRegistry()[IkSCSolver.nodeType()] = IkSCSolver
+NodeRegistry()[IkRPSolver.nodeType()] = IkRPSolver
+NodeRegistry()[IkSplineSolver.nodeType()] = IkSplineSolver
+NodeRegistry()[IkSpringSolver.nodeType()] = IkSpringSolver

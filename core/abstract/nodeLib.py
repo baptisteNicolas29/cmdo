@@ -3,6 +3,8 @@ from typing import List, Optional, Union, Any, Tuple, Dict
 from maya import cmds
 from maya.api import OpenMaya as om
 
+from ..cmdoTyping import CmdoObject
+from ..exceptions import CmdoException
 from ..plugsLib import Plug, PlugArray
 
 
@@ -51,23 +53,33 @@ class Node(om.MObject):
         return do_not_print_types, do_not_print_names
 
     @classmethod
-    def create(cls, name: str = None) -> om.MObject:
+    def create(cls, name: str = None, parent: CmdoObject = None) -> om.MObject:
 
         """
         Create a new instance of this class
 
         Args:
             name: str, an optional name for the new node
+            parent: CmdoObject, an optional parent for the new node
 
         Returns:
             om.MObject: the created object (subclass of om.MObject)
         """
 
-        obj = om.MFnDependencyNode().create(cls.nodeType(), name)
+        try:
+            if parent:
+                obj = om.MFnDagNode().create(cls.nodeType(), name=name, parent=parent)
+            else:
+                obj = om.MFnDependencyNode().create(cls.nodeType(), name)
+
+        except RuntimeError as re:
+            raise CmdoException(
+                f'Could not create node: Node(type={cls.nodeType()}, {name=}, {parent=})'
+            ) from re
 
         return cls(obj)
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
+    def __init__(self, name: CmdoObject = None) -> None:
 
         """
         Initialize an instance of Node
@@ -132,13 +144,6 @@ class Node(om.MObject):
         Returns:
             Plug: the wanted plug
         """
-        if self.hasFn(om.MFn.kContainer):
-            container = om.MFnContainerNode(self)
-            plugs, names = container.getPublishedPlugs()
-
-            for plug, name in zip(plugs, names):
-                if plug == name:
-                    return Plug(plug)
 
         return Plug(self.dependencyNode.findPlug(plug, True))
 
