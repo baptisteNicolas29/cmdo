@@ -3,7 +3,7 @@ from typing import List, Dict, Union, Set, Tuple
 import os
 import random
 
-from maya import cmds as mc
+from maya import cmds
 from ..core.graphLib import Graph
 from ..core.cmdoTyping import *
 
@@ -74,7 +74,7 @@ def getSceneMaterials() -> List:
     Returns:
         list of all the materials in the current scene
     """
-    return mc.ls(materials=True)
+    return cmds.ls(materials=True)
 
 
 def getShadersFromObjects(nodes: List[str] = None, **kwargs) -> Dict[str, List[str]]:
@@ -105,8 +105,8 @@ def getShadersFromObject(node: str = None, **kwargs) -> List[str]:
 
     """
 
-    return mc.ls(
-        mc.hyperShade(geometries=node, listMaterialNodes=True),
+    return cmds.ls(
+        cmds.hyperShade(geometries=node, listMaterialNodes=True),
         **kwargs
     )
 
@@ -140,7 +140,7 @@ def getObjectsFromShader(material: str = None) -> List[str]:
 
     """
 
-    return mc.hyperShade(material, listGeometries=True)
+    return cmds.hyperShade(material, listGeometries=True)
 
 
 def getBoundingBoxTiles(bb):
@@ -191,19 +191,19 @@ def getUVUdimTiles(mesh, uv_set=None):
     if uv_set is not None:
         kwargs["uvSetName"] = uv_set
 
-    # bb = mc.polyEvaluate(mesh, boundingBox2d=True, **kwargs)
+    # bb = cmds.polyEvaluate(mesh, boundingBox2d=True, **kwargs)
     # tiles = getBoundingBoxTiles(bb)
 
     # Get the bounding box per UV shell
-    uv_shells = mc.polyEvaluate(mesh, uvShell=True, **kwargs)
+    uv_shells = cmds.polyEvaluate(mesh, uvShell=True, **kwargs)
 
     uv_data = {}
     for i in range(uv_shells):
         key = str(i)
         uv_data[key] = {}
 
-        shell_uvs = mc.polyEvaluate(mesh, uvsInShell=i, **kwargs)
-        shell_bb = mc.polyEvaluate(
+        shell_uvs = cmds.polyEvaluate(mesh, uvsInShell=i, **kwargs)
+        shell_bb = cmds.polyEvaluate(
             shell_uvs,
             boundingBoxComponent2d=True,
             **kwargs
@@ -243,36 +243,36 @@ def assignMaterial(faces, material_name, mat_type='lambert'):
     Returns:
 
     """
-    material = mc.ls(material_name, type=mat_type)
+    material = cmds.ls(material_name, type=mat_type)
     shading_engine = None
     if not material:
-        material_name = mc.shadingNode(
+        material_name = cmds.shadingNode(
             mat_type, name=material_name, asShader=True
         )
-        shading_engine = mc.sets(
+        shading_engine = cmds.sets(
             name=f'{material_name}SG',
             empty=True,
             renderable=True,
             noSurfaceShader=True
         )
-        mc.connectAttr(
+        cmds.connectAttr(
             f'{material_name}.outColor',
             f'{shading_engine}.surfaceShader'
         )
 
     else:
-        connected = mc.connectionInfo(
+        connected = cmds.connectionInfo(
             f'{material[0]}.outColor',
             destinationFromSource=True
         )
         for connection in connected:
 
-            if mc.objectType(connection) == 'shadingEngine':
+            if cmds.objectType(connection) == 'shadingEngine':
                 shading_engine = connection.split('.')[0]
                 break
 
     if shading_engine is not None:
-        mc.sets(faces, edit=True, forceElement=shading_engine)
+        cmds.sets(faces, edit=True, forceElement=shading_engine)
 
 
 def assignMaterialPerUdim(geometry_objs, exceptions=None):
@@ -296,17 +296,17 @@ def assignMaterialPerUdim(geometry_objs, exceptions=None):
         if any(exception in mesh for exception in (exceptions or [])):
             continue
 
-        mc.hyperShade(assign='lambert1', geometries=f'{mesh}.f[*]')
+        cmds.hyperShade(assign='lambert1', geometries=f'{mesh}.f[*]')
 
         uv_data = getUVUdimTiles(mesh)
         if not uv_data:
-            mc.warning(f'{mesh = } has no UV data, skipping ...')
+            cmds.warning(f'{mesh = } has no UV data, skipping ...')
 
         for shell_id, data in uv_data.items():
             if data['uvs'] is None or data["tile"] is None:
                 continue
 
-            faces = mc.polyListComponentConversion(data['uvs'], toFace=True)
+            faces = cmds.polyListComponentConversion(data['uvs'], toFace=True)
 
             udim_name = uvToUdim(data["tile"])
             material_name = f'UDIM_{udim_name}'
@@ -354,20 +354,20 @@ def assign_diffuse_to_material(material_list, diffuse_path):
     diffuse_name = os.path.basename(diffuse_path).split('.')[0]
     for material in material_list:
 
-        color_file = mc.shadingNode(
+        color_file = cmds.shadingNode(
             'file',
             asTexture=True,
             isColorManaged=True,
             name=f'{diffuse_name}_color'
         )
 
-        mc.setAttr(
+        cmds.setAttr(
             f'{color_file}.fileTextureName',
             str(diffuse_path),
             type='string'
         )
 
-        place_tex = mc.shadingNode(
+        place_tex = cmds.shadingNode(
             'place2dTexture',
             asUtility=True,
             name=f'{diffuse_name}_place2D'
@@ -375,12 +375,12 @@ def assign_diffuse_to_material(material_list, diffuse_path):
 
         # Reconnect attribute between the place2dtexture and the color file
         for source, destination in connect_dict.items():
-            mc.connectAttr(
+            cmds.connectAttr(
                 f'{place_tex}.{source}',
                 f'{color_file}.{destination}'
             )
 
-        mc.connectAttr(
+        cmds.connectAttr(
             f'{color_file}.outColor',
             f'{material}.color', force=True
         )
@@ -415,7 +415,7 @@ def addMaterialWithColor(
         object_materials = materials.get(obj)
 
         for mat in reversed(object_materials):
-            if mc.nodeType(mat) == 'GLSLShader':
+            if cmds.nodeType(mat) == 'GLSLShader':
                 object_materials.remove(mat)
 
         if not object_materials or MAYA_DEFAULT_MAT in object_materials:
@@ -428,7 +428,7 @@ def addMaterialWithColor(
 
     for mat in set(material_set):
 
-        match mc.nodeType(mat):
+        match cmds.nodeType(mat):
             case 'lambert':
                 color_attr = 'color'
             case 'standardSurface':
@@ -438,5 +438,5 @@ def addMaterialWithColor(
             case _:
                 color_attr = 'color'
 
-        if not mc.connectionInfo(f'{mat}.{color_attr}', isDestination=True):
-            mc.setAttr(f'{mat}.{color_attr}', *color, type='double3')
+        if not cmds.connectionInfo(f'{mat}.{color_attr}', isDestination=True):
+            cmds.setAttr(f'{mat}.{color_attr}', *color, type='double3')

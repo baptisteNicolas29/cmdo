@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from maya import cmds as mc
+from maya import cmds
 
 from .singletonMetaclass import SingletonMeta
 
@@ -18,21 +18,21 @@ class MayaFileInfo(dict, metaclass=SingletonMeta):
 
     @property
     def raw_data(self) -> List:
-        return mc.fileInfo(query=True)
+        return cmds.fileInfo(query=True)
 
     def get(self, key: str, default=None):
 
-        return mc.fileInfo(key, query=True) or default
+        return cmds.fileInfo(key, query=True) or default
 
     def __getitem__(self, key: str):
 
-        return mc.fileInfo(key, query=True)
+        return cmds.fileInfo(key, query=True)
 
     def __setitem__(self, key: str, value: str):
         super().__setitem__(key, value)
         super().update({key: value})
 
-        mc.fileInfo(str(key), str(value))
+        cmds.fileInfo(str(key), str(value))
 
     def update(self, other: Dict, **kwargs):
 
@@ -40,11 +40,11 @@ class MayaFileInfo(dict, metaclass=SingletonMeta):
             raise TypeError(f'Need dict instance, got {type(other)}')
 
         for key, value in other.items():
-            mc.fileInfo(str(key), str(value))
+            cmds.fileInfo(str(key), str(value))
 
         self.clear()
 
-        raw_data = mc.fileInfo(query=True)
+        raw_data = cmds.fileInfo(query=True)
         for key, value in zip(raw_data[::2], raw_data[1::2]):
             self[key] = value
             super().__setitem__(key, value)

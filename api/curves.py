@@ -6,17 +6,19 @@ import maya.api.OpenMaya as om
 from . import graph
 from ..nodes.dag.curveLib import Curve
 from ..core.abstract import nodeLib, dagLib
+from ..core.exceptions import CmdoException
+from ..core.cmdoTyping import CmdoNumber
+
 
 __all__: List[str] = [
     'createCircle',
-    'createLine',
     'createBox',
     'createCross'
 ]
 
 
 # TODO: Move to more task oriented library (aka: rigging)
-def createCircle(name='nurbsCircle', radius: float = 1.0, **kwargs):
+def createCircle(name='nurbsCircle', radius: CmdoNumber = 1.0, **kwargs):
     """
     Create a basic circle
 
@@ -33,15 +35,28 @@ def createCircle(name='nurbsCircle', radius: float = 1.0, **kwargs):
     return graph.ls(transform)[0]
 
 
-def createBox(name='nurbsBox', size: float = 1.0, **kwargs):
+def createBox(name='nurbsBox', size: Union[CmdoNumber, List[CmdoNumber]] = 1.0, **kwargs):
     """
     Create a basic Box
 
     :param name: str, the name of the node to create
     :param size: float, change the default size of the box
+
     :return:
         Curve: the created object
     """
+    if isinstance(size, (int, float)) or len(size) == 1:
+        sizeX = sizeY = sizeZ = size
+
+    elif len(size) == 3:
+        sizeX, sizeY, sizeZ = size
+
+    else:
+        raise CmdoException(
+            f'[cmdo.api.curves.createBox]: size argument must be length 1 or 3,'
+            f' got: {len(size)} - {size}'
+        )
+
     curve_data = {
         "degree": 1,
         "form": 1,
@@ -53,23 +68,23 @@ def createBox(name='nurbsBox', size: float = 1.0, **kwargs):
             12.0, 13.0, 14.0, 15.0, 16.0
         ],
         "cvs": [
-            [-size, size, size, 1.0],
-            [-size, -size, size, 1.0],
-            [size, -size, size, 1.0],
-            [size, size, size, 1.0],
-            [-size, size, size, 1.0],
-            [-size, size, -size, 1.0],
-            [-size, -size, -size, 1.0],
-            [-size, -size, size, 1.0],
-            [size, -size, size, 1.0],
-            [size, -size, -size, 1.0],
-            [size, size, -size, 1.0],
-            [size, size, size, 1.0],
-            [-size, size, size, 1.0],
-            [-size, size, -size, 1.0],
-            [size, size, -size, 1.0],
-            [size, -size, -size, 1.0],
-            [-size, -size, -size, 1.0]
+            [-sizeX, sizeY, sizeZ, 1.0],
+            [-sizeX, -sizeY, sizeZ, 1.0],
+            [sizeX, -sizeY, sizeZ, 1.0],
+            [sizeX, sizeY, sizeZ, 1.0],
+            [-sizeX, sizeY, sizeZ, 1.0],
+            [-sizeX, sizeY, -sizeZ, 1.0],
+            [-sizeX, -sizeY, -sizeZ, 1.0],
+            [-sizeX, -sizeY, sizeZ, 1.0],
+            [sizeX, -sizeY, sizeZ, 1.0],
+            [sizeX, -sizeY, -sizeZ, 1.0],
+            [sizeX, sizeY, -sizeZ, 1.0],
+            [sizeX, sizeY, sizeZ, 1.0],
+            [-sizeX, sizeY, sizeZ, 1.0],
+            [-sizeX, sizeY, -sizeZ, 1.0],
+            [sizeX, sizeY, -sizeZ, 1.0],
+            [sizeX, -sizeY, -sizeZ, 1.0],
+            [-sizeX, -sizeY, -sizeZ, 1.0]
         ]
     }
 
@@ -96,7 +111,8 @@ def createBox(name='nurbsBox', size: float = 1.0, **kwargs):
     return curveParent
 
 
-def createCross(name='nurbsCross', size: float = 1.0, **kwargs):
+def createCross(name='nurbsCross', size: CmdoNumber = 1.0, **kwargs):
+
     """
     Create a basic Cross
 
@@ -105,6 +121,7 @@ def createCross(name='nurbsCross', size: float = 1.0, **kwargs):
     :return:
         Curve: the created object
     """
+
     curve_data = {
         "degree": 1,
         "form": 1,
@@ -138,7 +155,3 @@ def createCross(name='nurbsCross', size: float = 1.0, **kwargs):
     curveParent.name = name
 
     return curveParent
-
-
-def createLine(positions, **kwargs):
-    return NotImplementedError('Line function not implemented yet')

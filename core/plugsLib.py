@@ -2,7 +2,7 @@ from typing import Union, Any
 
 import math
 
-from maya import cmds as mc
+from maya import cmds
 from maya.api import OpenMaya as om
 
 
@@ -308,21 +308,18 @@ class Plug(om.MPlug):
         # search for matrices
         if apiType == om.MFn.kTypedAttribute:
             fn_typed = om.MFnTypedAttribute(self.attribute()).attrType()
-            # print(f'{fn_typed = } - {om.MFnData.kMatrix}')
             if fn_typed == om.MFnData.kMatrix:
-                matrix = mc.getAttr(self.name())
-                # print(f'{self.name()} - {len(matrix)} - {matrix = }')
+                matrix = cmds.getAttr(self.name())
                 return om.MMatrix(matrix)
 
         elif apiType == om.MFn.kMatrixAttribute:
-            # print(f'{apiType = } - {om.MFn.kMatrixAttribute}')
-            return om.MMatrix(mc.getAttr(self.name()))
+            return om.MMatrix(cmds.getAttr(self.name()))
 
         # search for vectors
         elif apiType in [om.MFn.kAttribute3Float, om.MFn.kAttribute3Double]:
-            return om.MVector(*mc.getAttr(self.name()))
+            return om.MVector(*cmds.getAttr(self.name()))
 
-        return mc.getAttr(self.name())
+        return cmds.getAttr(self.name())
 
     @value.setter
     def value(self, value: Any) -> None:
@@ -345,7 +342,7 @@ class Plug(om.MPlug):
             str: the type of attribute this plug represents
         """
 
-        return mc.getAttr(self.name(), type=True)
+        return cmds.getAttr(self.name(), type=True)
 
 
 # TODO: Update PlugArray properties and dunders

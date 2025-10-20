@@ -1,6 +1,6 @@
 from typing import List
 
-from maya import cmds as mc
+from maya import cmds
 from maya.api import OpenMaya as om
 
 # * import list
@@ -106,7 +106,7 @@ def removeNamespace(namespace: str, delete_content: bool = False) -> None:
 
     """
     if not om.MNamespace.namespaceExists(namespace):
-        mc.warning(
+        cmds.warning(
             f'Namespace does not exist : {namespace}'
             f'\n\tProvide absolute name to remove namespace'
         )
@@ -120,8 +120,8 @@ def removeNamespace(namespace: str, delete_content: bool = False) -> None:
                 continue
 
             obj_name = om.MFnDagNode(m_object).fullPathName()
-            if mc.objExists(obj_name):
-                mc.delete(obj_name)
+            if cmds.objExists(obj_name):
+                cmds.delete(obj_name)
 
     om.MNamespace.moveNamespace(namespace, ROOT_NAMESPACE(), force=True)
     om.MNamespace.removeNamespace(namespace, removeContents=False)

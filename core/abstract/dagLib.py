@@ -1,6 +1,6 @@
 from typing import Optional, List, Type, Union
 
-from maya import cmds as mc
+from maya import cmds
 from maya.api import OpenMaya as om
 
 from ..plugsLib import Plug

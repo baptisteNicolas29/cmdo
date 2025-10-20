@@ -1,6 +1,6 @@
 from typing import Optional, Union, List, Dict, Set, Type
 
-from maya import cmds as mc
+from maya import cmds
 from maya.api import OpenMaya as om, OpenMayaAnim as oma
 
 from ...core.abstract import dgLib

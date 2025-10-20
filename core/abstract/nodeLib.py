@@ -1,6 +1,6 @@
 from typing import List, Optional, Union, Any, Tuple, Dict
 
-from maya import cmds as mc
+from maya import cmds
 from maya.api import OpenMaya as om
 
 from ..plugsLib import Plug, PlugArray
@@ -337,7 +337,7 @@ class Node(om.MObject):
         Returns:
             str: the maya type of the current node
         """
-        return mc.nodeType(self.name)
+        return cmds.nodeType(self.name)
 
     @property
     def mayaObjectHandle(self) -> om.MObjectHandle:

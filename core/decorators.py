@@ -7,7 +7,7 @@ import traceback
 from pstats import SortKey
 from functools import wraps
 
-from maya import cmds as mc
+from maya import cmds
 
 
 # TODO: probably remove / rework all of this
@@ -38,7 +38,7 @@ def execute_in_maya_standalone(func: callable) -> callable:
         try:
             function_results = func(*args, **kwargs)
         except Exception:
-            mc.warning(
+            cmds.warning(
                 f"Exception found while running code on Maya Standalone : ")
             traceback.print_exc()
 
@@ -61,13 +61,13 @@ def undo_chunk(func: callable) -> callable:
     @wraps(func)
     def decor_func(*args, **kwargs) -> callable:
         function_results = None
-        mc.undoInfo(openChunk=True)
+        cmds.undoInfo(openChunk=True)
         try:
             function_results = func(*args, **kwargs)
         except Exception:
             traceback.print_exc()
         finally:
-            mc.undoInfo(closeChunk=True)
+            cmds.undoInfo(closeChunk=True)
 
         return function_results
 

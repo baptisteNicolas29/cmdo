@@ -1,6 +1,6 @@
 from typing import List, Union, Sequence, Optional, Type
 
-from maya import cmds as mc, mel
+from maya import cmds, mel
 from maya.api import OpenMaya as om
 
 from .abstract import dgLib, dagLib
@@ -807,23 +807,23 @@ def check_remove_mesh_instances(obj: str) -> Union[str, None]:
     Returns:
         the name of the shape of the object
     """
-    if not mc.objExists(obj):
-        mc.warning(f'Given obj does not exist : {obj}. Aborting....')
+    if not cmds.objExists(obj):
+        cmds.warning(f'Given obj does not exist : {obj}. Aborting....')
         return
 
-    mc.bakePartialHistory(obj, prePostDeformers=True)
+    cmds.bakePartialHistory(obj, prePostDeformers=True)
 
-    shapes = mc.listRelatives(obj, c=True, s=True, f=True)
+    shapes = cmds.listRelatives(obj, c=True, s=True, f=True)
     if not shapes:
-        mc.warning(f'Given obj has no shapes : {obj}. Aborting....')
+        cmds.warning(f'Given obj has no shapes : {obj}. Aborting....')
         return
 
-    if len(mc.listRelatives(shapes, ap=True)) > 1:
-        mc.select(obj)
+    if len(cmds.listRelatives(shapes, ap=True)) > 1:
+        cmds.select(obj)
         mel.eval('ConvertInstanceToObject()')
 
-    new_shape_name = mc.rename(
-        mc.listRelatives(obj, c=True, s=True, f=True)[0],
+    new_shape_name = cmds.rename(
+        cmds.listRelatives(obj, c=True, s=True, f=True)[0],
         f'{obj}Shape'
     )
 

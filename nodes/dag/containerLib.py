@@ -1,6 +1,6 @@
 from typing import Union, List, Dict, Optional, Type
 
-from maya import cmds as mc
+from maya import cmds
 from maya.api import OpenMaya as om
 
 from ...core.plugsLib import Plug
@@ -227,7 +227,7 @@ class Container(dgLib.DGNode):
         """
         
         node = Graph.ls(node)[0]
-        mc.container(self.name, addNode=node.name, edit=True)
+        cmds.container(self.name, addNode=node.name, edit=True)
 
 
 NodeRegistry()[Container.nodeType()] = Container

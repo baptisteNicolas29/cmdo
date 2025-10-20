@@ -1,7 +1,7 @@
 from typing import List, Any, Union
 
+from maya import cmds, mel
 from maya.api import OpenMaya as om
-from maya import cmds as mc, mel
 
 from ...core.abstract import dgLib, dagLib
 from ...core.nodeRegistry import NodeRegistry
@@ -20,7 +20,7 @@ class AnimLayer(dgLib.DGNode):
         The command looks like this (admitting we have 3 animation layers)
             -> animLayerMerge {"AnimLayer1","AnimLayer2","BaseAnimation"}
         """
-        animLayers = mc.ls(type='animLayer')
+        animLayers = cmds.ls(type='animLayer')
         if not animLayers:
             return
 
@@ -28,7 +28,7 @@ class AnimLayer(dgLib.DGNode):
         mel.eval('source "performAnimLayerMerge.mel"')
 
         melCmd = 'animLayerMerge {%s}' % ','.join(
-            [f'"{layer}"' for layer in mc.ls(type='animLayer')]
+            [f'"{layer}"' for layer in cmds.ls(type='animLayer')]
         )
         mel.eval(melCmd)
 

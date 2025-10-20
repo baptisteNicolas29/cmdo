@@ -1,6 +1,6 @@
 from typing import Optional, Union, List
 
-from maya import cmds as mc
+from maya import cmds
 from maya.api import OpenMaya as om, OpenMayaAnim as oma
 
 from ...core.nodeRegistry import NodeRegistry
@@ -105,6 +105,206 @@ class IkHandle(Transform):
     def dWorldUpMatrixEnd(self, value: Plug) -> None:
         self['dWorldUpMatrixEnd'] = value
 
+    @property
+    def dWorldUpVector(self) -> List[float]:
+
+        """
+        Get the dWorldUpVector value
+
+        Returns:
+            List[float]: the dWorldUpVector value
+        """
+
+        return [
+            self.dWorldUpVectorX,
+            self.dWorldUpVectorY,
+            self.dWorldUpVectorZ
+        ]
+
+    @dWorldUpVector.setter
+    def dWorldUpVector(self, value):
+
+        """
+        Set the dWorldUpVector value
+
+        Args:
+            value: List[float], the dWorldUpVector value
+        """
+
+        self['dWorldUpVector'] = value
+
+    @property
+    def dWorldUpVectorX(self) -> float:
+
+        """
+        Get the dWorldUpVectorX value
+
+        Returns:
+            List[float]: the dWorldUpVectorX value
+        """
+
+        return self['dWorldUpVectorX'].asFloat()
+
+    @dWorldUpVectorX.setter
+    def dWorldUpVectorX(self, value) -> None:
+
+        """
+        Set the dWorldUpVectorX value
+
+        Args:
+            value: List[float], the dWorldUpVectorX value
+        """
+
+        self['dWorldUpVectorX'] = value
+
+    @property
+    def dWorldUpVectorY(self) -> float:
+
+        """
+        Get the dWorldUpVectorY value
+
+        Returns:
+            List[float]: the dWorldUpVectorY value
+        """
+
+        return self['dWorldUpVectorY'].asFloat()
+
+    @dWorldUpVectorY.setter
+    def dWorldUpVectorY(self, value) -> None:
+
+        """
+        Set the dWorldUpVectorY value
+
+        Args:
+            value: List[float], the dWorldUpVectorY value
+        """
+
+        self['dWorldUpVectorY'] = value
+
+    @property
+    def dWorldUpVectorZ(self) -> float:
+
+        """
+        Get the dWorldUpVectorZ value
+
+        Returns:
+            List[float]: the dWorldUpVector value
+        """
+
+        return self['dWorldUpVectorZ'].asFloat()
+
+    @dWorldUpVectorZ.setter
+    def dWorldUpVectorZ(self, value) -> None:
+
+        """
+        Set the dWorldUpVectorZ value
+
+        Args:
+            value: List[float], the dWorldUpVectorZ value
+        """
+
+        self['dWorldUpVectorZ'] = value
+
+    @property
+    def dWorldUpVectorEnd(self) -> List[float]:
+
+        """
+        Get the dWorldUpVectorEnd value
+
+        Returns:
+            List[float]: the dWorldUpVectorEnd value
+        """
+
+        return [
+            self.dWorldUpVectorEndX,
+            self.dWorldUpVectorEndY,
+            self.dWorldUpVectorEndZ
+        ]
+
+    @dWorldUpVectorEnd.setter
+    def dWorldUpVectorEnd(self, value):
+
+        """
+        Set the dWorldUpVectorEnd value
+
+        Args:
+            value: List[float], the dWorldUpVectorEnd value
+        """
+
+        self['dWorldUpVectorEnd'] = value
+
+    @property
+    def dWorldUpVectorEndX(self) -> float:
+
+        """
+        Get the dWorldUpVectorEndX value
+
+        Returns:
+            List[float]: the dWorldUpVectorEndX value
+        """
+
+        return self['dWorldUpVectorEndX'].asFloat()
+
+    @dWorldUpVectorEndX.setter
+    def dWorldUpVectorEndX(self, value) -> None:
+
+        """
+        Set the dWorldUpVectorEndX value
+
+        Args:
+            value: List[float], the dWorldUpVectorEndX value
+        """
+
+        self['dWorldUpVectorEndX'] = value
+
+    @property
+    def dWorldUpVectorEndY(self) -> float:
+
+        """
+        Get the dWorldUpVectorEndY value
+
+        Returns:
+            List[float]: the dWorldUpVectorEndY value
+        """
+
+        return self['dWorldUpVectorEndY'].asFloat()
+
+    @dWorldUpVectorEndY.setter
+    def dWorldUpVectorEndY(self, value) -> None:
+
+        """
+        Set the dWorldUpVectorEndY value
+
+        Args:
+            value: List[float], the dWorldUpVectorEndY value
+        """
+
+        self['dWorldUpVectorEndY'] = value
+
+    @property
+    def dWorldUpVectorEndZ(self) -> float:
+
+        """
+        Get the dWorldUpVectorEndZ value
+
+        Returns:
+            List[float]: the dWorldUpVectorEnd value
+        """
+
+        return self['dWorldUpVectorEndZ'].asFloat()
+
+    @dWorldUpVectorEndZ.setter
+    def dWorldUpVectorEndZ(self, value) -> None:
+
+        """
+        Set the dWorldUpVectorEndZ value
+
+        Args:
+            value: List[float], the dWorldUpVectorEndZ value
+        """
+
+        self['dWorldUpVectorEndZ'] = value
+    
 
 class IkSolver(DGNode):
 

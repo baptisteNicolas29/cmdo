@@ -1,6 +1,6 @@
 from typing import List, Union
 
-from maya import cmds as mc
+from maya import cmds
 from maya.api import OpenMaya as om
 
 from . import graph
@@ -47,16 +47,16 @@ def getNodeHistoryByType(node: str, **kwargs) -> List[str]:
         a list of nodes corresponding to the demand
     """
 
-    past_history = set(mc.listHistory(
+    past_history = set(cmds.listHistory(
         node, allConnections=True, fastIteration=True
     ))
-    future_history = set(mc.listHistory(
+    future_history = set(cmds.listHistory(
         node, future=True, allConnections=True, fastIteration=True
     ))
 
     past_history.update(future_history)
 
-    return mc.ls(*list(past_history), **kwargs)
+    return cmds.ls(*list(past_history), **kwargs)
 
 
 # def get_deformers(target: str, deformer_type: list | str = None) -> list | None:
@@ -77,7 +77,7 @@ def getNodeHistoryByType(node: str, **kwargs) -> List[str]:
 #     :return: a list of deformers or None
 #     """
 #
-#     deformer_list = mc.findDeformers(target)
+#     deformer_list = cmds.findDeformers(target)
 #     if not deformer_list:
 #         return None
 #
@@ -86,7 +86,7 @@ def getNodeHistoryByType(node: str, **kwargs) -> List[str]:
 #
 #     wanted_deformer = [
 #         x for x in deformer_list
-#         if mc.nodeType(x) in deformer_type
+#         if cmds.nodeType(x) in deformer_type
 #     ]
 #
 #     if wanted_deformer:
@@ -94,12 +94,12 @@ def getNodeHistoryByType(node: str, **kwargs) -> List[str]:
 #
 #     for deform in deformer_list:
 #
-#         if mc.objExists(f'{deform}.deformerData'):
-#             deformer_handle = mc.listConnections(
+#         if cmds.objExists(f'{deform}.deformerData'):
+#             deformer_handle = cmds.listConnections(
 #                 f'{deform}.deformerData', s=True, sh=True
 #             )[0]
 #
-#             if deformer_type.capitalize() in mc.nodeType(deformer_handle):
+#             if deformer_type.capitalize() in cmds.nodeType(deformer_handle):
 #                 wanted_deformer.append(deformer_handle)
 #
 #     return wanted_deformer or None

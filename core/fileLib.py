@@ -9,7 +9,7 @@ from collections import namedtuple
 
 # from TatMayaLibrary import projectLib
 
-from maya import cmds as mc
+from maya import cmds
 
 
 # TODO: REFACTOR THE HELL OUT OF THIS MODULE

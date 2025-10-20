@@ -1,6 +1,6 @@
 from typing import Any, Union, List, Type
 
-from maya import cmds as mc
+from maya import cmds
 from maya.api import OpenMaya as om
 
 from . import plugsLib, cmdoTyping as cmdoT
@@ -92,10 +92,10 @@ class Graph(om.MSelectionList):
     @classmethod
     def ls(cls, *args, **kwargs) -> 'Graph':
         """
-        This function is a reimplementation of the mc.ls function
+        This function is a reimplementation of the cmds.ls function
 
         allow user to gather nodes from string list
-        args and kwargs work like mc.ls command
+        args and kwargs work like cmds.ls command
 
         """
 
@@ -105,7 +105,7 @@ class Graph(om.MSelectionList):
         if kwargs.get(key := 'long') or kwargs.get(key := 'l'):
             kwargs.pop(key)
 
-        result = mc.ls(*objects, long=True, **kwargs) or []
+        result = cmds.ls(*objects, long=True, **kwargs) or []
         return cls.__createList(result)
 
     def createNode(self, typ: str, name=None, parent=None, **kwargs) -> om.MObject:
@@ -151,9 +151,9 @@ class Graph(om.MSelectionList):
     @classmethod
     def listHistory(cls, *args, **kwargs) -> 'Graph':
         """
-        desc: this function is a reimplementation of the mc.listHistory function
+        desc: this function is a reimplementation of the cmds.listHistory function
         allow user to gather nodes from string list
-        args and kwargs work like mc.listHistory command
+        args and kwargs work like cmds.listHistory command
         """
 
         objects = list(map(cls.__filterObjects, args))
@@ -161,15 +161,15 @@ class Graph(om.MSelectionList):
         if kwargs.get(key := 'fullNodeName') or kwargs.get(key := 'fnn'):
             kwargs.pop(key)
 
-        result = mc.listHistory(*objects, fullNodeName=True, **kwargs) or []
+        result = cmds.listHistory(*objects, fullNodeName=True, **kwargs) or []
         return cls.__createList(result)
 
     @classmethod
     def listRelatives(cls, *args, **kwargs) -> 'Graph':
         """
-        desc: this function is a reimplementation of the mc.listHistory function
+        desc: this function is a reimplementation of the cmds.listHistory function
         allow user to gather nodes from string list
-        args and kwargs work like mc.listHistory command
+        args and kwargs work like cmds.listHistory command
         """
 
         objects = list(map(cls.__filterObjects, args))
@@ -178,7 +178,7 @@ class Graph(om.MSelectionList):
         if kwargs.get(key := 'fullPath') or kwargs.get(key := 'f'):
             kwargs.pop(key)
 
-        result = mc.listRelatives(*objects, fullPath=True, **kwargs) or []
+        result = cmds.listRelatives(*objects, fullPath=True, **kwargs) or []
         return cls.__createList(result)
 
     @classmethod
@@ -193,7 +193,7 @@ class Graph(om.MSelectionList):
         if kwargs.get(key := 'fullNodeName') or kwargs.get(key := 'fnn'):
             kwargs.pop(key)
 
-        result = mc.listConnections(*objects, fullNodeName=True, **kwargs) or []
+        result = cmds.listConnections(*objects, fullNodeName=True, **kwargs) or []
         return cls.__createList(result)
 
     @classmethod
@@ -343,7 +343,7 @@ class Graph(om.MSelectionList):
         """
         objects = list(map(cls.__filterObjects, args))
 
-        mc.select(*objects, **kwargs)
+        cmds.select(*objects, **kwargs)
 
     @classmethod
     def duplicate(cls, *args, **kwargs):
@@ -357,7 +357,7 @@ class Graph(om.MSelectionList):
         if kwargs.get(key := 'fullPath') or kwargs.get(key := 'f'):
             kwargs.pop(key)
 
-        result = mc.duplicate(*objects, fullPath=True, **kwargs)
+        result = cmds.duplicate(*objects, fullPath=True, **kwargs)
 
         return cls.__createList(result)
 
@@ -504,7 +504,7 @@ class Graph(om.MSelectionList):
 
         objects = list(map(self.__filterObjects, other))
 
-        result = mc.ls(*objects) or []
+        result = cmds.ls(*objects) or []
         for item in result:
             self.add(item)
 

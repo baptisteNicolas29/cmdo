@@ -1,7 +1,7 @@
 from typing import List, Any, Union
 
+from maya import cmds
 from maya.api import OpenMaya as om
-from maya import cmds as mc
 
 from ...core.abstract import dgLib
 from ...core.nodeRegistry import NodeRegistry
@@ -66,7 +66,7 @@ class ObjectSet(dgLib.DGNode):
         """
 
         otherSet = self.__getObjectName(other)
-        return mc.sets(otherSet, union=self.name)
+        return cmds.sets(otherSet, union=self.name)
 
     def __sub__(self, other: Union[str, om.MObject]) -> List[str]:
         """
@@ -81,7 +81,7 @@ class ObjectSet(dgLib.DGNode):
         """
 
         otherSet = self.__getObjectName(other)
-        return mc.sets(otherSet, subtract=self.name)
+        return cmds.sets(otherSet, subtract=self.name)
 
     def __isub__(self, value: Union[List, str, om.MObject]):
 
@@ -108,7 +108,7 @@ class ObjectSet(dgLib.DGNode):
             int: the number of members
         """
 
-        return mc.sets(self.name, query=True, size=True)
+        return cmds.sets(self.name, query=True, size=True)
 
     @property
     def members(self) -> List[om.MObject]:
@@ -117,7 +117,7 @@ class ObjectSet(dgLib.DGNode):
 
         """
 
-        nodeNames = mc.sets(self.name, query=True) or []
+        nodeNames = cmds.sets(self.name, query=True) or []
 
         return [
             NodeRegistry().get(name, dgLib.DGNode)(name)
@@ -130,14 +130,14 @@ class ObjectSet(dgLib.DGNode):
         Returns:
             om.MObject: a new object set
         """
-        return self.__class__(mc.sets(copy=self.name))
+        return self.__class__(cmds.sets(copy=self.name))
 
     def flatten(self) -> None:
         """
         Flattens the current set
         """
 
-        mc.sets(flatten=self.name)
+        cmds.sets(flatten=self.name)
 
     def split(self, value: Union[List, str, om.MObject]) -> om.MObject:
         """
@@ -152,7 +152,7 @@ class ObjectSet(dgLib.DGNode):
         """
 
         return self.__class__(
-            mc.sets(*self.__filterObjects(value), split=self.name)
+            cmds.sets(*self.__filterObjects(value), split=self.name)
         )
 
     def isMember(self, value: Union[List, str, om.MObject]):
@@ -163,7 +163,7 @@ class ObjectSet(dgLib.DGNode):
             value: List | str | om.MObject, the name of the node(s)
         """
 
-        mc.sets(*self.__filterObjects(value), isMember=self.name)
+        cmds.sets(*self.__filterObjects(value), isMember=self.name)
 
     def anyMember(self, value: Union[List, str, om.MObject]):
         """
@@ -173,7 +173,7 @@ class ObjectSet(dgLib.DGNode):
             value: List | str | om.MObject, the name of the node(s)
         """
 
-        mc.sets(*self.__filterObjects(value), anyMember=self.name)
+        cmds.sets(*self.__filterObjects(value), anyMember=self.name)
 
     def addMembers(self, value: Union[List, str, om.MObject]) -> None:
         """
@@ -183,7 +183,7 @@ class ObjectSet(dgLib.DGNode):
             value: List | str | om.MObject, the name of the node(s)
         """
 
-        mc.sets(*self.__filterObjects(value), addElement=self.name)
+        cmds.sets(*self.__filterObjects(value), addElement=self.name)
 
     def removeMembers(self, value: Union[List, str, om.MObject]):
         """
@@ -193,7 +193,7 @@ class ObjectSet(dgLib.DGNode):
             value: List | str | om.MObject, the name of the node(s)
         """
 
-        mc.sets(*self.__filterObjects(value), remove=self.name)
+        cmds.sets(*self.__filterObjects(value), remove=self.name)
 
 
 class ShadingEngine(ObjectSet):

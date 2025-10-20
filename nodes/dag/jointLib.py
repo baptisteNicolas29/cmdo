@@ -1,6 +1,6 @@
 from typing import Optional, Union, List
 
-from maya import cmds as mc
+from maya import cmds
 from maya.api import OpenMaya as om, OpenMayaAnim as oma
 
 from ...core.nodeRegistry import NodeRegistry

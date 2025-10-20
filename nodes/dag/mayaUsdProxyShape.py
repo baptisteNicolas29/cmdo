@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-from maya import cmds as mc
+from maya import cmds
 from maya.api import OpenMaya as om
 
 import mayaUsd.ufe as ufeUtils
@@ -25,11 +25,11 @@ class MayaUsdProxyShape(dagLib.DAGNode):
     @property
     def stagePath(self):
         """The stagePath property."""
-        return mc.getAttr(f'{self.fullName}.filePath')
+        return cmds.getAttr(f'{self.fullName}.filePath')
 
     @stagePath.setter
     def stagePath(self, value):
-        mc.setAttr(f'{self.fullName}.filePath', value, type='string')
+        cmds.setAttr(f'{self.fullName}.filePath', value, type='string')
 
     def getDuplicate(
         self,
@@ -46,10 +46,10 @@ class MayaUsdProxyShape(dagLib.DAGNode):
         stagePath = ufeUtils.stagePath(self.stage)
         parentFullPath = f'{stagePath},{parentStr}' if parentStr != '/' else stagePath
 
-        longSource = mc.ls(*mayaSources, long=True)
+        longSource = cmds.ls(*mayaSources, long=True)
 
         for source in longSource:
-            mc.mayaUsdDuplicate(source, parentFullPath)
+            cmds.mayaUsdDuplicate(source, parentFullPath)
 
     def sendDuplicate(self, *prims: Tuple[str | Usd.Prim]) -> None:
 
@@ -60,7 +60,7 @@ class MayaUsdProxyShape(dagLib.DAGNode):
                 prim = ufeUtils.usdPathToUfePathSegment(prim.GetPath())
                 prim = f'{stagePath},{prim}'
 
-            mc.mayaUsdDuplicate(prim, '|world')
+            cmds.mayaUsdDuplicate(prim, '|world')
 
 
 NodeRegistry()[MayaUsdProxyShape.nodeType()] = MayaUsdProxyShape

@@ -1,6 +1,6 @@
 from typing import List
 
-from maya import cmds as mc
+from maya import cmds
 
 
 __all__: List[str] = [
@@ -20,8 +20,8 @@ def duplicateUVSet(source_obj, source_uv_set, new_uv_set):
         new_uv_set: the name of the duplicated uv set
 
     """
-    mc.polyUVSet(source_obj, uvSet=source_uv_set, copy=True, newUVSet=new_uv_set)
-    mc.polyUVSet(source_obj, currentUVSet=True, uvSet=new_uv_set)
+    cmds.polyUVSet(source_obj, uvSet=source_uv_set, copy=True, newUVSet=new_uv_set)
+    cmds.polyUVSet(source_obj, currentUVSet=True, uvSet=new_uv_set)
 
 
 def transferUVSets(source_obj, target_obj, keep_history=False):
@@ -34,19 +34,19 @@ def transferUVSets(source_obj, target_obj, keep_history=False):
         keep_history: whether to delete history or not
 
     """
-    source_vtx_count = len(mc.ls(f'{source_obj}.vtx[*]', flatten=True))
-    target_vtx_count = len(mc.ls(f'{target_obj}.vtx[*]', flatten=True))
+    source_vtx_count = len(cmds.ls(f'{source_obj}.vtx[*]', flatten=True))
+    target_vtx_count = len(cmds.ls(f'{target_obj}.vtx[*]', flatten=True))
     if source_vtx_count != target_vtx_count:
-        mc.error(
+        cmds.error(
             f'Trying to transfer UVs between different topologies'
             f'\n\t{source_obj} vertex count : {source_vtx_count}'
             f'\n\t{target_obj} vertex count : {target_vtx_count}'
         )
 
-    mc.polyTransfer(target_obj, uvSets=True, alternateObject=source_obj)
+    cmds.polyTransfer(target_obj, uvSets=True, alternateObject=source_obj)
 
     if not keep_history:
-        mc.bakePartialHistory(target_obj, prePostDeformers=True)
+        cmds.bakePartialHistory(target_obj, prePostDeformers=True)
 
 
 def checkOverlappingUVs(source_obj):
@@ -61,5 +61,5 @@ def checkOverlappingUVs(source_obj):
     """
     all_faces = f'{source_obj}.f[*]'
 
-    return mc.polyUVOverlap(all_faces, overlappingComponents=True) or []
+    return cmds.polyUVOverlap(all_faces, overlappingComponents=True) or []
 

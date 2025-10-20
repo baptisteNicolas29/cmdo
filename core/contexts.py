@@ -1,22 +1,22 @@
 import time
 import contextlib
 
-from maya import cmds as mc
+from maya import cmds
 
 
 @contextlib.contextmanager
 def undo_chunk_context(undo_chunk_name=None):
 	if undo_chunk_name is None:
-		mc.undoInfo(openChunk=True)
+		cmds.undoInfo(openChunk=True)
 	else:
-		mc.undoInfo(openChunk=True, chunkName=undo_chunk_name)
+		cmds.undoInfo(openChunk=True, chunkName=undo_chunk_name)
 
 	yield
 
 	if undo_chunk_name is None:
-		mc.undoInfo(closeChunk=True)
+		cmds.undoInfo(closeChunk=True)
 	else:
-		mc.undoInfo(closeChunk=True, chunkName=undo_chunk_name)
+		cmds.undoInfo(closeChunk=True, chunkName=undo_chunk_name)
 
 
 @contextlib.contextmanager
@@ -25,7 +25,7 @@ def undo_after_context(undo_chunk_name=None):
 	with undo_chunk_context(undo_chunk_name=undo_chunk_name):
 		yield
 
-	mc.undo()
+	cmds.undo()
 
 
 @contextlib.contextmanager
