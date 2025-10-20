@@ -1,7 +1,7 @@
 from typing import List, Union, Type
 
-import maya.cmds as mc
-import maya.api.OpenMaya as om
+from maya import cmds
+from maya.api import OpenMaya as om
 
 from . import graph
 from ..nodes.dag.curveLib import Curve
@@ -28,7 +28,7 @@ def createCircle(name='nurbsCircle', radius: CmdoNumber = 1.0, **kwargs):
         Curve: the created object
     """
 
-    transform, make_nurbs = mc.circle(name=name, radius=radius, **kwargs)
+    transform, make_nurbs = cmds.circle(name=name, radius=radius, **kwargs)
 
     graph.delete(make_nurbs)
 

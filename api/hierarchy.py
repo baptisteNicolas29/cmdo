@@ -1,7 +1,7 @@
 from typing import List, Union, Type, Dict
 
-import maya.cmds as mc
-import maya.api.OpenMaya as om
+from maya import cmds
+from maya.api import OpenMaya as om
 
 from . import graph
 from ..core.abstract import nodeLib, dagLib
@@ -69,11 +69,11 @@ def getDirectChildren(node: str, **kwargs) -> List[str]:
         a list of direct children corresponding to the given arguments
     """
 
-    if not mc.objExists(node):
-        mc.warning(f'Given obj does not exist : {node}. Aborting....')
+    if not cmds.objExists(node):
+        cmds.warning(f'Given obj does not exist : {node}. Aborting....')
         return []
 
-    return mc.listRelatives(node, children=True, **kwargs)
+    return cmds.listRelatives(node, children=True, **kwargs)
 
 
 def getRootParent(node: str) -> Union[str, None]:
@@ -85,12 +85,12 @@ def getRootParent(node: str) -> Union[str, None]:
     Returns:
         the name of the root parent
     """
-    if not mc.objExists(node):
-        mc.warning(f'Given obj does not exist : {node}. Aborting....')
+    if not cmds.objExists(node):
+        cmds.warning(f'Given obj does not exist : {node}. Aborting....')
         return None
 
     top_parent = node
-    while (parent := mc.listRelatives(top_parent, parent=True)) is not None:
+    while (parent := cmds.listRelatives(top_parent, parent=True)) is not None:
         top_parent = parent[0]
 
     return top_parent
@@ -106,14 +106,14 @@ def getHierarchyRoot(node: str, **kwargs) -> List[str]:
            the name of all objects in the given objects hierarchy
        """
 
-    if not mc.objExists(node):
-        mc.warning(f'Given obj does not exist : {node}. Aborting....')
+    if not cmds.objExists(node):
+        cmds.warning(f'Given obj does not exist : {node}. Aborting....')
         return []
 
     joint_hierarchy = [node]
     parent = node
 
-    while (prt := mc.listRelatives(parent, parent=True, **kwargs)) is not None:
+    while (prt := cmds.listRelatives(parent, parent=True, **kwargs)) is not None:
         parent = prt[0]
         joint_hierarchy.append(parent)
 

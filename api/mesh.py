@@ -1,7 +1,7 @@
 from typing import List, Union, Type
 
 from maya import cmds, mel
-import maya.api.OpenMaya as om
+from maya.api import OpenMaya as om
 
 from ..nodes.dag.meshLib import Mesh
 from ..core.abstract import nodeLib, dagLib
