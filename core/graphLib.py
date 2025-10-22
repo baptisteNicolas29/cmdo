@@ -368,6 +368,16 @@ class Graph(om.MSelectionList):
 
         return itemToReturn
 
+    def append(self, value: Union[om.MObject, om.MPlug]) -> None:
+        """
+        Append a value to the list
+
+        :param value: the value to append
+
+        """
+
+        self.add(value)
+
     def __str__(self) -> str:
         args = ', '.join([f'"{x}"' for x in self])
         return f'{self.__class__.__name__} [{args}]'

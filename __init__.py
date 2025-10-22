@@ -7,7 +7,7 @@ import importlib
 import contextlib
 
 # - cmds functions are added to the cmdo namespace
-#    to handle cmdo objects in & out
+#    to handle cmdo objects in & out conversion
 # - mel is imported to be accessible through the cmdo namespace
 #    like: cmdo.mel
 # - OpenMaya, OpenMayaAnim and OpenMayaUI are imported to be accessible
@@ -34,8 +34,8 @@ __all__: List[str] = [
 ]
 
 
-# TODO: Add Undo/Redo in maya.api.OpenMaya... not looking forward to that...
-#  currently the libraries that implements OpenMaya behavior doesn't support
+# TODO: Add Undo/Redo using maya.api.OpenMaya... not looking forward to that...
+#  currently the libraries that implements OpenMaya behavior don't support
 #  undoing or redoing (so a lot of libraries),
 #  in OpenMaya, Undo/Redo is managed through om.MPxCommands,
 #  see a possible implementation -> https://github.com/mottosso/apiundo
