@@ -7,8 +7,9 @@ from . import fileInfoLib
 from . import fileLib
 from . import plugsLib
 
-from .abstract import nodeLib
-from .abstract import dgLib
-from .abstract import dagLib
+# import classes to access like: cmdo.core.Node
+from .abstract.nodeLib import Node
+from .abstract.dgLib import DGNode
+from .abstract.dagLib import DAGNode
 
 from . import graphLib

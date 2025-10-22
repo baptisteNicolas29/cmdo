@@ -458,14 +458,11 @@ class DAGNode(DGNode):
     def worldMatrix(self, value: Union[List[float], om.MMatrix]) -> None:
 
         """
-        Définit la matrice du monde du node.
+        Set the current node s world matrix
 
         Args:
-            matrix (MMatrix):
-                La matrice du monde du node.
+            value: om.MMatrix, the matrix to set the world matrix to
 
-        Returns:
-            None
         """
         if len(value) == 16:
             value = om.MMatrix(value)
@@ -478,6 +475,19 @@ class DAGNode(DGNode):
                 value * om.MMatrix(self['parentInverseMatrix'].value)
             )
         )
+
+    @property
+    def worldInverseMatrix(self) -> om.MMatrix:
+
+        """
+        Get the current node s world inverse matrix
+
+        Returns:
+            om.MMatrix: the current node s world inverse matrix
+
+        """
+
+        return self['worldInverseMatrix'].value
 
     @property
     def parentMatrix(self) -> om.MMatrix:

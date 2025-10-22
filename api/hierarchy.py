@@ -5,6 +5,7 @@ from maya.api import OpenMaya as om
 
 from . import graph
 from ..core.abstract import nodeLib, dagLib
+from ..core.cmdoTyping import CmdoObject, CmdoList
 
 
 __all__: List[str] = [
@@ -120,60 +121,46 @@ def getHierarchyRoot(node: str, **kwargs) -> List[str]:
     return joint_hierarchy
 
 
-def getShortestParent(
-    node: Union[str, om.MObject],
-    graph_list: Union[List[str], List[om.MObject], om.MSelectionList],
-    as_str: bool = True,
-) -> Union[nodeLib.Node, str, None]:
+def getShortestParent(node: CmdoObject, graphList: CmdoList, asStr: bool = True) -> Union[nodeLib.Node, str, None]:
     """
     Get the first parent of specified node inside the given graph
 
     Args:
-        node (Union[str, Node, MObject]): the node to get the parent for
-
-        graph_list (Union[List[str], List[Node], MSelectionList]):
-            the graph to search in for the parent
-
-        as_str (bool): get a string of nodeLib.Node
+        node: CmdoObject, the node to get the parent for
+        graphList: CmdoList, the graph to search in for the parent
+        asStr: bool, get a string of nodeLib.Node
 
     Returns:
         Union[nodeLib.Node, str, None]: the parent if found
     """
 
-    if isinstance(graph_list, om.MSelectionList):
-        graph_list = graph.Graph().copy(graph_list)
+    if isinstance(graphList, om.MSelectionList):
+        graphList = graph.Graph().copy(graphList)
 
     else:
-        graph_list = graph.ls(graph_list)
+        graphList = graph.ls(graphList)
 
     if isinstance(node, (str, om.MObject)):
         node = graph.ls(node)[0]
 
     item = node
-    while not item.maya_object.isNull():
-        for other in graph_list:
-            if item.maya_object == other.maya_object:
-                if item.maya_object != node.maya_object:
-                    return other.name if as_str else other
+    while not item.isNull():
+        for other in graphList:
+            if item == other and item != node:
+                return other.name if asStr else other
 
         item = item.parent[0]
 
     return None
 
 
-def getDagRoots(
-    nodes: Union[List[str], List[nodeLib.Node], om.MSelectionList],
-    safe: bool = True,
-) -> graph.Graph:
+def getDagRoots(nodes: CmdoList, safe: bool = True) -> graph.Graph:
     """
-    get the dag nodes roots from a set of given nodes
+    Get the dag nodes roots from a set of given nodes
 
     Args:
-        nodes: Union[[List[str], List[Node], om.MSelectionList]]:
-            node list you want to process
-
-        safe: (bool):
-            if safe function will not fail (bypass the not dagNodes) else bypass the dgNodes
+        nodes: CmdoList, node list to process
+        safe: bool, if safe function will not fail (bypass the not dagNodes) else bypass the dgNodes
 
     Returns:
         Graph: void one if source graph has no DagNode else return graph who contain the dagRootNodes
