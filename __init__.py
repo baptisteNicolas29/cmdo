@@ -160,6 +160,7 @@ def setDebugMode(state: bool = False, maxCharCount: int = __CMDS_DEBUG_MAX_PRINT
     Args:
         state: bool, the state of the debug mode to set
         maxCharCount: int, the maximum number of string characters per print
+         if set to -1, will print all characters given
 
     """
 
@@ -299,7 +300,7 @@ def __addMayaCmdsToCmdoNamespace() -> None:
         if isinstance(result, str) and cmds.objExists(result):
             return ls(result)[0]
 
-        elif isinstance(result, (list, tuple, set)) and all(cmds.objExists(res) for res in result):
+        elif isinstance(result, (list, tuple, set)) and all(cmds.objExists(str(res)) for res in result):
             return ls(*result)
 
         return result

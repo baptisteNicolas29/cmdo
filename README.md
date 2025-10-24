@@ -25,8 +25,16 @@ enables cmdo nodes to always be up to date with their maya counterpart.
 import cmdo
 
 cmdo.bigReload()
-# use debugMode to print all cmds command function name/inputs/outputs
-cmdo.setDebugMode(True)
+# use debugMode to print all cmds function name/input args and kwargs/outputs
+# maxCharCount is the maximum characters per print the debug mode will output
+cmdo.setDebugMode(state=True, maxCharCount=500)
+
+# EG:
+# trs = cmdo.getAttr('Global_CTRL.translate', keyable=True)
+# getAttr - 
+#	argsList = ['Global_CTRL.translate']
+#	kwargs = {'keyable': True}
+#	result = False
 ```
 
 ## SubModules:
