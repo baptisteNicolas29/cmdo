@@ -495,7 +495,7 @@ class Node(om.MObject):
         return self.dependencyNode.isFromReferencedFile
 
     @property
-    def referencedNode(self) -> Union[om.MObject, None]:
+    def referenceNode(self) -> Union[om.MObject, None]:
 
         if not self.isReferenced:
             return None
