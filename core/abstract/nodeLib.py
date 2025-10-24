@@ -29,10 +29,10 @@ class Node(om.MObject):
     @classmethod
     def nodeType(cls) -> str:
         """
-        Internal maya type
+        Internal cmds type
 
         Returns:
-             str: the maya type
+             str: the cmds type
         """
 
         return cls._NODE_TYPE
@@ -493,3 +493,16 @@ class Node(om.MObject):
         """
 
         return self.dependencyNode.isFromReferencedFile
+
+    @property
+    def referencedNode(self) -> Union[om.MObject, None]:
+
+        if not self.isReferenced:
+            return None
+
+        from ..nodeRegistry import NodeRegistry
+
+        refNodeName = cmds.referenceQuery(self.name, referenceNode=True)
+        refNode = om.MSelectionList().add(refNodeName)
+
+        return NodeRegistry().get(refNode)(refNode)

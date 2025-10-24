@@ -14,9 +14,6 @@ from .nodeRegistry import NodeRegistry
 from .exceptions import CmdoException
 
 
-# TODO: add pop methods etc
-
-
 class Graph(om.MSelectionList):
 
     __nodeRegistry = NodeRegistry()
@@ -396,7 +393,6 @@ class Graph(om.MSelectionList):
         return self[value]
 
     def __getitem__(self, value):
-        # TODO: add reverse count (eg: graph[-1])
         # Implement slicing in Graph
         if isinstance(value, slice):
             newGraph = self.__class__()

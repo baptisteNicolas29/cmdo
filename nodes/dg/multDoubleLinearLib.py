@@ -1,8 +1,7 @@
-from typing import Optional, List, Union
+from typing import Union
 
 from maya.api import OpenMaya as om
 
-from ...core import convert
 from ...core.abstract import dgLib
 from ...core.nodeRegistry import NodeRegistry
 

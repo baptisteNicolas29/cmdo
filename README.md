@@ -2,15 +2,17 @@
 
 
 # WHAT IS CMDO (maya commands object)
-`cmdo` is an oop python maya wrapper. It is mainly composed of a library of nodes (maya node wrappers classes)  
+`cmdo` is an oop maya python wrapper. It is mainly composed of a library of nodes (maya node wrappers classes)  
 and an api to enable high level operations on nodes (ie: lockAndHideTransforms ect).  
 At its core cmdo is built to operate on any kind of maya data, its nodes can be initialised with  
-object names, MObjects or cmdo custom nodes
+object names, MObjects, MSelectionLists, MPlugs or cmdo custom nodes
 
-`cmdo` integrates all `maya.cmds` functions in its namespace, through a wrapper to convert data between the two
+`cmdo` integrates all `maya.cmds` functions in its namespace, through a wrapper to convert data between the two.  
+The conversion is done at function call time.
 
 Its purpose is to facilitate the interaction between maya and programmers and to be able to interact with any       
-node type found in maya in an oop manner. To do this cmdo uses `maya.api.OpenMaya` for the base of its objects.
+node types found in maya in an oop manner while maintaining acceptable performance.  
+To do this cmdo uses `maya.api.OpenMaya` for the base of its objects.
 
 Furthermore, all cmdo nodes get data on demand most of the time, so we avoid heavy loading of the library and this  
 enables cmdo nodes to always be up to date with their maya counterpart.
@@ -23,7 +25,7 @@ enables cmdo nodes to always be up to date with their maya counterpart.
 import cmdo
 
 cmdo.bigReload()
-# use debugMode to print all cmds command input/outputs
+# use debugMode to print all cmds command function name/inputs/outputs
 cmdo.setDebugMode(True)
 ```
 
@@ -54,7 +56,7 @@ for namespace in unusedNamespaces:
 
 ### nodes :
 `cmdo.nodes` is a subPackage holding all maya node wrapper classes.  
-They enable oop interaction with maya nodes and are returned through the api.  
+They enable oop interaction with maya nodes and are returned through the api, and Graph objects.  
 They can take multiple input types such as, python types,  OpenMaya types or custom types
 
 
@@ -82,13 +84,13 @@ All that is needed is to create a class that inherits from one of three bases or
 > and implements lots of basic functionality and properties. It does not represent any node type inside maya.
 
 - `dgLib.DGNode`
-> This node inherits of `nodeLib.Node`. It represents the base of all non-DAG nodes of maya 
-> (DG (Directed Graph): nodes without transforms and/or parenting hierarchy)
+> This class inherits of `nodeLib.Node`. It represents the base of all non-DAG nodes of maya.   
+> DG (Directed Graph): nodes without transforms and/or parenting hierarchy
 
 - `dagLib.DAGNode`
-> This node inherits of `dgLib.DGNode`. It represents the base of all DAG nodes of maya. 
-> It implements transform and hierarchy related properties  
-> (DAG (Directed Acyclic Graph): nodes with transforms and/or parenting hierarchy)
+> This class inherits of `dgLib.DGNode`. It represents the base of all DAG nodes of maya. 
+> It implements transform and hierarchy related properties.  
+> DAG (Directed Acyclic Graph): nodes with transforms and/or parenting hierarchy
 
 Then override the `_NODE_TYPE` (maya.cmds type str) and `_API_TYPE` (maya.api.OpenMaya type int)  
 class variables to the corresponding node.  
@@ -107,10 +109,10 @@ from typing import List
 from maya.api import OpenMaya as om
 
 from cmdo.core.nodeRegistry import NodeRegistry
-from cmdo.core.abstract import dagLib
+from cmdo.core import DAGNode
 
 # Create class that inherits from DAGNode
-class Locator(dagLib.DAGNode):
+class Locator(DAGNode):
     _NODE_TYPE = "locator"  # the maya type from maya.cmds
     _API_TYPE = om.MFn.kLocator  # see types in maya.api.OpenMaya.MFn doc
 
@@ -206,17 +208,18 @@ import cmdo
 
 # get all controllers from scene 
 # use the same syntax as maya ls, but return custom python objects
-ctrls = cmdo.ls('*:*_CTRL')
-for ctrl in ctrls:
+for ctrl in cmdo.ls('*_CTRL', recursive=True):
     # get the shapes (Curve objects) of the current controller (Transform object)
-    shapes = ctrl.shapes
+    
+    shapes = ctrl.shapes  # cmds.listRelatives(ctrl, children=True, shapes=True)
     if not shapes:
         continue
     
-    # for each shape set the lineWidth attribute
+    # for each shape set the lineWidth and color attributes
     for shape in shapes:
-        # replace mc.setAttr(f'{shape}.lineWidth', 2)
-        shape.lineWidth = 2
+        shape.lineWidth = 2  # mc.setAttr(f'{shape}.lineWidth', 2)
+        shape.overrideEnabled = True  # mc.setAttr(f'{shape}.overrideEnabled', True)
+        shape.overrideColor = 17  # mc.setAttr(f'{shape}.overrideColor', 17)
 ```
 
 </details>
@@ -228,21 +231,21 @@ for ctrl in ctrls:
 ```python
 import cmdo
 
-cmdo.bigReload()
-
-# initialize an identity matrix as MMatrix (openMaya object)
-my_matrix = cmdo.math.identityMatrix4
-
-# get world matrix of the transform
+# create an object and move it
 trs1 = cmdo.createNode('transform', name='myTransform1')
 trs1.displayLocalAxis = True
 trs1.translate = [10, 20.58, 2]
 trs1.rotate = [10, 20.58, 2]
 
+# get world matrix of the transform
+wrldMtx = trs1.worldMatrix
+
+# create a group to parent second object beneath it
 prt = cmdo.createNode('transform', name='myTransform2_prt')
 prt.translate = [-10, 10.58, -25]
 prt.rotate = [0, -90, 54]
 
+# create second object, parent it, reset transform and move to world position
 trs2 = cmdo.createNode('transform', name='myTransform2')
 trs2.displayLocalAxis = True
 trs2.parents = prt
@@ -265,7 +268,7 @@ def get_node(node_type, node_name):
     Small function to create a node if it does not exist
     """
     
-    if (node := cmdo.ls(node_name)):
+    if node := cmdo.ls(node_name, type=node_type):
        return node[0]
        
     return cmdo.createNode(node_type, name=node_name)
@@ -278,11 +281,16 @@ jnt = get_node('joint', 'skinJoint_skn')
 mltMtx = get_node('multMatrix', 'skinJoint_mltMtx')
 dcpMtx = get_node('decomposeMatrix', 'skinJoint_dcpMtx')
 
-# set some attributes, different ways to do this
+# set some attributes. There are different ways to do this,
 # using properties if they exist, the plug name directly or using a dict
-trs['displayLocalAxis'] = True
+
+# using property
 ctrl.parents = trs
 
+# using plug name
+trs['displayLocalAxis'] = True
+
+# using a dict
 kwargs = {
     'localScale': [2, 2, 2],
     'overrideEnabled': True,
@@ -291,12 +299,13 @@ kwargs = {
 ctrl.shapes[0].setAttrFromDict(kwargs)
 
 jnt.parents = jntRoot
-jnt['displayLocalAxis'] = True
+jnt.displayLocalAxis = True
 
-# connect the setup using "=" or ">>" 
-# "=" connects destination_plug = source_plug (can be used with properties)
+# connect the nodes using "=" or ">>" or "<<" 
+# "=" connects destination_plug = source_plug (destination can be a property)
 # ">>" connects source_plug >> destination_plug
 # "<<" connects destination_plug << source_plug
+
 jntRoot.offsetParentMatrix = trs['worldMatrix'][0]
 
 ctrl['worldMatrix'][0] >> mltMtx['matrixIn'][0]
@@ -306,10 +315,16 @@ mltMtx['matrixSum'] >> dcpMtx['inputMatrix']
 for plugName in ['translate', 'rotate', 'scale', 'shear']:
     jnt[plugName] = dcpMtx[f'output{plugName.capitalize()}']
     
-# move controller
+# move controller and set keys
+cmdo.currentTime(10)
+cmdo.setKeyFrame(time=0)
+
+cmdo.currentTime(10)
 ctrl.translate = [3, 5, 2]
 ctrl.rotate = [-30.2, 17.154, 23]
 ctrl.scale = [1.1, 1.2, 1]
+cmdo.setKeyFrame(time=0)
+
 ```
 
 </details>
@@ -382,11 +397,11 @@ ctrl.scale = [1.1, 1.2, 1]
 # TODO: ALSO, since input2D and input3D are compoundAttributes
 #  containing multiAttributes, to set one of them ie: input2D[index],
 #  we need to give as argument an iterable of an iterable
-#  ie: pm.setInput2D(index, [[1, 2]])
+#  ie: plsMnsAvg.setInput2D(index, [[1, 2]])
 #  this will set the x and y component of the input2D[index] where x=1 and y=2
 #  otherwise we can set specific components of the multiAttribute one by one
-#  ie: pm.setInput2Dx(index, 1)
-#  ie: pm.setInput2Dy(index, 2)
+#  ie: plsMnsAvg.setInput2Dx(index, 1)
+#  ie: plsMnsAvg.setInput2Dy(index, 2)
 #  THIS IS ANNOYING WE NEED TO FIX THIS!!!!!
 ```
 
@@ -400,6 +415,3 @@ ctrl.scale = [1.1, 1.2, 1]
 ---
 
 # MISC
-`*1`: This is True for cmdo objects to OpenMaya, but not yet for maya.cmds
-
-

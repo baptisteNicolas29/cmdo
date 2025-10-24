@@ -1,8 +1,5 @@
 from typing import List, Union
 
-# import math
-# import numpy
-
 from maya.api import OpenMaya as om
 
 

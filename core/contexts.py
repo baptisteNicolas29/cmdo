@@ -4,6 +4,8 @@ import contextlib
 from maya import cmds
 
 
+# TODO: we should probably update / refactor this
+
 @contextlib.contextmanager
 def undo_chunk_context(undo_chunk_name=None):
 	if undo_chunk_name is None:

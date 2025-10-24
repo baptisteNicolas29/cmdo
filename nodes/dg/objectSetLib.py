@@ -1,48 +1,27 @@
 from typing import List, Any, Union
 
-from maya import cmds
+from ... import cmds
 from maya.api import OpenMaya as om
 
-from ...core.abstract import dgLib
+from ...core.abstract.dgLib import DGNode
+from ...core.graphLib import Graph
 from ...core.nodeRegistry import NodeRegistry
 
 
-class ObjectSet(dgLib.DGNode):
+class ObjectSet(DGNode):
 
     _NODE_TYPE = "objectSet"
     _API_TYPE = om.MFn.kSet
 
-    @staticmethod
-    def __getObjectName(obj: Union[str, om.MObject]) -> str:
+    @property
+    def mfnSet(self) -> om.MFnSet:
         """
-        Get the name obj the given node
-
-        Args:
-             obj: str | om.MObject, a maya node to convert
+        Get MFnSet of the om.MObject
 
         Returns:
-            str: the name of the node
+            om.MFnSet: the objectSet object
         """
-
-        if isinstance(obj, om.MObject):
-            return om.MFnDependencyNode(obj).name()
-
-        return obj
-
-    def __filterObjects(self, objs: Union[List, str, om.MObject]) -> List[str]:
-        """
-        Filter function to convert the input node to str name for maya commands
-
-        Args:
-             objs: List | str | om.MObject, a maya node or list of maya nodes
-
-        Returns:
-            List[str]: a list of node names
-        """
-        if not isinstance(objs, (tuple, list)):
-            objs = [objs]
-
-        return list(map(self.__getObjectName, objs))
+        return om.MFnSet(self)
 
     def __init__(self, name: Union[str, om.MObject] = None) -> None:
         """
@@ -65,10 +44,10 @@ class ObjectSet(dgLib.DGNode):
              List[str]: a list of nodes
         """
 
-        otherSet = self.__getObjectName(other)
-        return cmds.sets(otherSet, union=self.name)
+        otherSet = Graph.ls(other)[0]
+        return Graph(self.mfnSet.getUnion(otherSet))
 
-    def __sub__(self, other: Union[str, om.MObject]) -> List[str]:
+    def __sub__(self, other: Union[str, om.MObject]) -> Graph:
         """
         An operation between two sets which returns the members
         of the first set that are not in the second set
@@ -77,26 +56,31 @@ class ObjectSet(dgLib.DGNode):
             other: str | om.MObject, another object set to do the operation
 
         Returns:
-             List[str]: a list of nodes
+             Graph: a list of nodes
         """
 
-        otherSet = self.__getObjectName(other)
-        return cmds.sets(otherSet, subtract=self.name)
+        otherSet = Graph.ls(other)[0]
 
-    def __isub__(self, value: Union[List, str, om.MObject]):
+        return Graph.ls(*cmds.sets(otherSet.name, subtract=self.name))
+
+    def __isub__(self, value: Union[List, str, om.MObject, Graph]):
 
         if isinstance(value, self.__class__):
             value = value.members
 
-        self.removeMembers(value)
+        nodes = Graph.ls(*value)
+
+        self.removeMembers(*nodes)
         return self
 
-    def __iadd__(self, value: Union[List, str, om.MObject]):
+    def __iadd__(self, value: Union[List, str, om.MObject, Graph]):
 
         if isinstance(value, self.__class__):
             value = value.members
 
-        self.addMembers(value)
+        nodes = Graph.ls(*value)
+
+        self.addMembers(nodes)
         return self
 
     @property
@@ -108,21 +92,16 @@ class ObjectSet(dgLib.DGNode):
             int: the number of members
         """
 
-        return cmds.sets(self.name, query=True, size=True)
+        return self.mfnSet.getMembers(False).length()
 
     @property
-    def members(self) -> List[om.MObject]:
+    def members(self) -> Graph:
         """
         Get the set members as cmdo objects
 
         """
 
-        nodeNames = cmds.sets(self.name, query=True) or []
-
-        return [
-            NodeRegistry().get(name, dgLib.DGNode)(name)
-            for name in nodeNames
-        ]
+        return Graph(self.mfnSet.getMembers(False))
 
     def copy(self) -> om.MObject:
         """
@@ -130,6 +109,7 @@ class ObjectSet(dgLib.DGNode):
         Returns:
             om.MObject: a new object set
         """
+
         return self.__class__(cmds.sets(copy=self.name))
 
     def flatten(self) -> None:
@@ -152,7 +132,7 @@ class ObjectSet(dgLib.DGNode):
         """
 
         return self.__class__(
-            cmds.sets(*self.__filterObjects(value), split=self.name)
+            cmds.sets(*Graph.ls(value).getSelectionStrings(), split=self.name)
         )
 
     def isMember(self, value: Union[List, str, om.MObject]):
@@ -163,7 +143,7 @@ class ObjectSet(dgLib.DGNode):
             value: List | str | om.MObject, the name of the node(s)
         """
 
-        cmds.sets(*self.__filterObjects(value), isMember=self.name)
+        cmds.sets(*Graph.ls(value).getSelectionStrings(), isMember=self.name)
 
     def anyMember(self, value: Union[List, str, om.MObject]):
         """
@@ -173,9 +153,9 @@ class ObjectSet(dgLib.DGNode):
             value: List | str | om.MObject, the name of the node(s)
         """
 
-        cmds.sets(*self.__filterObjects(value), anyMember=self.name)
+        cmds.sets(*Graph.ls(value).getSelectionStrings(), anyMember=self.name)
 
-    def addMembers(self, value: Union[List, str, om.MObject]) -> None:
+    def addMembers(self, value: Union[List, str, om.MObject, Graph]) -> None:
         """
         Add members to set
 
@@ -183,7 +163,7 @@ class ObjectSet(dgLib.DGNode):
             value: List | str | om.MObject, the name of the node(s)
         """
 
-        cmds.sets(*self.__filterObjects(value), addElement=self.name)
+        cmds.sets(*Graph.ls(value).getSelectionStrings(), addElement=self.name)
 
     def removeMembers(self, value: Union[List, str, om.MObject]):
         """
@@ -193,7 +173,7 @@ class ObjectSet(dgLib.DGNode):
             value: List | str | om.MObject, the name of the node(s)
         """
 
-        cmds.sets(*self.__filterObjects(value), remove=self.name)
+        cmds.sets(*Graph.ls(value).getSelectionStrings(), remove=self.name)
 
 
 class ShadingEngine(ObjectSet):

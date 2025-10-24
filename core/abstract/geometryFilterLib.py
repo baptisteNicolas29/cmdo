@@ -5,6 +5,9 @@ from maya.api import OpenMaya as om, OpenMayaAnim as oma
 from . import dgLib
 
 
+# TODO: it would be great to update/implement a solid version of this class
+
+
 class GeometryFilter(dgLib.DGNode):
 
     def __init__(self, name: Union[str, om.MObject] = None) -> None:

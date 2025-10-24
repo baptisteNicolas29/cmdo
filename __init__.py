@@ -1,4 +1,4 @@
-from typing import Dict, Tuple, Any, Callable, List, Generator
+from typing import Dict, Tuple, Any, Callable, List, Generator, Union, Type
 from collections import OrderedDict
 
 import sys
@@ -45,20 +45,24 @@ __all__: List[str] = [
 __PACKAGE_NAME: str = __name__
 
 # True/False, print maya.cmds function's name/input/output/result
+# If __CMDS_DEBUG_MAX_PRINT is set to -1,
+#  the debug print will not trim the message
+#  this can become a problem when printing very large data sets (eg: meshes)
 __CMDS_DEBUG_PRINT: bool = False
 __CMDS_DEBUG_MAX_PRINT: int = 1000
 
 
-# TODO: try to add reloading dependencies.
-#  bigReload is a debugging function and
+# TODO: try to add reloading dependencies to bigReload
+
+# bigReload is a debugging function and
 #  should not be used in production
 def bigReload(moduleToReload: str = __PACKAGE_NAME) -> None:
     """
     Reload the given package from name and all its children modules
 
-    :param moduleToReload: str, the name of the package/module to reload
+    Args:
+        moduleToReload: str, the name of the package/module to reload
 
-    :return:
     """
 
     cmds.warning(
@@ -131,10 +135,8 @@ def getDebugMode() -> bool:
     """
     Get the debug mode state
 
-    !!!! WARNING !!!! - prints on every use of maya.cmds functions
-     Should not be use outside of dev contexts
-
-    :param state: bool, the state of the debug mode
+    Returns:
+        bool: the current state of the debug mode
 
     """
 
@@ -155,7 +157,9 @@ def setDebugMode(state: bool = False, maxCharCount: int = __CMDS_DEBUG_MAX_PRINT
     !!!! WARNING !!!! - prints on every use of maya.cmds functions
      Should not be use outside of dev contexts
 
-    :param state: bool, the state of the debug mode
+    Args:
+        state: bool, the state of the debug mode to set
+        maxCharCount: int, the maximum number of string characters per print
 
     """
 
@@ -177,12 +181,14 @@ def setDebugMode(state: bool = False, maxCharCount: int = __CMDS_DEBUG_MAX_PRINT
 @contextlib.contextmanager
 def debugContext(state: bool = False, maxCharCount: int = __CMDS_DEBUG_MAX_PRINT) -> Generator:
     """
-    Set the debug mode on/off
+    Set the debug mode on/off, at exit of the context, reset to previous value
 
     !!!! WARNING !!!! - prints on every use of maya.cmds functions
      Should not be use outside of dev contexts
 
-    :param state: bool, the state of the debug mode
+    Args:
+        state: bool, the state of the debug mode to set
+        maxCharCount: int, the maximum number of string characters per print
 
     """
 
@@ -211,38 +217,56 @@ def debugContext(state: bool = False, maxCharCount: int = __CMDS_DEBUG_MAX_PRINT
 def __debugPrint(message: str) -> None:
     """
     Print the given message if the debug mode is True
+    This is mostly used to print wrapped functions from
+     the maya.cmds & maya.mel modules
 
-    :param message: str, the message to print
-    :param maxCharCount: int, the maximum number of characters to print
+    Args:
+        message: str, the message to print
 
     """
-    global __CMDS_DEBUG_PRINT
 
-    if __CMDS_DEBUG_PRINT and __CMDS_DEBUG_MAX_PRINT != -1 and len(message) > __CMDS_DEBUG_MAX_PRINT:
+    global __CMDS_DEBUG_PRINT
+    if not __CMDS_DEBUG_PRINT:
+        return
+
+    if __CMDS_DEBUG_MAX_PRINT == -1 and len(message) > __CMDS_DEBUG_MAX_PRINT:
         message = f'{message[:__CMDS_DEBUG_MAX_PRINT]}....'
-        print(message)
+
+    print(message)
 
 
 def __addMayaCmdsToCmdoNamespace() -> None:
     """
     Dump all maya.cmds functions that do not exist in cmdo namespace
 
-    Wrap the functions to:
+    Wrap maya.cmds functions to:
         Convert inputs from cmdo types to maya types
         Convert outputs from maya types to cmdo types
 
     """
 
     def _isNodeSubclass(item: Any) -> bool:
+        """Check if item is a subclass of nodeLib.Node"""
         return issubclass(type(item), core.abstract.nodeLib.Node)
 
     def _isPlugSubclass(item: Any) -> bool:
+        """Check if item is a subclass of plugsLib.Plug"""
         return issubclass(type(item), core.plugsLib.Plug)
 
     def _isGraphSubclass(item: Any) -> bool:
+        """Check if item is a subclass of graphLib.Graph"""
         return issubclass(type(item), core.graphLib.Graph)
 
-    def _convertInputArguments(args) -> List:
+    def _convertInputArguments(args: Any) -> List:
+        """
+        Convert the given arguments to str for maya.cmds if possible
+
+        Args:
+            args: Any, arguments to convert to str for maya.cmds
+
+        Returns:
+            List[str]: the converted arguments for maya.cmds
+        """
         argsList = list(args)
 
         for i, arg in enumerate(argsList):
@@ -260,15 +284,17 @@ def __addMayaCmdsToCmdoNamespace() -> None:
 
         return argsList
 
-    def _convertOutputArguments(result: Any) -> core.abstract.nodeLib.Node | core.graphLib.Graph | Any:
+    cmdoResultType = Type[Union[core.Node, om.MObject, core.Graph, Any]]
+
+    def _convertOutputArguments(result: Any) -> cmdoResultType:
         """
         Convert the maya.cmds function output to cmdo types if possible
 
         Args:
-            result: the result of maya.cmds function
+            result: Any, the result of maya.cmds function
 
         Returns:
-
+            cmdoResultType: cmdo object or base result if conversion failed
         """
         if isinstance(result, str) and cmds.objExists(result):
             return ls(result)[0]
@@ -315,7 +341,9 @@ def __addMayaCmdsToCmdoNamespace() -> None:
         """
         Filter cmds functions by key
 
-        :param key: pair of function name and function object
+        Args:
+            key: a pair containing function name and function object
+
         Returns:
             bool: the filtered result
         """
@@ -344,6 +372,6 @@ def __addMayaCmdsToCmdoNamespace() -> None:
 # Add wrapped maya.cmds functions to cmdo package
 __addMayaCmdsToCmdoNamespace()
 
-# Delete the function after using it to make it not accessible by user
+# Delete the function after using it to make it un-accessible by user
 # after one run of the function it has no further use for the package
 del __addMayaCmdsToCmdoNamespace

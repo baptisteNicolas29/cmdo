@@ -241,10 +241,12 @@ class Plug(om.MPlug):
         """
         return self.__class__(super().source())
 
-    def destinations(self) -> 'PlugArray':
+    def destinations(self, *args, **kwargs) -> 'PlugArray':
         """
+         Get the destinations of the plug
 
         Returns:
+            PlugArray: an array of destination plugs
 
         """
         return PlugArray(super().destinations())

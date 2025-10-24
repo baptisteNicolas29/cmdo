@@ -1,7 +1,13 @@
-from typing import Union, List, Type, Tuple, Set
+"""
+Module describing some of the most used types in cmdo to make it easier for
+type hinting
 
+"""
 
-from maya.api import OpenMaya as om, OpenMayaAnim as oma
+from typing import Union, List, Type, Tuple
+
+from maya.api import OpenMaya as om
+
 
 __all__: List[str] = [
     'CmdoObject',

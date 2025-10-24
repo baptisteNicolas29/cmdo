@@ -3,7 +3,7 @@ from typing import List
 from maya.api import OpenMaya as om
 
 from .singletonMetaclass import SingletonMeta
-from .abstract import nodeLib
+from .abstract import nodeLib, dgLib
 
 
 __all__: List[str] = [
@@ -44,7 +44,7 @@ class NodeRegistry(dict, metaclass=SingletonMeta):
         # print(f'{repr(cls2)} - {repr(cls1.mro())}')
         return repr(cls2) in repr(cls1.mro())
 
-    def get(self, key, default=nodeLib.Node):
+    def get(self, key, default=dgLib.DGNode):
         if isinstance(key, (str, om.MObject)):
             return super().get(nodeLib.Node(key).type, default)
 

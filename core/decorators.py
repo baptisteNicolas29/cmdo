@@ -10,7 +10,7 @@ from functools import wraps
 from maya import cmds
 
 
-# TODO: probably remove / rework all of this
+# TODO: we should probably update / refactor this
 
 
 def execute_in_maya_standalone(func: callable) -> callable:

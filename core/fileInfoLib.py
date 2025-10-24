@@ -13,11 +13,12 @@ __all__: List[str] = [
 class MayaFileInfo(dict, metaclass=SingletonMeta):
 
     """
-    The class is a singleton and only one will exist in cmdo
+    The class is a singleton and only one should exist in cmdo
     """
 
     @property
     def raw_data(self) -> List:
+
         return cmds.fileInfo(query=True)
 
     def get(self, key: str, default=None):
@@ -45,6 +46,6 @@ class MayaFileInfo(dict, metaclass=SingletonMeta):
         self.clear()
 
         raw_data = cmds.fileInfo(query=True)
-        for key, value in zip(raw_data[::2], raw_data[1::2]):
+        for key, value in zip(raw_data[0::2], raw_data[1::2]):
             self[key] = value
             super().__setitem__(key, value)

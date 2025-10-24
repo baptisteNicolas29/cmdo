@@ -59,13 +59,13 @@ class BlendMatrix(dgLib.DGNode):
         return self['target'].numElements()
 
     @property
-    def outputMatrix(self) -> List[float]:
+    def outputMatrix(self) -> om.MMatrix:
 
         """
         Get the outputMatrix value
 
         Returns:
-            List[float]: the outputMatrix value
+            om.MMatrix: the outputMatrix value
         """
 
         return self['outputMatrix'].value

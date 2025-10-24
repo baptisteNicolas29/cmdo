@@ -1,3 +1,8 @@
+"""
+Module to define cmdo specific exceptions
+
+"""
+
 from typing import List
 
 __all__: List[str] = [

@@ -26,11 +26,11 @@ class Joint(Transform):
     @property
     def mfnIkJoint(self) -> oma.MFnIkJoint:
         """
-            Get MFnIkJoint of the om.MObject
+        Get MFnIkJoint of the om.MObject
 
-            Returns:
-                om.MFnIkJoint: the joint object
-            """
+        Returns:
+            om.MFnIkJoint: the joint object
+        """
 
         return oma.MFnIkJoint(self)
 
