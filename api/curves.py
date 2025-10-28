@@ -3,7 +3,7 @@ from typing import List, Union, Type
 from maya import cmds
 from maya.api import OpenMaya as om
 
-from . import graph
+from ..core import Graph
 from ..nodes.dag.curveLib import Curve
 from ..core.abstract import nodeLib, dagLib
 from ..core.exceptions import CmdoException
@@ -30,9 +30,9 @@ def createCircle(name='nurbsCircle', radius: CmdoNumber = 1.0, **kwargs):
 
     transform, make_nurbs = cmds.circle(name=name, radius=radius, **kwargs)
 
-    graph.delete(make_nurbs)
+    Graph.delete(make_nurbs)
 
-    return graph.ls(transform)[0]
+    return Graph.ls(transform)[0]
 
 
 def createBox(name='nurbsBox', size: Union[CmdoNumber, List[CmdoNumber]] = 1.0, **kwargs):
@@ -89,7 +89,7 @@ def createBox(name='nurbsBox', size: Union[CmdoNumber, List[CmdoNumber]] = 1.0, 
     }
 
     parent = (
-            graph.ls(kwargs.get('parent'), '')
+            Graph.ls(kwargs.get('parent'), '')
             or [om.MObject.kNullObj]
     )[0]
 
@@ -105,7 +105,7 @@ def createBox(name='nurbsBox', size: Union[CmdoNumber, List[CmdoNumber]] = 1.0, 
     )
     # mfnCurve.setName(name)
 
-    curveParent = graph.ls(mfnCurve.parent(0))[0]
+    curveParent = Graph.ls(mfnCurve.parent(0))[0]
     curveParent.name = name
 
     return curveParent
@@ -136,7 +136,7 @@ def createCross(name='nurbsCross', size: CmdoNumber = 1.0, **kwargs):
     }
 
     parent = (
-            graph.ls(kwargs.get('parent'), '')
+            Graph.ls(kwargs.get('parent'), '')
             or [om.MObject.kNullObj]
     )[0]
 
@@ -151,7 +151,7 @@ def createCross(name='nurbsCross', size: CmdoNumber = 1.0, **kwargs):
         parent=parent
     )
 
-    curveParent = graph.ls(mfnCurve.parent(0))[0]
+    curveParent = Graph.ls(mfnCurve.parent(0))[0]
     curveParent.name = name
 
     return curveParent

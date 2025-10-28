@@ -15,7 +15,7 @@ class Container(dgLib.DGNode):
     _API_TYPE = om.MFn.kContainerBase
 
     @classmethod
-    def containerize(cls, graph: Graph, name: str = None, setRootTransform: bool = False) -> Type['Container']:
+    def containerize(cls, graph: Graph, name: str = None, setRootTransform: bool = False) -> 'Container':
 
         container = cls.create(name)
         for node in graph:

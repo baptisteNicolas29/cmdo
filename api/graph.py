@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from maya import cmds
 from maya.api import OpenMaya as om
@@ -15,7 +15,7 @@ __all__: List[str] = [
     'listHistory',
     'listConnections',
     'createNode',
-    'delete',
+    # 'delete',
     'emptyGraph',
     'select',
     'duplicate',
@@ -99,13 +99,13 @@ def createNode(nodeType: str, name: str = None, parent: om.MObject = None, **kwa
     return Graph().createNode(nodeType, name=name, parent=parent, **kwargs)
 
 
-def delete(*args, **kwargs) -> None:
-    """
-    Delete nodes
-    Imitate the maya.cmds.delete command
-    """
-
-    Graph.delete(*args, **kwargs)
+# def delete(*args, **kwargs) -> None:
+#     """
+#     Delete nodes
+#     Imitate the maya.cmds.delete command
+#     """
+#
+#     Graph.delete(*args, **kwargs)
 
 
 def select(*args, **kwargs) -> None:
@@ -129,23 +129,22 @@ def duplicate(*args, **kwargs) -> Graph:
     return Graph.duplicate(*args, **kwargs)
 
 
-def duplicateWithInternalConnections(
-        graph: CmdoList,
-        inputConnections: bool = False
-        ) -> Graph:
+def duplicateWithInternalConnections(graph: CmdoList, inputConnections: bool = False) -> Union[Graph, None]:
     """
-    This function duplicate given nodes,
-    inside connections and setted attributes
+    This function duplicate given nodes, inside connections and set attributes
 
-    :param graph: List[str] node compose the graph to be duplicated
-    :param inputConnections: bool allow the graph to keep input connections
-    :return: List[str] of the new nodes created
+    Args:
+        graph: List[str], node compose the graph to be duplicated
+        inputConnections: bool, allow the graph to keep input connections
+
+    Returns:
+        List[str] of the new nodes created
     """
 
     if len(graph) == 0:
-        return
-    graph = Graph.ls(graph)
-    sourceContainer = Container.containerize(graph)
+        return None
+
+    sourceContainer = Container.containerize(Graph.ls(graph))
     duplicatedContainer = Container(
             cmds.duplicate(
                 str(sourceContainer),

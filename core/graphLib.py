@@ -144,6 +144,7 @@ class Graph(om.MSelectionList):
 
         objsToDelete = cls.ls(*args, **kwargs)
         for obj in objsToDelete:
+
             om.MGlobal.deleteNode(obj)
 
     @classmethod
@@ -359,7 +360,10 @@ class Graph(om.MSelectionList):
 
         return cls.__createList(result)
 
-    def pop(self, value: CmdoObject) -> om.MObject:
+    def pop(self, value: int) -> om.MObject:
+        # check negative indices
+        value = value if value >= 0 else len(self) + value
+
         itemToReturn = self[value]
         self.remove(value)
 
@@ -392,7 +396,7 @@ class Graph(om.MSelectionList):
     def get(self, value: Union[str, int]) -> Any:
         return self[value]
 
-    def __getitem__(self, value):
+    def __getitem__(self, value: Union[int, slice]):
         # Implement slicing in Graph
         if isinstance(value, slice):
             newGraph = self.__class__()

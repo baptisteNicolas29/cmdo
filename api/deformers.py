@@ -37,7 +37,6 @@ def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Uni
 
     # Get source skinCluster
     source_skin = history.getDeformers(source, types="skinCluster")
-
     if cmds.objectType(destination) == 'mesh':
         destination = cmds.listRelatives(destination, parent=True)[0]
 
@@ -54,7 +53,7 @@ def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Uni
 
     # Build destination skinCluster
     if not destination_skin:
-        source_influences = cmds.skinCluster(source_skin, query=True, influence=True)
+        source_influences = cmds.skinCluster(source_skin.name, query=True, influence=True)
         destination_prefix = destination.split(':')[-1].split('|')[-1]
 
         # since we include hidden selection
@@ -73,8 +72,6 @@ def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Uni
             includeHiddenSelections=True,
             name=f'{destination_prefix}_skinCluster'
         )[0]
-
-    # print(f'- {source_skin = }\n- {destination_skin = }')
 
     # Copy skin weights
     cmds.copySkinWeights(

@@ -33,7 +33,7 @@ def getDeformers(node: Union[str, om.MObject], types: Union[str, List[str]]) -> 
         history
     ))
 
-    return graph.ls(*deformers)
+    return graph.ls(*deformers) if deformers else graph.emptyGraph()
 
 
 def getNodeHistoryByType(node: str, **kwargs) -> List[str]:

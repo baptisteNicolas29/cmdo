@@ -513,6 +513,19 @@ class DAGNode(DGNode):
 
         return self['offsetParentMatrix'].value
 
+    @offsetParentMatrix.setter
+    def offsetParentMatrix(self, value: Union[List[float], om.MMatrix]) -> None:
+
+        """
+        Set the current node s offsetParentMatrix
+
+        Args:
+            value: om.MMatrix, the matrix to set the offsetParentMatrix to
+
+        """
+
+        self['offsetParentMatrix'] = value
+
     @property
     def visibilityPlug(self) -> Plug:
 
