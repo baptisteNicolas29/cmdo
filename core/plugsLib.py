@@ -5,6 +5,8 @@ import math
 from maya import cmds
 from maya.api import OpenMaya as om
 
+from .exceptions import CmdoPlugException
+
 
 class Plug(om.MPlug):
 
@@ -157,6 +159,12 @@ class Plug(om.MPlug):
         raise AttributeError(f'{mfn.name()} does not have attribute {keyname}')
 
     def set(self, *value: Any) -> None:
+
+        if self.isLocked or self.isConnected:
+            raise CmdoPlugException(
+                f'{self.name()} is locked or connected and cannot be set'
+            )
+
         if isinstance(value[0], om.MPlug):
             self.__class__(value[0]).connect(self)
 
