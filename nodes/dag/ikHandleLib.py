@@ -340,9 +340,9 @@ class IkSpringSolver(IkSolver):
     _API_TYPE = om.MFn.kIkSolver
 
     def __init__(self, name: Union[str, om.MObject] = None):
-        super().__init__(name)
-
         mel.eval('ikSpringSolver')
+
+        super().__init__(name)
 
 
 NodeRegistry()[IkHandle.nodeType()] = IkHandle

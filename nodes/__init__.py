@@ -35,11 +35,15 @@ from .dg.subtractLib import *
 from .dg.wtAddMatrixLib import *
 
 from .dag.transformLib import *  # dagLib
-from .dag.curveLib import *  # convert, exportLib, dagLib
+from .dag.curveLib import *  # dagLib
 from .dag.jointLib import *  # transformLib
 from .dag.meshLib import *  # dagLib
-from .dag.surfaceLib import *  # convert, dagLib
-from .dag.containerLib import *  # convert, dagLib
+from .dag.surfaceLib import *  # dagLib
+from .dag.containerLib import *  # dagLib
+from .dag.cameraLib import *  # dagLib
+from .dag.locatorLib import *  # dagLib
+from .dag.ikHandleLib import *  # dagLib
+from .dag.mayaUsdProxyShape import *  # dagLib
 
 from .dg.skinClusterLib import *
 from .dg.blendshapeLib import *

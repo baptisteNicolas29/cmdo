@@ -160,7 +160,8 @@ class Plug(om.MPlug):
 
     def set(self, *value: Any) -> None:
 
-        if self.isLocked or self.isDestination:
+        # TODO: how to check if it is connected but still animatable?
+        if self.isLocked:  # or self.isDestination:
             raise CmdoPlugException(
                 f'{self.name()} is locked or connected and cannot be set'
             )

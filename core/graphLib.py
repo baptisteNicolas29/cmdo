@@ -14,6 +14,8 @@ from .nodeRegistry import NodeRegistry
 from .exceptions import CmdoException
 
 
+# TODO: find a way to handle f***ing components (ie: vertices, edges, etc)
+
 class Graph(om.MSelectionList):
 
     __nodeRegistry = NodeRegistry()

@@ -46,14 +46,8 @@ It is easy to access all functionalities through the main namespace like we woul
 import cmdo
 
 # returns a Graph object using specified flags (graph is a subclass of MSelectionList)
-cameraNames = [
-    'perspShape', 'frontShape', 'sideShape', 'topShape', 
-    'leftShape', 'bottomShape', 'backShape'
-]
-graphObject = cmdo.ls(cameraNames, type='camera')
-
-newNode = cmdo.createNode('transform', name='myNewNode')
-newNode.name = 'newNodeName' 
+graphObject = cmdo.ls('*_CTRL', type='transform', recursive=True)
+cmdo.lockAndHideTransforms(graphObject)
 
 # the api has a lot of high level operations
 unusedNamespaces = cmdo.getAllUnusedNamespaces()
@@ -174,10 +168,15 @@ Later cmdo will be able to wrap locator shapes with this class when they are que
 ```python
 import cmdo
 
-trs = cmdo.createNode('locator')
+trs = cmdo.createNode('locator') # return the locator transform
 locator_instance = trs.shapes[0] # this will return a Locator class instance
 
+# Attr from Locator class
 locator_instance.localScale = [5, 5, 5]
+
+# Attr inherited from DAGNode
+locator_instance.overrideEnabled = True # enable color override
+locator_instance.overrideColor = 13 # red
 
 ```
 

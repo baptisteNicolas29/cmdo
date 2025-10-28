@@ -6,6 +6,7 @@ from .animCurveLib import *
 from .animLayerLib import *
 from .axisAngleToQuatLib import *
 from .blendMatrixLib import *
+from .blendshapeLib import *
 from .choiceLib import *
 from .clampRangeLib import *
 from .composeMatrixLib import *
@@ -31,5 +32,7 @@ from .referenceLib import *
 from .remapValueLib import *
 from .setRangeLib import *
 from .sinLib import *
+from .skinClusterLib import *
 from .subtractLib import *
+from .uvpinLib import *
 from .wtAddMatrixLib import *

@@ -89,7 +89,7 @@ def bigReload(moduleToReload: str = __PACKAGE_NAME) -> None:
 #     Order of import is important to avoid circular imports
 #     or partial import errors, until we get lazy imports
 
-from . import mathLib
+from . import mathLib  # deprecate when all maths use maya.api.OpenMaya types
 from . import core
 from . import nodes
 from . import api
