@@ -1,4 +1,4 @@
-from typing import List, Optional, Union, Any, Tuple, Dict
+from typing import List, Optional, Union, Any, Tuple, Dict, Callable
 
 from maya import cmds
 from maya.api import OpenMaya as om
@@ -136,6 +136,23 @@ class Node(om.MObject):
         """
 
         return self.name
+
+    # TODO: implement __getattr__ (ie: Node().attributeName)
+    # def __getattr__(self, attr: str) -> Callable:
+    #     print(f'{self.__class__.__name__}.__getattr__({attr=})')
+    #
+    #     if hasattr(self.__dependencyNode, attr):
+    #         def wrapOutput(*args, **kwargs):
+    #             result = getattr(self.__dependencyNode, attr)(*args, **kwargs)
+    #             if isinstance(result, om.MPlug):
+    #                 return Plug(result)
+    #
+    #             return result
+    #
+    #         return wrapOutput
+    #
+    #     # Raise the native python error if nothing was found
+    #     return super().__getattr__(attr)
 
     def __getitem__(self, plug) -> Plug:
         """

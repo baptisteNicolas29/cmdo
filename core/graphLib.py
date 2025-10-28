@@ -360,23 +360,91 @@ class Graph(om.MSelectionList):
 
         return cls.__createList(result)
 
-    def setMembersAttribute(self, attr: Union[str, plugsLib.Plug], value: Any) -> None:
+    def setMembersAttributeValue(self, attr: Union[str, plugsLib.Plug], value: Any, raiseOnError: bool = False) -> None:
         """
         Set attribute for all members if they correspond or have the attribute
 
-        :param attr:
-        :param value:
-        :return:
+        Args:
+            attr: Union[str, plugsLib.Plug], the name of the attribute or
+                plug to set
+            value: Any, the value to set the attribute to
+            raiseOnError: bool, if true raise a CmdoPlugException if
+                the attribute is locked or connected
+
         """
+        dgDagType = [
+            om.MItSelectionList.kDNselectionItem,
+            om.MItSelectionList.kDagSelectionItem
+        ]
+        plugType = om.MItSelectionList.kPlugSelectionItem
+
+        def isNotSettable(plug: om.MPlug):
+            return plug.isLocked or plug.isConnected
+
+        def isValidPlug(item, obj) -> bool:
+            return item.itemType() == plugType and obj.name().endswith(attr)
+
+        def isValidObjPlug(item, obj) -> bool:
+            return item.itemType() in dgDagType and obj.hasAttr(attr)
 
         for i, item in enumerate(om.MItSelectionList(self)):
             currentObj = self[i]
 
-            if item.itemType() == item.kPlugSelectionItem and currentObj.name().endswith(attr):
+            if isValidPlug(item, currentObj):
+                if not raiseOnError and isNotSettable(currentObj):
+                    continue
+
                 currentObj.value = value
 
-            elif item.itemType() in [item.kDNselectionItem, item.kDagSelectionItem] and currentObj.hasAttr(attr):
+            elif isValidObjPlug(item, currentObj):
+                if not raiseOnError and isNotSettable(currentObj[attr]):
+                    continue
+
                 currentObj[attr] = value
+
+    def getMembersAttributeValue(self, attr: Union[str, plugsLib.Plug], raiseOnError: bool = False) -> List:
+        """
+        Get attribute for all members if they correspond or have the attribute
+
+        Args:
+            attr: Union[str, plugsLib.Plug], the name of the attribute or
+                plug to set
+            raiseOnError: bool, if true raise a CmdoPlugException if
+                the attribute is locked or connected
+
+        """
+        dgDagType = [
+            om.MItSelectionList.kDNselectionItem,
+            om.MItSelectionList.kDagSelectionItem
+        ]
+        plugType = om.MItSelectionList.kPlugSelectionItem
+
+        def isNotSettable(plug: om.MPlug):
+            return plug.isLocked or plug.isConnected
+
+        def isValidPlug(item, obj) -> bool:
+            return item.itemType() == plugType and obj.name().endswith(attr)
+
+        def isValidObjPlug(item, obj) -> bool:
+            return item.itemType() in dgDagType and obj.hasAttr(attr)
+
+        result = []
+        for i, item in enumerate(om.MItSelectionList(self)):
+            currentObj = self[i]
+
+            if isValidPlug(item, currentObj):
+                if not raiseOnError and isNotSettable(currentObj):
+                    continue
+
+                result.append(currentObj.value)
+
+            elif isValidObjPlug(item, currentObj):
+                if not raiseOnError and isNotSettable(currentObj[attr]):
+                    continue
+
+                result.append(currentObj[attr].value)
+
+        return result
 
     def pop(self, value: int) -> om.MObject:
         # check negative indices
@@ -411,8 +479,31 @@ class Graph(om.MSelectionList):
     def __len__(self) -> int:
         return self.length()
 
-    def get(self, value: Union[str, int]) -> Any:
-        return self[value]
+    def __getattr__(self, attr: Union[str, plugsLib.Plug]) -> List[Any]:
+        """
+        Get attribute for all members if they correspond or have the attribute
+
+        Args:
+            attr: Union[str, plugsLib.Plug], the name of the attribute or
+                plug to set
+
+        Returns:
+            List[Any]: the list of attribute values
+
+        """
+        return self.getMembersAttributeValue(attr)
+
+    def __setattr__(self, attr: Union[str, plugsLib.Plug], value: Any) -> None:
+        """
+        Set attribute for all members if they correspond or have the attribute
+
+        Args:
+            attr: Union[str, plugsLib.Plug], the name of the attribute or
+                plug to set
+            value: Any, the value to set the attribute to
+
+        """
+        self.setMembersAttributeValue(attr, value)
 
     def __getitem__(self, value: Union[int, slice]):
         # Implement slicing in Graph
@@ -486,7 +577,7 @@ class Graph(om.MSelectionList):
 
     def __iter__(self) -> Any:
         for value in range(self.length()):
-            yield self.get(value)
+            yield self[value]
 
     def __contains__(self, item: Union[om.MObject, Any, str]) -> bool:
 
