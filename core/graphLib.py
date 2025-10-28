@@ -360,6 +360,24 @@ class Graph(om.MSelectionList):
 
         return cls.__createList(result)
 
+    def setMembersAttribute(self, attr: Union[str, plugsLib.Plug], value: Any) -> None:
+        """
+        Set attribute for all members if they correspond or have the attribute
+
+        :param attr:
+        :param value:
+        :return:
+        """
+
+        for i, item in enumerate(om.MItSelectionList(self)):
+            currentObj = self[i]
+
+            if item.itemType() == item.kPlugSelectionItem and currentObj.name().endswith(attr):
+                currentObj.value = value
+
+            elif item.itemType() in [item.kDNselectionItem, item.kDagSelectionItem] and currentObj.hasAttr(attr):
+                currentObj[attr] = value
+
     def pop(self, value: int) -> om.MObject:
         # check negative indices
         value = value if value >= 0 else len(self) + value

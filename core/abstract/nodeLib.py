@@ -213,6 +213,7 @@ class Node(om.MObject):
         """
 
         for attr, value in data.items():
+
             self[attr] = value
 
     def getAttrFromList(self, data: List[str]) -> Dict[str, Any]:
@@ -369,6 +370,13 @@ class Node(om.MObject):
         """
 
         return self.dependencyNode.hasObj(self)
+
+    def hasAttr(self, attr: Union[str, Plug]) -> bool:
+
+        if isinstance(attr, Plug):
+            attr = attr.name()
+
+        return self.dependencyNode.hasAttribute(attr)
 
     @property
     def connectedPlugs(self) -> PlugArray:

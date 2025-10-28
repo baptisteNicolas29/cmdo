@@ -53,6 +53,15 @@ class Plug(om.MPlug):
 
         return self.__class__()
 
+    def __setitem__(self, key: str, value: Any) -> None:
+
+        # TODO: need to fix this part with the * operator
+        if isinstance(value, (tuple, list)):
+            self[key].set(*value)
+
+        else:
+            self[key].set(value)
+
     def __str__(self) -> str:
         selList = om.MSelectionList()
         selList.add(self)
@@ -104,6 +113,30 @@ class Plug(om.MPlug):
 
         return self.value * other
 
+    def __rshift__(self, other: 'Plug') -> None:
+        self.connect(other)
+
+    def __lshift__(self, other: 'Plug') -> None:
+        other.connect(self)
+
+    def __truediv__(self, other: om.MPlug) -> None:
+        """
+        Implement "/" symbol for disconnecting plugs
+        Works in either direction: plug1 / plug2 OR plug2 / plug1
+
+        Args:
+            other: om.MPlug, a plug to disconnect
+        """
+
+        if not isinstance(other, self.__class__):
+            other = Plug(other)
+
+        if other.source() == self:
+            self.disconnect(other)
+
+        elif self.source() == other:
+            other.disconnect(self)
+
     def get(self, keyname: Union[int, str]) -> 'Plug':
         """
         Get the wanted plug from its name
@@ -116,21 +149,12 @@ class Plug(om.MPlug):
             om.MPlug: found plug or null plug if not found
 
         """
-        mfn = om.MFnDependencyNode(self.node())
+        mfn = self.node().dependencyNode
 
-        if mfn.hasAttribute(keyname):
+        if self.node().dependencyNode.hasAttribute(keyname):
             return self[keyname]
 
         raise AttributeError(f'{mfn.name()} does not have attribute {keyname}')
-
-    def __setitem__(self, key: str, value: Any) -> None:
-
-        # TODO: need to fix this part with the * operator
-        if isinstance(value, (tuple, list)):
-            self[key].set(*value)
-
-        else:
-            self[key].set(value)
 
     def set(self, *value: Any) -> None:
         if isinstance(value[0], om.MPlug):
@@ -182,30 +206,6 @@ class Plug(om.MPlug):
                     f'\t- value: {value}'
                 )
 
-    def __rshift__(self, other: 'Plug') -> None:
-        self.connect(other)
-
-    def __lshift__(self, other: 'Plug') -> None:
-        other.connect(self)
-
-    def __truediv__(self, other: om.MPlug) -> None:
-        """
-        Implement "/" symbol for disconnecting plugs
-        Works in either direction: plug1 / plug2 OR plug2 / plug1
-
-        Args:
-            other: om.MPlug, a plug to disconnect
-        """
-
-        if not isinstance(other, self.__class__):
-            other = Plug(other)
-
-        if other.source() == self:
-            self.disconnect(other)
-
-        elif self.source() == other:
-            other.disconnect(self)
-
     def parent(self, *args, **kwargs):
         return self.__class__(super().parent(*args, **kwargs))
 
@@ -231,7 +231,7 @@ class Plug(om.MPlug):
         """
         return self.__class__(super().child(*args, **kwargs))
 
-    def source(self) -> 'Plug':
+    def source(self, *args, **kwargs) -> 'Plug':
         """
         Get the source of the plug
 
