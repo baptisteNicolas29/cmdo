@@ -160,7 +160,7 @@ class Plug(om.MPlug):
 
     def set(self, *value: Any) -> None:
 
-        if self.isLocked or self.isConnected:
+        if self.isLocked or self.isDestination:
             raise CmdoPlugException(
                 f'{self.name()} is locked or connected and cannot be set'
             )
