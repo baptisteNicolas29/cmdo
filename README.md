@@ -1,7 +1,7 @@
 # cmdo
 
 
-# WHAT IS CMDO (maya commands object)
+# WHAT IS CMDO: (maya commands object)
 `cmdo` is an oop maya python wrapper. It is mainly composed of a library of nodes (maya node wrappers classes)  
 and an api to enable high level operations on nodes (ie: lockAndHideTransforms ect).  
 At its core cmdo is built to operate on any kind of maya data, its nodes can be initialised with  
@@ -38,6 +38,20 @@ cmdo.setDebugMode(state=True, maxCharCount=500)
 ```
 
 ## SubModules:
+### nodes :
+`cmdo.nodes` is a subPackage holding all maya node wrapper classes.  
+They enable oop interaction with maya nodes and are returned through the api, and Graph objects.  
+They can take multiple input types such as, python types,  OpenMaya types or custom types
+
+
+### core :
+`cmdo.core` is a subPackage holding some important objets and operations used throughout cmdo.
+
+Notably all classes that serve as a node base and that do not represent specific nodes.
+The `graphLib`,  
+which is used to interact with maya graphs (ie: ls, listRelatives ect). The `nodeRegistry` that holds a reference to all node  
+classes that `cmdo` can wrap. And some modules to help, like exceptions, decorators ect.
+
 ### api:
 `cmdo.api` subPackage is dumped into the main namespace of the master package (cmdo).  
 This module is a wrapper of maya cmds/OpenMaya to return python objects  (for oop interaction).  
@@ -55,21 +69,6 @@ for namespace in unusedNamespaces:
     cmdo.removeNamespaces(namespace)
 
 ```
-
-### nodes :
-`cmdo.nodes` is a subPackage holding all maya node wrapper classes.  
-They enable oop interaction with maya nodes and are returned through the api, and Graph objects.  
-They can take multiple input types such as, python types,  OpenMaya types or custom types
-
-
-### core :
-`cmdo.core` is a subPackage holding some important objets and operations used throughout cmdo.
-
-Notably all classes that serve as a node base and that do not represent specific nodes.
-The `graphLib`,  
-which is used to interact with maya graphs (ie: ls, listRelatives ect). The `nodeRegistry` that holds a reference to all node  
-classes that `cmdo` can wrap. And some modules to help, like exceptions, decorators ect.
-
 
 ### mathLib :
 !Warning: This library will be remove once all maths use `maya.api.OpenMaya`    
@@ -192,16 +191,17 @@ locator_instance.overrideColor = 13 # red
 ```python
 import cmdo
 
+
 # return a transform python object
-trs = cmdo.createNode('transform', name='myTransform')
-# get the translation component from the new transform as vector3
-# type cmdo.math.Vector3 is a subclass of OpenMaya.MVector
-pos = trs.translate
+trs1 = cmdo.createNode('transform', name='myTransform')
+
+# get the translation component from the new transform as OpenMaya.MVector
+pos = trs1.translate
 
 # set new object translate and rotate
-trs = cmdo.createNode('transform', name='newTransform')
-trs.translate = pos
-trs.rotate = [3.5, 50, -24.1]
+trs2 = cmdo.createNode('transform', name='newTransform')
+trs2.translate = trs1.translate
+trs2.rotate = [3.5, 50, -24.1]
 ```
 
 </details>
@@ -212,6 +212,7 @@ trs.rotate = [3.5, 50, -24.1]
 
 ```python
 import cmdo
+
 
 # get all controllers from scene 
 # use the same syntax as maya ls, but return custom python objects
@@ -238,13 +239,14 @@ for ctrl in cmdo.ls('*_CTRL', recursive=True):
 ```python
 import cmdo
 
+
 # create an object and move it
 trs1 = cmdo.createNode('transform', name='myTransform1')
 trs1.displayLocalAxis = True
 trs1.translate = [10, 20.58, 2]
 trs1.rotate = [10, 20.58, 2]
 
-# get world matrix of the transform
+# get world matrix of the transform as OpenMaya.MMatrix
 wrldMtx = trs1.worldMatrix
 
 # create a group to parent second object beneath it
@@ -264,31 +266,23 @@ trs2.worldMatrix = trs1.worldMatrix
 
 <details>
 
-<summary>Exemple 4: Create nodes and connect them</summary>
+<summary>Exemple 4: Create nodes, connect and animate them</summary>
 
 ```python
 import cmdo
 
+# create an emptyGraph (Graph is a subclass of OpenMaya.MSelectionList)
+nodes = cmdo.Graph()
 
-def get_node(node_type, node_name):
-    """
-    Small function to create a node if it does not exist
-    """
-    
-    if node := cmdo.ls(node_name, type=node_type):
-       return node[0]
-       
-    return cmdo.createNode(node_type, name=node_name)
+# create nodes and add them to the graph
+trs = nodes.createNode('transform', 'blockOutput_grp')
+ctrl = nodes.createNode('locator', 'blockController_ctrl')
+jntRoot = nodes.createNode('joint', 'skinJointRoot_skn')
+jnt = nodes.createNode('joint', 'skinJoint_skn')
+mltMtx = nodes.createNode('multMatrix', 'skinJoint_mltMtx')
+dcpMtx = nodes.createNode('decomposeMatrix', 'skinJoint_dcpMtx')
 
-# create or get nodes
-trs = get_node('transform', 'blockOutput_grp')
-ctrl = get_node('locator', 'blockController_ctrl')
-jntRoot = get_node('joint', 'skinJointRoot_skn')
-jnt = get_node('joint', 'skinJoint_skn')
-mltMtx = get_node('multMatrix', 'skinJoint_mltMtx')
-dcpMtx = get_node('decomposeMatrix', 'skinJoint_dcpMtx')
-
-# set some attributes. There are different ways to do this,
+# Set some attributes. There are different ways to do this,
 # using properties if they exist, the plug name directly or using a dict
 
 # using property
@@ -323,14 +317,17 @@ for plugName in ['translate', 'rotate', 'scale', 'shear']:
     jnt[plugName] = dcpMtx[f'output{plugName.capitalize()}']
     
 # move controller and set keys
-cmdo.currentTime(10)
-cmdo.setKeyFrame(time=0)
+cmdo.currentTime(0)
+cmdo.setKeyframe(ctrl, time=0)
 
 cmdo.currentTime(10)
 ctrl.translate = [3, 5, 2]
 ctrl.rotate = [-30.2, 17.154, 23]
 ctrl.scale = [1.1, 1.2, 1]
-cmdo.setKeyFrame(time=0)
+cmdo.setKeyframe(ctrl, time=10)
+
+# we can also set attributes from the Graph itself if all objects have it
+nodes.visibility = False
 
 ```
 

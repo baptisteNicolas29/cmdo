@@ -103,6 +103,15 @@ class ObjectSet(DGNode):
 
         return Graph(self.mfnSet.getMembers(False))
 
+    @property
+    def allMembers(self) -> Graph:
+        """
+        Get the set members recursively as cmdo objects
+
+        """
+
+        return Graph(self.mfnSet.getMembers(True))
+
     def copy(self) -> om.MObject:
         """
         Create a new set that is the copy of this set
