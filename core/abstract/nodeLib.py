@@ -528,6 +528,7 @@ class Node(om.MObject):
         from ..nodeRegistry import NodeRegistry
 
         refNodeName = cmds.referenceQuery(self.name, referenceNode=True)
-        refNode = om.MSelectionList().add(refNodeName)
+        selList = om.MSelectionList().add(refNodeName)
+        refNode = selList.getDependNode(0)
 
-        return NodeRegistry().get(refNode)(refNode)
+        return NodeRegistry().get(refNodeName)(refNode)

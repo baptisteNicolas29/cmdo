@@ -21,6 +21,7 @@ class DAGNode(DGNode):
 
         super().__init__(name=name)
 
+    # TODO: remove this one (already in node)
     def __str__(self) -> str:
         return self.name
 
@@ -115,6 +116,7 @@ class DAGNode(DGNode):
 
         return self.dagPath.childCount()
 
+    # TODO: CONVERT OUTOUT TO Graph!!!
     @property
     def children(self) -> list:
 
@@ -132,6 +134,7 @@ class DAGNode(DGNode):
 
         return items
 
+    # TODO : TO DELETE
     @property
     def childNames(self) -> List[str]:
 
@@ -182,6 +185,7 @@ class DAGNode(DGNode):
 
         return NotImplementedError('"shapeOrig" property is not implemented yet')
 
+    # TODO : TO DELETE
     @property
     def isOrig(self) -> bool:
 
@@ -253,7 +257,7 @@ class DAGNode(DGNode):
 
         mObj = parentNodePath.node()
         return NodeRegistry().get(mObj, DAGNode)(mObj)
-        
+
     @property
     def isTransform(self) -> bool:
 
