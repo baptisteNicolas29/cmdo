@@ -19,26 +19,18 @@ __all__: List[str] = [
 
 
 def getAllChildren(node: Union[str, Type[dagLib.DAGNode]]) -> List[str]:
-
     """
     Get all children of the given node
 
-    Args:
-        node: Union[str, Type[dagLib.DAGNode]]:
-            Le noeud à partir duquel on veut récupérer les enfants.
+    :param node: Union[str, Type[dagLib.DAGNode]]: node to get all children from
 
-    Returns:
-        List[str]:
-            La liste de tous les enfants des noeuds.
+    :return: List[str]: all children of the given node
     """
 
     if isinstance(node, str):
-        sel = om.MSelectionList()
-        sel.clear()
-        sel.add(node)
-        dag = sel.getDagPath(0)
+        dag = dagLib.DAGNode(node).dagPath
     else:
-        dag = node.maya_dagPath
+        dag = node.dagPath
 
     traversed = set()
     iterator = om.MItDag(om.MItDag.kDepthFirst)
@@ -63,11 +55,10 @@ def getAllChildren(node: Union[str, Type[dagLib.DAGNode]]) -> List[str]:
 def getDirectChildren(node: str, **kwargs) -> List[str]:
     """
     Get the direct children of the given object
-    Args:
-        node: the object for which to get direct children
-        **kwargs: keyword arguments for the listRelative maya command
-    Returns:
-        a list of direct children corresponding to the given arguments
+
+    :param node: the object for which to get direct children
+
+    :return: List[str], list of direct children corresponding to the arguments
     """
 
     if not cmds.objExists(node):
@@ -80,12 +71,12 @@ def getDirectChildren(node: str, **kwargs) -> List[str]:
 def getRootParent(node: str) -> Union[str, None]:
     """
     Get the root parent of the object
-    Args:
-        node: a maya object to find the parent for
 
-    Returns:
-        the name of the root parent
+    :param node: str, a maya object to find the parent for
+
+    :return: str, the name of the root parent
     """
+
     if not cmds.objExists(node):
         cmds.warning(f'Given obj does not exist : {node}. Aborting....')
         return None
@@ -99,13 +90,13 @@ def getRootParent(node: str) -> Union[str, None]:
 
 def getHierarchyRoot(node: str, **kwargs) -> List[str]:
     """
-       Makes a list of all the hierarchy leading to the given obj
-       Args:
-           node: a maya object to find the parent for
-           kwargs: key word arguments for the listRelatives maya command
-       Returns:
-           the name of all objects in the given objects hierarchy
-       """
+   Makes a list of all the hierarchy leading to the given obj
+
+   :param node: a maya object to find the parent for
+   :param kwargs: key word arguments for the listRelatives maya command
+
+   :return: List[str], the name of all objects in the given objects hierarchy
+   """
 
     if not cmds.objExists(node):
         cmds.warning(f'Given obj does not exist : {node}. Aborting....')
@@ -125,13 +116,12 @@ def getShortestParent(node: CmdoObject, graphList: CmdoList, asStr: bool = True)
     """
     Get the first parent of specified node inside the given graph
 
-    Args:
-        node: CmdoObject, the node to get the parent for
-        graphList: CmdoList, the graph to search in for the parent
-        asStr: bool, get a string of nodeLib.Node
 
-    Returns:
-        Union[nodeLib.Node, str, None]: the parent if found
+    :param node: CmdoObject, the node to get the parent for
+    :param graphList: CmdoList, the graph to search in for the parent
+    :param asStr: bool, get a string of nodeLib.Node
+
+    :return: Union[nodeLib.Node, str, None]: the parent if found
     """
 
     if isinstance(graphList, om.MSelectionList):
@@ -158,12 +148,10 @@ def getDagRoots(nodes: CmdoList, safe: bool = True) -> graph.Graph:
     """
     Get the dag nodes roots from a set of given nodes
 
-    Args:
-        nodes: CmdoList, node list to process
-        safe: bool, if safe function will not fail (bypass the not dagNodes) else bypass the dgNodes
+    :param nodes: CmdoList, node list to process
+    :param safe: bool, if safe function will not fail (bypass the not dagNodes) else bypass the dgNodes
 
-    Returns:
-        Graph: void one if source graph has no DagNode else return graph who contain the dagRootNodes
+    :return: Graph: graph which contains the dagRootNodes or empty graph
     """
 
     if isinstance(nodes, list) or isinstance(nodes, om.MSelectionList):

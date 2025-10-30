@@ -19,6 +19,7 @@ def lockTransforms(nodes, attrs=None, value: bool = True) -> None:
     :param attrs:
     :param value:
     :return:
+
     """
     graph_node = Graph.ls(nodes)
     for node in graph_node:
@@ -41,6 +42,7 @@ def hideTransforms(nodes, attrs=None, value: bool = True) -> None:
     :param value:
     :return:
     """
+
     graph_node = Graph.ls(nodes)
     for node in graph_node:
         attributes = (
@@ -60,6 +62,7 @@ def lockAndHideTransforms(nodes, attrs=None, value: bool = True) -> None:
     :param nodes:
     :param attrs:
     :param value:
+
     :return:
     """
 

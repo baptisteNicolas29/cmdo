@@ -29,13 +29,11 @@ __all__: List[str] = [
 MAYA_DEFAULT_MAT = 'lambert1'
 
 
-def assignDefaultShader(nodes):
+def assignDefaultShader(nodes: CmdoList) -> None:
     """
     Assign given nodes to the initial shading engine
 
-    Args:
-        nodes: a collection of nodes/components to be add to the shading engine
-
+    :param nodes: CmdoList, a list of nodes/components to add to the default shading engine
     """
 
     initSG = Graph.ls('initialShadingGroup')[0]
@@ -47,13 +45,12 @@ def getRandomColor(min_value: CmdoNumber = 0, max_value: CmdoNumber = 100) -> Li
     """
     Generate a random double3 color range for color purposes
 
-    Args:
-        min_value: float|int, the minimum value for the color range
-        max_value: float|int, the maximum value for the color range
+    :param min_value: CmdoNumber, the minimum value for the color range
+    :param max_value: CmdoNumber, the maximum value for the color range
 
-    Returns:
-        list[float], a list of double3 to be used for color ranged 0-1
+    :return: list[float], a list of double3 to be used for color ranged 0-1
     """
+
     if not 0 <= min_value <= max_value <= 100:
         raise Exception(
             f'Min/Max values for color range need to be between 0 and 100 got,'
@@ -71,8 +68,7 @@ def getSceneMaterials() -> List:
     """
     Get all materials in the current scene
 
-    Returns:
-        list of all the materials in the current scene
+    :return: List, list of all the materials in the current scene
     """
     return cmds.ls(materials=True)
 
@@ -80,12 +76,12 @@ def getSceneMaterials() -> List:
 def getShadersFromObjects(nodes: List[str] = None, **kwargs) -> Dict[str, List[str]]:
     """
     Returns the shaders of the given or selected objects
-    Args:
-        nodes: the node to get shaders from
 
-    Returns:
-        dict[str: list[str]], dictionary holding node: materials key value pairs
+    :param nodes: the node to get shaders from
+
+    :return: dict[str: list[str]], dictionary holding {node: materials} pairs
     """
+
     materials = {}
     for node in nodes:
         mats = getShadersFromObject(node, **kwargs)
@@ -98,11 +94,10 @@ def getShadersFromObjects(nodes: List[str] = None, **kwargs) -> Dict[str, List[s
 def getShadersFromObject(node: str = None, **kwargs) -> List[str]:
     """
     Returns the shaders of the given or selected objects
-    Args:
-        node: the node to get shaders from
 
-    Returns:
+    :param node: str, the node to get shaders from
 
+    :return: List[str], list of all the materials assigned to given object
     """
 
     return cmds.ls(
@@ -113,12 +108,11 @@ def getShadersFromObject(node: str = None, **kwargs) -> List[str]:
 
 def getObjectsFromShaders(materials: List[str] = None) -> Dict[str, List[str]]:
     """
+    Returns the objects to which the given materials are assigned
 
-    Args:
-        materials:
+    :param materials: List[str], list of materials to get objects from
 
-    Returns:
-
+    :return: dict[str: list[str]], dictionary holding {material: nodes} pairs
     """
 
     objects = {}
@@ -132,12 +126,11 @@ def getObjectsFromShaders(materials: List[str] = None) -> Dict[str, List[str]]:
 
 def getObjectsFromShader(material: str = None) -> List[str]:
     """
+    Returns the objects to which the given material is assigned
 
-    Args:
-        material:
+    :param material: str, the material to get objects from
 
-    Returns:
-
+    :return: list[str], list of all object the given material is assigned
     """
 
     return cmds.hyperShade(material, listGeometries=True)
@@ -145,14 +138,13 @@ def getObjectsFromShader(material: str = None) -> List[str]:
 
 def getBoundingBoxTiles(bb):
     """
-    return the bounding box of the udim tile
+    Get the bounding box of the UDIM tile
 
-    Args:
-        bb:
+    :param bb:
 
-    Returns:
-
+    :return: list[int], the bounding box of the UDIM tile
     """
+
     u_minmax, v_minmax = bb
 
     if u_minmax[1] != int(u_minmax[1]):
@@ -171,20 +163,12 @@ def getBoundingBoxTiles(bb):
 
 def getUVUdimTiles(mesh, uv_set=None):
     """
-        Return the UVs and UV tiles used by the UVs of the input mesh.
+    Return the UVs and UV tiles used by the UVs of the input mesh.
 
-        Args:
-            mesh (str): Mesh node name.
-            uv_set (str): The UV set to sample. When not
-                provided the current UV map is used.
+    :param mesh: str, Mesh node name
+    :param uv_set: str, the UV set to sample. When not provided the current UV map is used.
 
-        Returns:
-            dict[
-                shell_id: dict[
-                    uvs: shell uv indices
-                    tile: tile (u, v)
-                ]
-
+    :return: dict[shell_id: dict[uvs: shell uv indices, tile: tile (u, v)]
     """
 
     kwargs = {}
@@ -218,15 +202,14 @@ def getUVUdimTiles(mesh, uv_set=None):
 
 def uvToUdim(tile):
     """
-        UV tile to UDIM number.
+    UV tile to UDIM number.
 
-        Note that an input integer of 2 means it's
-        the UV tile range using 2.0-3.0.
+    Note that an input integer of 2 means it's
+    the UV tile range using 2.0-3.0.
 
-        Returns:
-            int: UDIM tile number
-
+    :return: int: UDIM tile number
     """
+
     u, v = tile
     return 1001 + u + 10 * v
 
@@ -235,12 +218,11 @@ def assignMaterial(faces, material_name, mat_type='lambert'):
     """
     Assign a material, creates the material if it does not exist
 
-    Args:
-        faces:
-        material_name:
-        mat_type:
+    :param faces:
+    :param material_name:
+    :param mat_type:
 
-    Returns:
+    :return:
 
     """
     material = cmds.ls(material_name, type=mat_type)
@@ -279,13 +261,12 @@ def assignMaterialPerUdim(geometry_objs, exceptions=None):
     """
     Assignes a new material per UDIM associated with the object
 
-    Args:
-        geometry_objs:
-        exceptions:
+    :param geometry_objs:
+    :param exceptions:
 
-    Returns:
-
+    :return:
     """
+
     materials = []
 
     if not isinstance(geometry_objs, CmdoList):
@@ -321,11 +302,10 @@ def assign_diffuse_to_material(material_list, diffuse_path):
     """
     Assign the diffuse texture to a list of materials given a folder path
 
-    Args:
-        material_list:
-        diffuse_path:
-    Returns:
+    :param material_list:
+    :param diffuse_path:
 
+    :return:
     """
     connect_dict = {
         'coverage': 'coverage',
@@ -396,11 +376,10 @@ def addMaterialWithColor(
     For each geometry in the current scene, assign new material
     and either a random color or given color, default color is brown
 
-    Args:
-        objects: list[str], a list of objects to assigne color to, default None
-        random_color: bool, whether to select a random color or brown
-        color: tuple[float] | list[float], rbg color values, defaults to brown
-        color_range: tuple[float]: the range of accepted color to randomise
+    :param objects: list[str], a list of objects to assigne color to, default None
+    :param random_color: bool, whether to select a random color or brown
+    :param color: Union[Tuple[float], List[float]], rbg color values, defaults to brown
+    :param color_range: tuple[float]: the range of accepted color to randomise
     """
 
     color = (

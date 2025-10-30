@@ -27,8 +27,7 @@ def emptyGraph() -> Graph:
     """
     Get an empty Graph (maya.api.OpenMaya.MSelectionList subclass)
 
-    Returns:
-        Graph: and empty graph (list)
+    :return: Graph: and empty graph (list)
     """
     return Graph()
 
@@ -36,10 +35,10 @@ def emptyGraph() -> Graph:
 def ls(*args, **kwargs) -> Graph:
     """
     Get a list of cmdo objects depending on args, kwargs
+
     Imitate the maya.cmds.ls command but using OpenMaya
 
-    Returns:
-        Graph: a list of cmdo objects
+    :return: Graph: a list of cmdo objects
     """
 
     return Graph.ls(*args, **kwargs)
@@ -48,54 +47,55 @@ def ls(*args, **kwargs) -> Graph:
 def listHistory(*args, **kwargs) -> Graph:
     """
     Get a list of cmdo objects from the input node history
-     depending on args, kwargs
+    depending on args, kwargs
+
     Imitate the maya.cmds.listHistory
 
-    Returns:
-        Graph: a list of cmdo objects
+    :return: Graph: a list of cmdo objects
     """
+
     return Graph.listHistory(*args, **kwargs)
 
 
 def listRelatives(*args, **kwargs) -> Graph:
     """
     Get a list of cmdo objects from input node hierarchy
-     depending on args, kwargs
+    depending on args, kwargs
 
     Imitate the maya.cmds.listRelatives command
 
-    Returns:
-        Graph: a list of cmdo objects
+    :return: Graph: a list of cmdo objects
     """
+
     return Graph.listRelatives(*args, **kwargs)
 
 
 def listConnections(*args, **kwargs) -> Graph:
     """
     Get a list of cmdo plugs from input plugs
-     depending on args, kwargs
+    depending on args, kwargs
 
     Imitate the maya.cmds.listConnections command
 
-    Returns:
-        Graph: a list of cmdo plugs
+    :return: Graph: a list of cmdo plugs
     """
+
     return Graph.listConnections(*args, **kwargs)
 
 
 def createNode(nodeType: str, name: str = None, parent: om.MObject = None, **kwargs) -> om.MObject:
     """
     Create a maya node and wraps it in cmdo object class depending on node type
+
     Imitate the maya.cmds.createNode command
 
-    Args:
-        nodeType: str, the type of node to create
-        name: str, the name of the node to create
-        parent: om.MObject, the node to parent the created node to
+    :param nodeType: str, the type of node to create
+    :param name: str, the name of the node to create
+    :param parent: om.MObject, the node to parent the created node to
 
-    Returns:
-        om.MObject: a maya node wrapped in cmdo object class
+    :return: om.MObject: a maya node wrapped in cmdo object class
     """
+
     return Graph().createNode(nodeType, name=name, parent=parent, **kwargs)
 
 
@@ -111,6 +111,7 @@ def createNode(nodeType: str, name: str = None, parent: om.MObject = None, **kwa
 def select(*args, **kwargs) -> None:
     """
     Select nodes
+
     Imitate the maya.cmds.select command
     """
 
@@ -120,10 +121,10 @@ def select(*args, **kwargs) -> None:
 def duplicate(*args, **kwargs) -> Graph:
     """
     Duplicate nodes
+
     Imitate the maya.cmds.duplicate command
 
-    Returns:
-        Graph: a list of duplicated objects
+    :return: Graph: a list of duplicated objects
     """
 
     return Graph.duplicate(*args, **kwargs)
@@ -131,14 +132,12 @@ def duplicate(*args, **kwargs) -> Graph:
 
 def duplicateWithInternalConnections(graph: CmdoList, inputConnections: bool = False) -> Union[Graph, None]:
     """
-    This function duplicate given nodes, inside connections and set attributes
+    This function duplicate given nodes, keeps connections and set attributes
 
-    Args:
-        graph: List[str], node compose the graph to be duplicated
-        inputConnections: bool, allow the graph to keep input connections
+    :param graph: List[str], node compose the graph to be duplicated
+    :param inputConnections: bool, allow the graph to keep input connections
 
-    Returns:
-        List[str] of the new nodes created
+    :return: List[str] of the new nodes created
     """
 
     if len(graph) == 0:

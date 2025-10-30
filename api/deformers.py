@@ -18,13 +18,12 @@ __all__: List[str] = [
 # TODO: wierd things are going on when trying to use skinAs
 def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Union[om.MObject, None]:
     """
-    Bind a destination mesh based on the influence list and weights of the 
-    skinCluster of a source mesh.
+    Bind a destination mesh based on the influence list and weights of the skinCluster of a source mesh.
 
     :param source: Source mesh that will be used to determine influence list 
-    and weights of destination mesh.
+        and weights of destination mesh.
     :param destination: Destination mesh to bind based on source mesh 
-    skinCluster.
+        skinCluster.
     :param smooth: Smooth incoming skinCluster weights for destination mesh.
     """
 
@@ -92,8 +91,7 @@ def resetSkin(nodes: List[str]) -> None:
     """
     Reset the skinClusters bindPreMatrix values with the current matrix values
 
-    Args:
-        nodes: List[str], nodes to reset skin for
+    :param nodes: List[str], nodes to reset skin for
 
     """
     # TODO: upgrade to take om & cmdo types
@@ -129,9 +127,8 @@ def getJointsNotInSkinHierarchy(obj_list: List[str] = None, joint_wildcard: str 
     """
     Get a list of joints not in any skin of given meshes
 
-    Args:
-        obj_list: meshes to check whether they are in the skin hierarchy or not
-        joint_wildcard: wildcard string for searching joints
+    :param obj_list: meshes to check whether they are in the skin hierarchy
+    :param joint_wildcard: wildcard string for searching joints
 
     Returns: list of joints not in the skin hierarchy
 

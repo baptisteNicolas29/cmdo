@@ -13,18 +13,24 @@ __all__: List[str] = [
 
 
 def createCube(positions, **kwargs):
+    """
+    Create a new mesh cube
+
+    :param positions:
+    :param kwargs:
+    :return:
+    """
     return NotImplementedError('Line function not implemented yet')
 
 
-def check_remove_mesh_instances(obj: str) -> Union[str, None]:
+def checkRemoveMeshInstances(obj: str) -> Union[str, None]:
     """
     Check the passed object makes it unique
     removes history and renames the shape
-    Args:
-        obj: the object name to check or None if a problem occurred
 
-    Returns:
-        the name of the shape of the object
+    :param obj: str, the object name to check or None if a problem occurred
+
+    :return: Union[str, None], the name of the shape of the object
     """
     if not cmds.objExists(obj):
         cmds.warning(f'Given obj does not exist : {obj}. Aborting....')
@@ -41,9 +47,9 @@ def check_remove_mesh_instances(obj: str) -> Union[str, None]:
         cmds.select(obj)
         mel.eval('ConvertInstanceToObject()')
 
-    new_shape_name = cmds.rename(
+    newShapeName = cmds.rename(
         cmds.listRelatives(obj, c=True, s=True, f=True)[0],
         f'{obj}Shape'
     )
 
-    return new_shape_name
+    return newShapeName

@@ -18,9 +18,9 @@ __all__: List[str] = [
 
 
 # TODO: Move to more task oriented library (aka: rigging)
-def createCircle(name='nurbsCircle', radius: CmdoNumber = 1.0, **kwargs):
+def createCircle(name: str = 'nurbsCircle', radius: CmdoNumber = 1.0, **kwargs):
     """
-    Create a basic circle
+    Create a basic circle nurbsCurve
 
     :param name: str, the name of the node to create
     :param radius: float, change the default size of the circle

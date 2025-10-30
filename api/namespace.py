@@ -27,39 +27,38 @@ BASE_NAMESPACES = [':UI', ':shared']
 def namespaceExists(namespace: str) -> bool:
     """
     Check if the given namespace exists
-    Args:
-        namespace: str, the namespace to check
 
-    Returns:
-        bool, whether the namespace exists or not
+    :param namespace: str, the namespace to check
+
+    :return: bool, whether the namespace exists or not
     """
 
     return om.MNamespace.namespaceExists(namespace)
 
 
-def getAllNamespaces(recursive: bool = True):
+def getAllNamespaces(recursive: bool = True) -> List[str]:
     """
     Gets all the namespaces in the scene and sorts the in ascending order
     (child -> parent). Remove non-deletable namespaces from the list
-    Returns:
 
+    :return: List[str], list of all namespaces in the scene
     """
-    all_namespaces = [
+    allNamespaces = [
         namespace
         for namespace in om.MNamespace.getNamespaces(recurse=recursive)
         if namespace not in BASE_NAMESPACES
     ]
-    all_namespaces.sort(key=len, reverse=True)
+    allNamespaces.sort(key=len, reverse=True)
 
-    return all_namespaces
+    return allNamespaces
 
 
 def getAllUnusedNamespaces(recursive: bool = True) -> List[str]:
     """
     Gets all the namespaces in the scene and sorts them in ascending order
     (child -> parent). Remove namespaces without content
-    Returns: a list of namespaces -> ie: ['a:b:c', 'a:b', 'a']
 
+    :return: List[str], a list of namespaces -> ie: ['a:b:c', 'a:b', 'a']
     """
 
     # get all namespaces that don t have content
@@ -79,14 +78,12 @@ def addNamespace(
 ) -> None:
     """
     Create the given namespace to the scene
-    Args:
-        namespace: str, the name of the new namespace to create
-        parent_namespace: str, the name of the parent namespace if any
-        set_current: whether to set the new namespace as current
 
-    Returns:
-
+    :param namespace: str, the name of the new namespace to create
+    :param parent_namespace: str, the name of the parent namespace if any
+    :param set_current: whether to set the new namespace as current
     """
+
     if namespaceExists(namespace):
         return
 
@@ -100,9 +97,8 @@ def removeNamespace(namespace: str, delete_content: bool = False) -> None:
     """
     Delete the given namespace and move content to root
 
-    Args:
-        namespace: str, the namespace to remove
-        delete_content: bool, delete namespace content with namespace
+    :param namespace: str, the namespace to remove
+    :param delete_content: bool, delete namespace content with namespace
 
     """
     if not om.MNamespace.namespaceExists(namespace):
@@ -130,9 +126,9 @@ def removeNamespace(namespace: str, delete_content: bool = False) -> None:
 def removeAllNamespaces() -> None:
     """
     Moves the contents of every namespace to the root namespace and deletes it
-    Returns:
 
     """
+
     for namespace in getAllNamespaces():
         removeNamespace(namespace)
 
@@ -140,12 +136,12 @@ def removeAllNamespaces() -> None:
 def getObjectsFromNamespace(namespace: str) -> List[om.MObject]:
     """
     Get objects from the given namespace
-    Args:
-        namespace: str, the namespace to get objects from
 
-    Returns:
-        list[str], a list of objects in the given namespace
+    :param namespace: str, the namespace to get objects from
+
+    :return: list[str], a list of objects in the given namespace
     """
+
     if not namespaceExists(namespace):
         return []
 
