@@ -14,8 +14,7 @@ class GeometryFilter(dgLib.DGNode):
         """
         Initialize an instance of GeometryFilter
 
-        Args:
-            name: Optional[str], the name of the node
+        :param name: Optional[str], the name of the node
         """
 
         super().__init__(name=name)

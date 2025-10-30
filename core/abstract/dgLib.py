@@ -12,8 +12,7 @@ class DGNode(nodeLib.Node):
         """
         Initialize an instance of DGNode
 
-        Args:
-            name: Optional[str], the name of the node
+        :param name: Optional[str], the name of the node
         """
 
         super().__init__(name=name)
@@ -23,8 +22,7 @@ class DGNode(nodeLib.Node):
         """
         Get the isHistoricallyInteresting value
 
-        Returns:
-            bool: the isHistoricallyInteresting value
+        :return: bool, the isHistoricallyInteresting value
         """
 
         return self['isHistoricallyInteresting'].asBool()
@@ -34,8 +32,7 @@ class DGNode(nodeLib.Node):
         """
         Set the isHistoricallyInteresting value
 
-        Returns:
-            bool: the isHistoricallyInteresting value
+        :return: bool, the isHistoricallyInteresting value
         """
 
         self['isHistoricallyInteresting'] = value

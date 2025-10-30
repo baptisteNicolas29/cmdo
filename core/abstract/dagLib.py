@@ -11,12 +11,10 @@ from ..nodeRegistry import NodeRegistry
 class DAGNode(DGNode):
 
     def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
         """
         Initialize an instance of DAGNode
 
-        Args:
-            name: str, the name of the node
+        :param name: str, the name of the node
         """
 
         super().__init__(name=name)
@@ -27,7 +25,6 @@ class DAGNode(DGNode):
 
     @property
     def dagPath(self) -> om.MDagPath:
-
         """
         Get the node s MDagPath.
 
@@ -38,20 +35,17 @@ class DAGNode(DGNode):
         MFnDagNode.dagPath() method, does not work
          because we initialize our MFnDagNode with an MObject
 
-        Returns:
-            Optional[MDagPath]: the node s MDagPath
+        :return: om.MDagPath, the node's MDagPath
         """
 
         return self.mfnDagNode.getAllPaths()[0]
 
     @property
     def isDagPathValid(self) -> bool:
-
         """
         Is MFnDagPath valid
 
-        Returns:
-            bool: if the MFnDagPath is valid or not
+        :return: bool, if the MFnDagPath is valid or not
         """
 
         return self.dagPath.isValid()
@@ -62,8 +56,7 @@ class DAGNode(DGNode):
         """
         The full name including parents of the current node
 
-        Returns:
-            str: the full name of the current node
+        :return: str, the full name of the current node
         """
 
         return self.dagPath.fullPathName()
@@ -74,8 +67,7 @@ class DAGNode(DGNode):
         """
         The smallest unique name for the current node
 
-        Returns:
-            str: the short name of the current node
+        :return: str, the short name of the current node
         """
 
         return self.dagPath.partialPathName()
@@ -86,8 +78,7 @@ class DAGNode(DGNode):
         """
         Get the node s MFnDagNode
 
-        Returns:
-            Optional[MFnDagNode]: the MFnDagNode of the current node
+        :return: om.MFnDagNode, the MFnDagNode of the current node
         """
 
         return om.MFnDagNode(self)
@@ -98,8 +89,7 @@ class DAGNode(DGNode):
         """
         Is MFnDagNode valid
 
-        Returns:
-            bool: if the MFnDagNode is valid or not
+        :return: bool, if the MFnDagNode is valid or not
         """
 
         return self.mfnDagNode.hasObj(self)
@@ -110,8 +100,7 @@ class DAGNode(DGNode):
         """
         The number of children of the current node
 
-        Returns:
-            int: The number of children of the current node
+        :return: int, The number of children of the current node
         """
 
         return self.dagPath.childCount()
@@ -123,8 +112,7 @@ class DAGNode(DGNode):
         """
         Get hierarchical children of the current node
 
-        Returns:
-            list[DAGNode]: the list of children objects
+        :return: list[DAGNode], the list of children objects
         """
         items = []
         for idx in range(self.mfnDagNode.childCount()):
@@ -141,8 +129,7 @@ class DAGNode(DGNode):
         """
         Get hierarchical children names of the current node
 
-        Returns:
-            List[str]: the list of children names if any
+        :return: List[str], the list of children names if any
         """
 
         return [child.name for child in self.children]
@@ -153,8 +140,7 @@ class DAGNode(DGNode):
         """
         The number of shapes the current transform has
 
-        Returns:
-            int: The number of shapes the current transform has
+        :return: int, The number of shapes the current transform has
         """
 
         return self.dagPath.numberOfShapesDirectlyBelow()
@@ -165,8 +151,7 @@ class DAGNode(DGNode):
         """
         The shapes held by the current node
 
-        Returns:
-            List[str]: the shape names of None
+        :return: List[str], the shape names of None
         """
 
         return [child for child in self.children if child.isShape]
@@ -203,9 +188,9 @@ class DAGNode(DGNode):
         """
         Get the parent nodes of the current node
 
-        Returns:
-             list[DAGNode]: The parents of the current node
+        :return: list[DAGNode], The parents of the current node
         """
+        
         items = []
         for idx in range(self.mfnDagNode.parentCount()):
             parentObj = self.mfnDagNode.parent(idx)
@@ -227,9 +212,7 @@ class DAGNode(DGNode):
         If None is supplied, parents the
         current node to the scene root node (aka: parent to world)
 
-        Args:
-            parent: str, the name of the new parent, if None, parents to root
-
+        :param parent: str, the name of the new parent, if None, parents to root
         """
 
         if isinstance(parent, str):
@@ -246,8 +229,7 @@ class DAGNode(DGNode):
         """
         Get the root parent node of the current node or self if it is the root
 
-        Returns:
-             DAGNode: The root parent of the current node
+        :return: DAGNode, The root parent of the current node
         """
 
         parentNodePath = self.dagPath.pop(self.dagPath.length()-1)
@@ -264,9 +246,9 @@ class DAGNode(DGNode):
         """
         Is current node a transform
 
-        Returns:
-            bool: is node a transform
+        :return: bool, is node a transform
         """
+        
         return self.dagPath.hasFn(om.MFn.kTransform)
 
     @property
@@ -275,9 +257,9 @@ class DAGNode(DGNode):
         """
         Is current node a shape
 
-        Returns:
-            bool: is node a shape
+        :return: bool, is node a shape
         """
+        
         return not self.isTransform and self.dagPath.hasFn(om.MFn.kShape)
 
     @property
@@ -286,8 +268,7 @@ class DAGNode(DGNode):
         """
         Get the draw override info for the current node
 
-        Returns:
-            om.MDrawOverrideInfo: the draw info object
+        :return: om.MDrawOverrideInfo, the draw info object
         """
 
         return self.dagPath.getDrawOverrideInfo()
@@ -298,8 +279,7 @@ class DAGNode(DGNode):
         """
         Is draw override info enabled
 
-        Returns:
-            bool: Is draw override info  enabled
+        :return: bool, Is draw override info  enabled
         """
 
         return self.drawOverrideInfo.overrideEnabled
@@ -310,8 +290,7 @@ class DAGNode(DGNode):
         """
         Enable or Disable the drawOverride state
 
-        Args:
-            value: bool, state of the drawOverride
+        :param value: bool, state of the drawOverride
 
         """
 
@@ -323,8 +302,7 @@ class DAGNode(DGNode):
         """
         The index of the RGB color for the draw override
 
-        Returns:
-            int: the index of the RGB color
+        :return: int, the index of the RGB color
         """
 
         return self['overrideRGBColors'].asInt()
@@ -335,9 +313,7 @@ class DAGNode(DGNode):
         """
         Set the RBG color index for the draw override
 
-        Args:
-            value: int, the index of the RGB color to use
-
+        :param value: int, the index of the RGB color to use
         """
 
         self["overrideRGBColors"] = value
@@ -348,8 +324,7 @@ class DAGNode(DGNode):
         """
         The RGB color vector from the draw override
 
-        Returns:
-            List[float]: the RGB vector3
+        :return: List[float], the RGB vector3
         """
 
         return [
@@ -364,9 +339,7 @@ class DAGNode(DGNode):
         """
         Set the draw override RGB colors
 
-        Args:
-            value: List[float], RGB color vector3
-
+        :param value: List[float], RGB color vector3
         """
 
         self["overrideColorR"] = value[0]
@@ -379,8 +352,7 @@ class DAGNode(DGNode):
         """
         The index of the color for the draw override
 
-        Returns:
-            int: the index of the current draw override color
+        :return: int, the index of the current draw override color
         """
 
         return self['overrideColor'].asInt()
@@ -391,9 +363,7 @@ class DAGNode(DGNode):
         """
         Set the index for the draw override color
 
-        Args:
-            value: int, the index of the color to set
-
+        :param value: int, the index of the color to set
         """
 
         self["overrideColor"] = value
@@ -404,8 +374,7 @@ class DAGNode(DGNode):
         """
         The bounding box of the current node
 
-        Returns:
-            om.MBoundingBox: the bounding box of the current node
+        :return: om.MBoundingBox, the bounding box of the current node
         """
 
         return self.mfnDagNode.boundingBox
@@ -416,8 +385,7 @@ class DAGNode(DGNode):
         """
         Get the local transformation matrix of the current node
 
-        Returns:
-            om.MMatrix: the transformation matrix
+        :return: om.MMatrix, the transformation matrix
         """
 
         return self.mfnDagNode.transformationMatrix()
@@ -428,9 +396,7 @@ class DAGNode(DGNode):
         """
         Set the local transformation matrix of the current node
 
-        Args:
-            matrix: om.MMatrix, The transformation matrix of the current node
-
+        :param matrix: om.MMatrix, The transformation matrix of the current node
         """
 
         om.MFnTransform(self.dagPath).setTransformation(
@@ -452,8 +418,7 @@ class DAGNode(DGNode):
         """
         Get the current node s world matrix
 
-        Returns:
-            om.MMatrix: the node s world matrix
+        :return: om.MMatrix, the node s world matrix
         """
 
         return self['worldMatrix'].value
@@ -464,9 +429,7 @@ class DAGNode(DGNode):
         """
         Set the current node s world matrix
 
-        Args:
-            value: om.MMatrix, the matrix to set the world matrix to
-
+        :param value: om.MMatrix, the matrix to set the world matrix to
         """
         if len(value) == 16:
             value = om.MMatrix(value)
@@ -486,9 +449,7 @@ class DAGNode(DGNode):
         """
         Get the current node s world inverse matrix
 
-        Returns:
-            om.MMatrix: the current node s world inverse matrix
-
+        :return: om.MMatrix, the current node s world inverse matrix
         """
 
         return self['worldInverseMatrix'].value
@@ -499,8 +460,7 @@ class DAGNode(DGNode):
         """
         Get the parent world matrix of the current node
 
-        Returns:
-            om.MMatrix: the parent world matrix
+        :return: om.MMatrix, the parent world matrix
         """
 
         return self['parentMatrix'].value
@@ -511,8 +471,7 @@ class DAGNode(DGNode):
         """
         Get the offset parent matrix of the current node
 
-        Returns:
-            om.MMatrix: the offset parent matrix
+        :return: om.MMatrix, the offset parent matrix
         """
 
         return self['offsetParentMatrix'].value
@@ -523,9 +482,7 @@ class DAGNode(DGNode):
         """
         Set the current node s offsetParentMatrix
 
-        Args:
-            value: om.MMatrix, the matrix to set the offsetParentMatrix to
-
+        :param value: om.MMatrix, the matrix to set the offsetParentMatrix to
         """
 
         self['offsetParentMatrix'] = value
@@ -536,8 +493,7 @@ class DAGNode(DGNode):
         """
         Get the visibility plug of the current node
 
-        Returns:
-            Plug: the visibility plug
+        :return: Plug, the visibility plug
         """
 
         return self['visibility']
@@ -548,8 +504,7 @@ class DAGNode(DGNode):
         """
         Get the visibility state of the current node
 
-        Returns:
-            bool: the visibility state
+        :return: bool, the visibility state
         """
 
         return self['visibility'].asBool()
@@ -560,8 +515,7 @@ class DAGNode(DGNode):
         """
         Set the visibility state of the current node
 
-        Args:
-            value: bool, the visibility state
+        :param value: bool, the visibility state
 
         """
 
@@ -573,8 +527,7 @@ class DAGNode(DGNode):
         """
         Get the displayLocalAxis state of the current node
 
-        Returns:
-            bool: the displayLocalAxis state
+        :return: bool, the displayLocalAxis state
         """
 
         return self['displayLocalAxis'].asBool()
@@ -585,9 +538,7 @@ class DAGNode(DGNode):
         """
         Set the displayLocalAxis state of the current node
 
-        Args:
-            value: bool, the displayLocalAxis state
-
+        :param value: bool, the displayLocalAxis state
         """
 
         self['displayLocalAxis'] = value

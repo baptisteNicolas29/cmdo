@@ -20,8 +20,7 @@ class Node(om.MObject):
         """
         Internal OpenMaya type
 
-        Returns:
-             int: the OpenMaya type
+        :return: int, the OpenMaya type
         """
 
         return cls._API_TYPE
@@ -31,8 +30,7 @@ class Node(om.MObject):
         """
         Internal cmds type
 
-        Returns:
-             str: the cmds type
+        :return: str, the cmds type
         """
 
         return cls._NODE_TYPE
@@ -43,6 +41,7 @@ class Node(om.MObject):
         Get a list of excluded members for the "printClass" function
 
         """
+
         do_not_print_types = [
             'method_descriptor', 'mappingproxy', 'type', 'wrapper_descriptor',
             "<class 'dict'>", 'getset_descriptor', 'builtin_function_or_method',
@@ -58,12 +57,10 @@ class Node(om.MObject):
         """
         Create a new instance of this class
 
-        Args:
-            name: str, an optional name for the new node
-            parent: CmdoObject, an optional parent for the new node
+        :param name: str, an optional name for the new node
+        :param parent: CmdoObject, an optional parent for the new node
 
-        Returns:
-            om.MObject: the created object (subclass of om.MObject)
+        :return: om.MObject, the created object (subclass of om.MObject)
         """
 
         try:
@@ -84,8 +81,7 @@ class Node(om.MObject):
         """
         Initialize an instance of Node
 
-        Args:
-            name: str | om.MObject, the name of the node
+        :param name: CmdoObject, the name of the node
         """
 
         if isinstance(name, str):
@@ -102,8 +98,10 @@ class Node(om.MObject):
     def __hash__(self) -> int:
         """
         Make hash using long name and uuid to try having a unique hash
+
         We "cache" the hash to avoid it changing in the middle of maya operation
         """
+
         if not hasattr(self, '_HASH'):
             self._HASH = None
 
@@ -120,8 +118,7 @@ class Node(om.MObject):
         """
         The representation of the node as a string
 
-        Returns
-            str: the representation of the node
+        :return: str, the representation of the node
         """
 
         return f'{self.__class__.__name__}("{self.name}")'
@@ -131,8 +128,7 @@ class Node(om.MObject):
         """
         The name of the node
 
-        Returns
-            str: then name of the node
+        :return: str, then name of the node
         """
 
         return self.name
@@ -158,8 +154,7 @@ class Node(om.MObject):
         """
         Convenient implementations to retrieve a plug from the current node
 
-        Returns:
-            Plug: the wanted plug
+        :return: Plug, the wanted plug
         """
 
         return Plug(self.dependencyNode.findPlug(plug, True))
@@ -169,6 +164,7 @@ class Node(om.MObject):
         Convenient implementations to set a plug on the current node
 
         """
+
         if isinstance(value, tuple):
             self[plug].set(*value)
 
@@ -179,8 +175,7 @@ class Node(om.MObject):
         """
         Get a representation the class and all its members
 
-        Returns:
-            str, string representation of the current class
+        :return: str, string representation of the current class
         """
 
         text = "\n"
@@ -197,8 +192,7 @@ class Node(om.MObject):
         """
         Data representing the class and its members
 
-        Returns:
-             dict: class members except excluded names and patterns
+        :return: dict: class members except excluded names and patterns
         """
         data = {}
         excluded_types, excluded_names = self.getExcludedMembers()
@@ -225,8 +219,7 @@ class Node(om.MObject):
         """
         Set multiple attributes from given dictionary
 
-        Args:
-            data: dict[str, Any], a dictionary of {attrName: attrValue} pairs
+        :param data: dict[str, Any], a dictionary of {attrName: attrValue} pairs
         """
 
         for attr, value in data.items():
@@ -237,11 +230,9 @@ class Node(om.MObject):
         """
         Get multiple attribute values from a list of attribute names
 
-        Args:
-            data: list[str], a list of attribute names to get values for
+        :param data: list[str], a list of attribute names to get values for
 
-        Returns:
-             dict[str, Any], a dictionary of {attrName: attrValue} pairs
+        :return: dict[str, Any], a dictionary of {attrName: attrValue} pairs
         """
 
         return {
@@ -254,8 +245,7 @@ class Node(om.MObject):
         """
         Get a copy of the current object s dependencyNode
 
-        Returns:
-            om.MFnDependencyNode: the dependency node
+        :return: om.MFnDependencyNode, the dependency node
         """
 
         return self.__dependencyNode
@@ -265,9 +255,9 @@ class Node(om.MObject):
         """
         Get the current instance hash
 
-        Returns:
-             int: the hash value
+        :return: int, the hash value
         """
+
         return hash(self)
 
     @property
@@ -275,9 +265,9 @@ class Node(om.MObject):
         """
         Get the name or partialName of the current node
 
-        Returns:
-             str: the name of the node
+        :return: str, the name of the node
         """
+
         if self.__dependencyNode.hasUniqueName():
             return self.__dependencyNode.name()
 
@@ -288,8 +278,7 @@ class Node(om.MObject):
         """
         Set the name of the current node
 
-        Args:
-            value: str, the name to give to the current node
+        :param value: str, the name to give to the current node
         """
 
         self.__dependencyNode.setName(value)
@@ -300,8 +289,7 @@ class Node(om.MObject):
         """
         Get the name without namespace
 
-        Returns:
-            Optional[str]: the name without namespace
+        :return: Optional[str], the name without namespace
         """
 
         return om.MNamespace.stripNamespaceFromName(self.name)
@@ -312,8 +300,7 @@ class Node(om.MObject):
         """
         Set the name without namespace
 
-        Args:
-            name: str, The new name without namespace
+        :param name: str, The new name without namespace
 
         """
 
@@ -329,8 +316,7 @@ class Node(om.MObject):
         """
         Get the namespace of the current node
 
-        Returns:
-            str: the namespace of the node
+        :return: str, the namespace of the node
         """
 
         return om.MNamespace.getNamespaceFromName(self.name)
@@ -341,8 +327,7 @@ class Node(om.MObject):
         """
         Set the current node s namespace
 
-        Args:
-            namespace: str | None, the namespace of the node
+        :param namespace: Union[str, None], the namespace of the node
         """
 
         stripped_name = om.MNamespace.stripNamespaceFromName(self.name)
@@ -357,8 +342,7 @@ class Node(om.MObject):
         """
         Returns the maya type of the current Node
 
-        Returns:
-            str: the maya type of the current node
+        :return: str, the maya type of the current node
         """
         return cmds.nodeType(self.name)
 
@@ -370,25 +354,28 @@ class Node(om.MObject):
         MObjectHandle if a MObject wrapper that makes it easy to verify
         if the object is valid
 
-        Returns:
-            om.MObjectHandle: the MObjectHandle of the node
+        :return: om.MObjectHandle, the MObjectHandle of the node
         """
 
         return om.MObjectHandle(self)
 
     @property
     def isValidDependencyNode(self) -> bool:
-
         """
         Is MFnDependencyNode valid
 
-        Returns:
-            bool: Is MFnDependencyNode valid
+        :return: bool, Is MFnDependencyNode valid
         """
 
         return self.dependencyNode.hasObj(self)
 
     def hasAttr(self, attr: Union[str, Plug]) -> bool:
+        """
+        Check if the current node has the given attribute
+
+        :param attr: Union[str, Plug], the name of the attribute or the Plug
+        :return: bool, if the current node has the given attribute
+        """
 
         if isinstance(attr, Plug):
             attr = attr.name()
@@ -400,8 +387,7 @@ class Node(om.MObject):
         """
         Get all connected plugs from the current node
 
-        Returns:
-            PlugArray: an array of connected plugs
+        :return: PlugArray, an array of connected plugs
         """
 
         return PlugArray(self.dependencyNode.getConnections())
@@ -411,9 +397,9 @@ class Node(om.MObject):
         """
         If the current node has connections, incoming and/or outgoing
 
-        Returns:
-            bool: if the current node has connections
+        :return: bool, if the current node has connections
         """
+
         return bool(self.connectedPlugs)
 
     @property
@@ -424,8 +410,7 @@ class Node(om.MObject):
 
         ie: dict(currentNodePlug: connectedPlug)
 
-        Returns:
-            dict[Plug, Plug]
+        :return: dict[Plug, Plug], the incoming connections
         """
 
         connection_dict = {}
@@ -446,8 +431,7 @@ class Node(om.MObject):
 
         ie: dict(currentNodePlug: connectedPlug)
 
-        Returns:
-            dict[Plug, Plug]
+        :return: dict[Plug, Plug], the outgoing connections
         """
 
         connection_dict = {}
@@ -466,8 +450,7 @@ class Node(om.MObject):
         """
         Get the node validity state from the object handle
 
-        Returns:
-            bool: if the current node is valid
+        :return: bool, if the current node is valid
         """
 
         return self.mayaObjectHandle.isValid()
@@ -478,8 +461,7 @@ class Node(om.MObject):
         """
         Is the current node a MFnDagNode
 
-        Returns:
-            bool: Is the current node a MFnDagNode
+        :return: bool, Is the current node a MFnDagNode
         """
 
         return self.hasFn(om.MFn.kDagNode)
@@ -490,8 +472,7 @@ class Node(om.MObject):
         """
         Is the current node a MFnDagNode of type KShape
 
-        Returns:
-            bool: Is the current node a MFnDagNode of type KShape
+        :return: bool, Is the current node a MFnDagNode of type KShape
         """
 
         return self.hasFn(om.MFn.kShape)
@@ -502,8 +483,7 @@ class Node(om.MObject):
         """
         Does the object exist
 
-        Returns:
-            bool: the inverse null state of the object
+        :return: bool, the inverse null state of the object
         """
 
         return not self.isNull()
@@ -513,14 +493,18 @@ class Node(om.MObject):
         """
         Check if the current node is referenced
 
-        Returns:
-            bool: Is the current node is referenced
+        :return: bool, Is the current node is referenced
         """
 
         return self.dependencyNode.isFromReferencedFile
 
     @property
     def referenceNode(self) -> Union[om.MObject, None]:
+        """
+        The reference node of the current node or None
+
+        :return: Union[om.MObject, None], the reference node or None
+        """
 
         if not self.isReferenced:
             return None
