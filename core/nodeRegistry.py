@@ -3,7 +3,7 @@ from typing import List
 from maya.api import OpenMaya as om
 
 from .singletonMetaclass import SingletonMeta
-from .abstract import nodeLib, dgLib
+from .abstract import nodeLib, dgLib  # , dagLib
 
 
 __all__: List[str] = [
@@ -34,6 +34,12 @@ class NodeRegistry(dict, metaclass=SingletonMeta):
     print(cmdo.getCmdoNodeDict())
     ```
     """
+
+    # TODO: debate on graph
+    # _graph = Graph
+
+    # TODO: add base classe to NodeRegistry
+    # _abstractNode = [nodeLib.Node, dgLib.DGNode, dagLib.DAGNode]
 
     @staticmethod
     def __isSubClass(cls1, cls2):

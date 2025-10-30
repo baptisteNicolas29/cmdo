@@ -333,6 +333,24 @@ nodes.visibility = False
 
 </details>
 
+<details>
+
+<summary>Exemple 5: Reset all controller transforms</summary>
+
+```python
+import cmdo
+
+# Get all objects ending with _CTRL regardless of namespace
+ctrls = cmdo.ls('*_CTRL', recursive=True)  # Graph
+
+# Apply set attr to all objects in the Graph that have the attribute
+ctrls.translate = [0, 0, 0]
+ctrls.rotate = [0, 0, 0]
+ctrls.scale = [1, 1, 1]
+```
+
+</details>
+
 ---
 
 # TODO:

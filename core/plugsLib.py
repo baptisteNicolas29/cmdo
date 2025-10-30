@@ -141,8 +141,7 @@ class Plug(om.MPlug):
 
     def get(self, keyname: Union[int, str]) -> 'Plug':
         """
-        Get the wanted plug from its name
-        plug.get("childPlug")
+        Get the wanted plug from its name plug.get("childPlug")
 
         Args:
             keyname: int | str, index or name of the asked plug

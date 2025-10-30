@@ -11,7 +11,7 @@ from .abstract import dgLib
 from .abstract import dagLib
 
 from .nodeRegistry import NodeRegistry
-from .exceptions import CmdoException
+from .exceptions import CmdoException, CmdoPlugException
 
 
 # TODO: find a way to handle f***ing components (ie: vertices, edges, etc)
@@ -367,8 +367,7 @@ class Graph(om.MSelectionList):
         Set attribute for all members if they correspond or have the attribute
 
         Args:
-            attr: Union[str, plugsLib.Plug], the name of the attribute or
-                plug to set
+            attr: Union[str, plugsLib.Plug], the name of the attribute or plug to set
             value: Any, the value to set the attribute to
             raiseOnError: bool, if true raise a CmdoPlugException if
                 the attribute is locked or connected
@@ -381,7 +380,24 @@ class Graph(om.MSelectionList):
         plugType = om.MItSelectionList.kPlugSelectionItem
 
         def isNotSettable(plug: om.MPlug):
-            return plug.isLocked or plug.isConnected
+            if not plug.isCompound and not plug.isArray:
+                return plug.isLocked or plug.isDestination
+
+            elif plug.isCompound:
+                return any(
+                    plug.child(n).isLocked or plug.child(n).isDestination
+                    for n in range(plug.numChildren())
+                )
+            elif plug.isArray:
+                return any(
+                    plug.child(n).isLocked or plug.child(n).isDestination
+                    for n in range(plug.numElements())
+                )
+
+            if raiseOnError:
+                raise CmdoPlugException(f'Invalid plug : {plug.name()}')
+
+            return True
 
         def isValidPlug(item, obj) -> bool:
             return item.itemType() == plugType and obj.name().endswith(attr)
@@ -642,3 +658,6 @@ class Graph(om.MSelectionList):
             Graph: returns the current instance with removed nodes
         """
         return self.merge(other, strategy=om.MSelectionList.kRemoveFromList)
+
+
+# NodeRegistry._graph = Graph
