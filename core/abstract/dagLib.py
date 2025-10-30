@@ -156,32 +156,30 @@ class DAGNode(DGNode):
 
         return [child for child in self.children if child.isShape]
 
-    @property
-    def shapeOrig(self) -> Optional[Type["DAGNode"]]:
-
-        """
-        Return the node s original shape
-        OrigShapes are shapes saved by maya to remember the initial state of
-        a mesh before deformations
-
-        Returns:
-            Optional[Type["DAGNode"]]: the shape orig or None
-        """
-
-        return NotImplementedError('"shapeOrig" property is not implemented yet')
-
-    # TODO : TO DELETE
-    @property
-    def isOrig(self) -> bool:
-
-        """
-        Is this the original shape (shapeOrig)
-
-        Returns:
-            bool: if the shape is the shapeOrig or not
-        """
-
-        return NotImplementedError('"isOrig" property is not implemented yet')
+    # @property
+    # def shapeOrig(self) -> Optional[Type["DAGNode"]]:
+    # 
+    #     """
+    #     Return the node s original shape
+    #     OrigShapes are shapes saved by maya to remember the initial state of
+    #     a mesh before deformations
+    # 
+    #     :return: Optional[Type["DAGNode"]], the shape orig or None
+    #     """
+    # 
+    #     return NotImplementedError('"shapeOrig" property is not implemented yet')
+    # 
+    # # TODO : TO DELETE
+    # @property
+    # def isOrig(self) -> bool:
+    # 
+    #     """
+    #     Is this the original shape (shapeOrig)
+    # 
+    #     :return: bool, if the shape is the shapeOrig or not
+    #     """
+    # 
+    #     return NotImplementedError('"isOrig" property is not implemented yet')
 
     @property
     def parents(self) -> List:

@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 from maya import cmds
 from maya.api import OpenMaya as om
@@ -19,23 +19,34 @@ class MayaUsdProxyShape(dagLib.DAGNode):
     @property
     def stage(self):
         """The stage property."""
+
         prim = mayaUsdLib.GetPrim(self.fullName)
         return prim.GetStage()
 
     @property
     def stagePath(self):
         """The stagePath property."""
+
         return cmds.getAttr(f'{self.fullName}.filePath')
 
     @stagePath.setter
     def stagePath(self, value):
+        """The stagePath property setter."""
+
         cmds.setAttr(f'{self.fullName}.filePath', value, type='string')
 
     def getDuplicate(
         self,
-        *mayaSources: Tuple[str | dagLib.DAGNode],
+        *mayaSources: Tuple[Union[str, dagLib.DAGNode]],
         parent=None
     ) -> None:
+        """
+
+        :param mayaSources:
+        :param parent:
+
+        :return:
+        """
 
         # default to rootPrim
         if parent is None:
@@ -51,7 +62,13 @@ class MayaUsdProxyShape(dagLib.DAGNode):
         for source in longSource:
             cmds.mayaUsdDuplicate(source, parentFullPath)
 
-    def sendDuplicate(self, *prims: Tuple[str | Usd.Prim]) -> None:
+    def sendDuplicate(self, *prims: Tuple[Union[str, dagLib.DAGNode]]) -> None:
+        """
+
+        :param prims:
+
+        :return:
+        """
 
         stagePath = ufeUtils.stagePath(self.stage)
 

@@ -15,7 +15,7 @@ class Container(dgLib.DGNode):
     _API_TYPE = om.MFn.kContainerBase
 
     @classmethod
-    def containerize(cls, graph: Graph, name: str = None, setRootTransform: bool = False) -> 'Container':
+    def containerize(cls, graph: Graph, name: str = None, setRootTransform: bool = False) -> om.MObject:
 
         container = cls.create(name)
         for node in graph:
@@ -27,17 +27,6 @@ class Container(dgLib.DGNode):
 
         return container
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of Camera
-
-        Args:
-            name: Optional[str], the name of the node
-        """
-        
-        super().__init__(name=name)
-
     def __str__(self) -> str:
         return self.name
 
@@ -45,8 +34,7 @@ class Container(dgLib.DGNode):
         """
         Convenient implementations to retrieve a plug from the current node
 
-        Returns:
-            Plug: the wanted plug
+        :return: Plug, the wanted plug
         """
 
         plugs, names = self.mfnContainer.getPublishedPlugs()
@@ -62,8 +50,7 @@ class Container(dgLib.DGNode):
         """
         Return an MFnContainerNode object
 
-        Returns:
-            MFnContainerNode: MFnContainerNode object
+        :return: om.MFnContainerNode, MFnContainerNode object
         """
 
         return om.MFnContainerNode(self)
@@ -73,8 +60,7 @@ class Container(dgLib.DGNode):
         """
         Get the parent container
 
-        Returns:
-             Container: the parent container
+        :return: Container, the parent container
         """
 
         parent = self.mfnContainer.getParentContainer()
@@ -88,8 +74,7 @@ class Container(dgLib.DGNode):
         """
         Get the child containers
 
-        Returns:
-             Container: the parent container
+        :return: Container, the parent container
         """
         return_list = []
         for item in self.mfnContainer.getSubcontainers():
@@ -103,8 +88,7 @@ class Container(dgLib.DGNode):
         """
         Get container nodes
 
-        Returns:
-             Graph: the list of contained nodes
+        :return: Graph, the list of contained nodes
         """
 
         sel = Graph()
@@ -117,8 +101,7 @@ class Container(dgLib.DGNode):
         """
         Get container published nodes
 
-        Returns:
-             Graph: the list of published nodes
+        :return: Graph, the list of published nodes
         """
         names, nodes = self.mfnContainer.getPublishedNodes(attr)
         return dict(zip(names, Graph.ls(nodes)))
@@ -128,8 +111,7 @@ class Container(dgLib.DGNode):
         """
         Get container published parent anchors
 
-        Returns:
-             Graph: the list of published parent anchors
+        :return: Graph, the list of published parent anchors
         """
         return self.__publishedNodes(self.mfnContainer.kParentAnchor)
 
@@ -138,8 +120,7 @@ class Container(dgLib.DGNode):
         """
         Get container published child anchors
 
-        Returns:
-             Graph: the list of published child anchors
+        :return: Graph, the list of published child anchors
         """
         return self.__publishedNodes(self.mfnContainer.kChildAnchor)
 
@@ -148,8 +129,7 @@ class Container(dgLib.DGNode):
         """
         Get container published generic anchors
 
-        Returns:
-             Graph: the list of published generic anchors
+        :return: Graph, the list of published generic anchors
         """
         return self.__publishedNodes(self.mfnContainer.kGeneric)
 
@@ -158,8 +138,7 @@ class Container(dgLib.DGNode):
         """
         Get container published plugs
 
-        Returns:
-             Graph: the list of published plugs
+        :return: Graph, the list of published plugs
         """
         plugs, names = self.mfnContainer.getPublishedPlugs()
         plugs = [Plug(plug) for plug in plugs]
@@ -171,8 +150,7 @@ class Container(dgLib.DGNode):
         """
         Is the current container
 
-        Returns:
-             bool, is the current container
+        :return: bool, is the current container
         """
 
         return self.mfnContainer.isCurrent()
@@ -193,8 +171,7 @@ class Container(dgLib.DGNode):
         """
         Get the root transform of the container
 
-        Returns:
-             dgLib.DGNode, an instance of a subclass of Node
+        :return: dgLib.DGNode, an instance of a subclass of Node
         """
         return Graph.ls(self.mfnContainer.getRootTransform())[0]
 
@@ -225,8 +202,7 @@ class Container(dgLib.DGNode):
         """
         Create a node and add it to the container
 
-        Returns:
-             dgLib.DGNode, an instance of a subclass of Node
+        :return: dgLib.DGNode, an instance of a subclass of Node
         """
         node = Graph().createNode(typ, name=name, parent=parent)
 

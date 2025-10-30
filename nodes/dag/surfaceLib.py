@@ -12,26 +12,12 @@ class Surface(dagLib.DAGNode):
     _NODE_TYPE = "nurbsSurface"
     _API_TYPE = om.MFn.kNurbsSurface
 
-    def __init__(self, name: str = None) -> None:
-
-        """
-        Initialize an instance of Surface
-
-        Args:
-            name: Optional[str], the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def mfnNurbsSurface(self) -> om.MFnNurbsSurface:
-
         """
-        Récupère l'API MFnNurbsSurface du node.
+        Get MFnNurbsSurface of the om.MObject
 
-        Returns
-            om.MFnNurbsSurface
-                API MFnNurbsSurface du node.
+        :return: om.MFnNurbsSurface: the surface object
         """
 
         return om.MFnNurbsSurface(self)

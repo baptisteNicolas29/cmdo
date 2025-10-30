@@ -3,6 +3,7 @@ from typing import Optional, List, Union
 from maya import cmds
 from maya.api import OpenMaya as om
 
+from ...core.cmdoTyping import CmdoObject
 from ...core.plugsLib import Plug
 from ...core.abstract import dagLib
 from ...core.nodeRegistry import NodeRegistry
@@ -13,25 +14,12 @@ class Transform(dagLib.DAGNode):
     _NODE_TYPE = "transform"
     _API_TYPE = om.MFn.kTransform
 
-    def __init__(self, name: str = None, *args, **kwargs) -> None:
-
-        """
-        Initialize an instance of Transform
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
-    def mfnTransform(self) -> Optional[om.MFnTransform]:
-
+    def mfnTransform(self) -> om.MFnTransform:
         """
-        Return an MFnTransform object
+        Return an omMFnTransform object
 
-        Returns:
-            MFnTransform: MFnTransform object
+        :return: om.MFnTransform, the transform object
         """
 
         return om.MFnTransform(self)
@@ -40,11 +28,12 @@ class Transform(dagLib.DAGNode):
     def transformAttributes(self) -> List[Plug]:
         """
         The transform attribute plugs of the current node
+
         AKA: translate, rotate, scale
 
-        Returns:
-            list[Plug]: list of transform plugs (tx, ty, etc... )
+        :returns: list[Plug], list of transform plugs (tx, ty, etc... )
         """
+        
         return [
             self[f'{attr}{axis}']
             for axis in ['X', 'Y', 'Z']
@@ -57,8 +46,7 @@ class Transform(dagLib.DAGNode):
         """
         Get the list of available Rotate Orders
 
-        Returns:
-            List[str]: the list of available rotate orders
+        :return: List,[str]: the list of available rotate orders
         """
 
         return ['xyz', 'yzx', 'zxy', 'xzy', 'yxz', 'zyx']
@@ -69,8 +57,7 @@ class Transform(dagLib.DAGNode):
         """
         Get the translate value
 
-        Returns:
-            List[float]: the translate value
+        :return: List,[float]: the translate value
         """
 
         return [
@@ -85,8 +72,7 @@ class Transform(dagLib.DAGNode):
         """
         Set the translate value
 
-        Args:
-            value: List[float], the translate value
+        :param value: List[float], the translate value
         """
 
         self['translate'] = value
@@ -97,8 +83,7 @@ class Transform(dagLib.DAGNode):
         """
         Get the translateX value
 
-        Returns:
-            float: the translateX value
+        :return: float, the translateX value
         """
 
         return self['translateX'].asFloat()
@@ -109,8 +94,7 @@ class Transform(dagLib.DAGNode):
         """
         Set the translateX value
 
-        Args:
-            value: float, the translateX value
+        :param value: float, the translateX value
         """
 
         self['translateX'] = value
@@ -121,8 +105,7 @@ class Transform(dagLib.DAGNode):
         """
         Get the translateY value
 
-        Returns:
-            float: the translateY value
+        :return: float, the translateY value
         """
 
         return self['translateY'].asFloat()
@@ -133,8 +116,7 @@ class Transform(dagLib.DAGNode):
         """
         Set the translateY value
 
-        Args:
-            value: float, the translateY value
+        :param value: float, the translateY value
         """
 
         self['translateY'] = value
@@ -145,8 +127,7 @@ class Transform(dagLib.DAGNode):
         """
         Get the translateZ value
 
-        Returns:
-            float: the translateZ value
+        :return: float, the translateZ value
         """
 
         return self['translateZ'].asFloat()
@@ -157,8 +138,7 @@ class Transform(dagLib.DAGNode):
         """
         Set the translateZ value
 
-        Args:
-            value: float, the translateZ value
+        :param value: float, the translateZ value
         """
         
         self['translateZ'] = value
@@ -169,8 +149,7 @@ class Transform(dagLib.DAGNode):
         """
         Get the rotate value
 
-        Returns:
-            List[float]: the rotate value
+        :return: List,[float]: the rotate value
         """
 
         return [
@@ -185,8 +164,7 @@ class Transform(dagLib.DAGNode):
         """
         Set the rotate value
 
-        Args:
-            value: List[float], the rotate value
+        :param value: List[float], the rotate value
         """
 
         rotation = [
@@ -202,8 +180,7 @@ class Transform(dagLib.DAGNode):
         """
         Get the rotateX value
 
-        Returns:
-            List[float]: the rotateX value
+        :return: List,[float]: the rotateX value
         """
 
         return self['rotateX'].asMAngle().asDegrees()
@@ -214,8 +191,7 @@ class Transform(dagLib.DAGNode):
         """
         Set the rotate value
 
-        Args:
-            value: List[float], the rotate value
+        :param value: List[float], the rotate value
         """
 
         angle = om.MAngle(value).asRadians()
@@ -228,8 +204,7 @@ class Transform(dagLib.DAGNode):
         """
         Get the rotateY value
 
-        Returns:
-            List[float]: the rotateY value
+        :return: List,[float]: the rotateY value
         """
 
         return self['rotateY'].asMAngle().asDegrees()
@@ -240,8 +215,7 @@ class Transform(dagLib.DAGNode):
         """
         Set the rotateY value
 
-        Args:
-            value: List[float], the rotateY value
+        :param value: List[float], the rotateY value
         """
 
         self['rotateY'] = om.MAngle(value).asRadians()
@@ -252,8 +226,7 @@ class Transform(dagLib.DAGNode):
         """
         Get the rotateZ value
 
-        Returns:
-            List[float]: the rotateZ value
+        :return: List,[float]: the rotateZ value
         """
 
         return self['rotateZ'].asMAngle().asDegrees()
@@ -264,8 +237,7 @@ class Transform(dagLib.DAGNode):
         """
         Set the rotateZ value
 
-        Args:
-            value: List[float], the rotateZ value
+        :param value: List[float], the rotateZ value
         """
 
         self['rotateZ'] = om.MAngle(value).asRadians()
@@ -276,8 +248,7 @@ class Transform(dagLib.DAGNode):
         """
         Get the scale value
 
-        Returns:
-            List[float]: the scale value
+        :return: List,[float]: the scale value
         """
 
         return [
@@ -292,8 +263,7 @@ class Transform(dagLib.DAGNode):
         """
         Set the scale value
 
-        Args:
-            value: List[float], the scale value
+        :param value: List[float], the scale value
         """
 
         self['scale'] = value
@@ -304,8 +274,7 @@ class Transform(dagLib.DAGNode):
         """
         Get the scaleX value
 
-        Returns:
-            List[float]: the scaleX value
+        :return: List,[float]: the scaleX value
         """
 
         return self['scaleX'].asFloat()
@@ -316,8 +285,7 @@ class Transform(dagLib.DAGNode):
         """
         Set the scaleX value
 
-        Args:
-            value: List[float], the scaleX value
+        :param value: List[float], the scaleX value
         """
 
         self['scaleX'] = value
@@ -328,8 +296,7 @@ class Transform(dagLib.DAGNode):
         """
         Get the scaleY value
 
-        Returns:
-            List[float]: the scaleY value
+        :return: List,[float]: the scaleY value
         """
 
         return self['scaleY'].asFloat()
@@ -340,8 +307,7 @@ class Transform(dagLib.DAGNode):
         """
         Set the scaleY value
 
-        Args:
-            value: List[float], the scaleY value
+        :param value: List[float], the scaleY value
         """
 
         self['scaleY'] = value
@@ -352,8 +318,7 @@ class Transform(dagLib.DAGNode):
         """
         Get the scaleZ value
 
-        Returns:
-            List[float]: the scale value
+        :return: List,[float]: the scale value
         """
 
         return self['scaleZ'].asFloat()
@@ -364,8 +329,7 @@ class Transform(dagLib.DAGNode):
         """
         Set the scaleZ value
 
-        Args:
-            value: List[float], the scaleZ value
+        :param value: List[float], the scaleZ value
         """
 
         self['scaleZ'] = value
@@ -375,8 +339,7 @@ class Transform(dagLib.DAGNode):
         """
         Get the current transforms rotate order
 
-        Returns:
-            int, the chosen rotate order index
+        :return: int, the chosen rotate order index
         """
         return self['rotateOrder'].asInt()
 
@@ -385,9 +348,8 @@ class Transform(dagLib.DAGNode):
         """
         Set the current transform's rotate order
 
-        Args:
-            value: int | str, the rotate order to set, either the index or the
-                string (ie: "xyz")
+        :param value: int | str, the rotate order to set, either the index or
+            the string (ie: "xyz")
         """
         if isinstance(value, int):
             self['rotateOrder'] = value

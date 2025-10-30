@@ -3,6 +3,7 @@ from typing import Optional, Union, List
 from maya import cmds
 from maya.api import OpenMaya as om, OpenMayaAnim as oma
 
+from ...core.cmdoTyping import CmdoObject
 from ...core.nodeRegistry import NodeRegistry
 from .transformLib import Transform
 
@@ -12,24 +13,12 @@ class Joint(Transform):
     _NODE_TYPE = "joint"
     _API_TYPE = om.MFn.kJoint
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of Joint
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def mfnIkJoint(self) -> oma.MFnIkJoint:
         """
         Get MFnIkJoint of the om.MObject
 
-        Returns:
-            om.MFnIkJoint: the joint object
+        :return: om.MFnIkJoint: the joint object
         """
 
         return oma.MFnIkJoint(self)
@@ -40,9 +29,7 @@ class Joint(Transform):
         """
         Get the joint radius
 
-        Returns:
-            float: the radius of the joint
-
+        :return: float: the radius of the joint
         """
 
         return self['radius'].asFloat()
@@ -53,8 +40,7 @@ class Joint(Transform):
         """
         Set the joint radius
 
-        Args:
-            value: float, the value of the radius to set
+        :param value: float, the value of the radius to set
         """
 
         self['radius'] = value
@@ -65,6 +51,7 @@ class Joint(Transform):
 
         :return:
         """
+
         return [self.jointOrientX, self.jointOrientY, self.jointOrientZ]
 
     @jointOrient.setter
@@ -72,6 +59,7 @@ class Joint(Transform):
         """
 
         :param value:
+
         :return:
         """
 
@@ -133,6 +121,12 @@ class Joint(Transform):
 
     @property
     def drawStyle(self):
+        """
+        Get the drawStyle value
+
+        :return: int, the index of the drawStyle
+        """
+
         return self['drawStyle'].asInt()
 
     @drawStyle.setter
@@ -145,8 +139,7 @@ class Joint(Transform):
         """
         Get the segment scale compensate state
 
-        Returns:
-            bool: if segment scale compensate is activated
+        :return: bool, if segment scale compensate is activated
         """
 
         return self["segmentScaleCompensate"].asBool()
@@ -157,8 +150,7 @@ class Joint(Transform):
         """
         Set the segment scale compensate state
 
-        Args:
-            value: bool, the value to set segment scale compensate to
+        :param value: bool, the value to set segment scale compensate to
 
         """
 
@@ -166,11 +158,19 @@ class Joint(Transform):
 
     @property
     def orientJointAxisList(self) -> List[str]:
+        """
+
+        :return:
+        """
 
         return ['xyz', 'yzx', 'zxy', 'zyx', 'yxz', 'xzy', 'none']
 
     @property
     def orientJointSecondaryAxisList(self) -> List[str]:
+        """
+
+        :return:
+        """
 
         return ['xup', 'xdown', 'yup', 'ydown', 'zup', 'zdown', 'none']
 

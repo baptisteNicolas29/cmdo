@@ -12,19 +12,6 @@ class Mesh(dagLib.DAGNode):
     _NODE_TYPE = "mesh"
     _API_TYPE = om.MFn.kMesh
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of Mesh
-
-        Args:
-            name: Optional[str], the name of the node
-        """
-
-        super().__init__(name=name)
-
-        # self._init_mesh_properties()
-
     @property
     def mfnMesh(self) -> om.MFnMesh:
 
@@ -39,7 +26,11 @@ class Mesh(dagLib.DAGNode):
 
     @property
     def mitMeshVertex(self) -> om.MItMeshVertex:
+        """
+        Get a mesh vertex iterator
 
+        :return: om.MItMeshVertex: the mesh vertex iterator
+        """
         return om.MItMeshVertex(self)
 
     @property
@@ -48,8 +39,7 @@ class Mesh(dagLib.DAGNode):
         """
         Get the vertex count
 
-        Returns:
-            int: the number of vertices
+        :return: int, the number of vertices
         """
 
         return self.mfnMesh.numVertices
@@ -60,8 +50,7 @@ class Mesh(dagLib.DAGNode):
         """
         Get the edge count
 
-        Returns:
-            int: the number of edges
+        :return: int, the number of edges
         """
 
         return self.mfnMesh.numEdges
@@ -72,8 +61,7 @@ class Mesh(dagLib.DAGNode):
         """
         Get the face count
 
-        Returns:
-            int: the number of faces
+        :return: int, the number of faces
         """
 
         return self.mfnMesh.numPolygons
@@ -84,8 +72,7 @@ class Mesh(dagLib.DAGNode):
         """
         Get the mesh invisible faces
 
-        Returns
-            om.MUintArray: the mesh invisible faces
+        :return: om.MUintArray, the mesh invisible faces
         """
 
         return self.mfnMesh.getInvisibleFaces()
@@ -94,11 +81,9 @@ class Mesh(dagLib.DAGNode):
     def numInvisibleFaces(self) -> int:
 
         """
-        Retourne le nombre de faces invisibles du maillage.
+        Get the number of invisible faces
 
-        Returns
-            om.MUintArray
-                Les faces invisibles du maillage.
+        :return: om.MUintArray, the number of invisible faces
         """
 
         return len(self.invisibleFaces)
@@ -109,8 +94,7 @@ class Mesh(dagLib.DAGNode):
         """
         Get vertice positions in object space
 
-        Returns
-            om.MPointArray: the vertex positions
+        :return om.MPointArray: the vertex positions
         """
 
         return self.mfnMesh.getPoints(space=om.MSpace.kObject)
@@ -121,8 +105,7 @@ class Mesh(dagLib.DAGNode):
         """
         Get the number of UV sets
 
-        Returns
-            int: the number of UV sets
+        :return: int, the number of UV sets
         """
 
         return self.mfnMesh.numUVSets
@@ -133,8 +116,7 @@ class Mesh(dagLib.DAGNode):
         """
         Get the current UV set
 
-        Returns
-            str: the current UV set
+        :return: str, the current UV set
         """
 
         return self.mfnMesh.currentUVSetName()
@@ -145,8 +127,7 @@ class Mesh(dagLib.DAGNode):
         """
         Get the number of color sets
 
-        Returns
-            int: the number of color sets
+        :return: int, the number of color sets
         """
 
         return self.mfnMesh.numColorSets
@@ -157,8 +138,7 @@ class Mesh(dagLib.DAGNode):
         """
         Get the current Color set
 
-        Returns
-            str: the current Color set
+        :return: str, the current Color set
         """
 
         return self.mfnMesh.currentColorSetName()
@@ -169,13 +149,16 @@ class Mesh(dagLib.DAGNode):
         """
         Are colors displayed on the mesh node
 
-        Returns
-            bool:
+        :return: bool, are the colors displayed on this mesh node
         """
 
         return self.mfnMesh.displayColors
 
     def checkDifferenceWithOrigShape(self):
+        """
+
+        :return:
+        """
 
         indices = []
         mesh = self.parents[0]
@@ -208,19 +191,13 @@ class Mesh(dagLib.DAGNode):
 
         return indices
 
-# -- Mesh Properties ----------------------------------------------------------
-# -----------------------------------------------------------------------------
     @property
     def checkSamePointTwice(self) -> bool:
 
         """
-        Check if created or added points don t exist twice on the same mesh
+        Check if created or added points exist twice on the same mesh
 
-        Returns
-            bool
-                True si les polygones créés ou ajoutés au node de Mesh
-                ne contiennent pas deux fois le même point.
-                False sinon.
+        :return: bool, if the created or added points exist twice on the same mesh
         """
 
         return self.mfnMesh.checkSamePointTwice
@@ -231,8 +208,7 @@ class Mesh(dagLib.DAGNode):
         """
         Get the intermediateObject value
 
-        Returns:
-            bool: the intermediateObject value
+        :return: bool, the intermediateObject value
         """
 
         return self['intermediateObject'].asBool()
@@ -242,8 +218,7 @@ class Mesh(dagLib.DAGNode):
         """
         Set the intermediateObject value
 
-        Args:
-            value: Union[bool, int], the intermediateObject value
+        :param value: Union[bool, int], the intermediateObject value
         """
 
         self['intermediateObject'] = value

@@ -16,9 +16,9 @@ class Locator(dagLib.DAGNode):
         """
         Get the localScale values
 
-        Returns:
-            List[float]: the localScale values
+        :return: List[float] the localScale values
         """
+        
         return self['localScale'].value
 
     @localScale.setter
@@ -26,9 +26,9 @@ class Locator(dagLib.DAGNode):
         """
         Set the localScale values
 
-        Args:
-            value: List[float], the localScale values to set
+        :param value: List[float], the localScale values to set
         """
+        
         self['localScale'] = value
 
     @property
@@ -36,9 +36,9 @@ class Locator(dagLib.DAGNode):
         """
         Get the localPosition values
 
-        Returns:
-            List[float]: the localPosition values
+        :return: List[float] the localPosition values
         """
+        
         return self['localPosition'].value
 
     @localPosition.setter
@@ -46,9 +46,9 @@ class Locator(dagLib.DAGNode):
         """
         Set the localPosition values
 
-        Args:
-            value: List[float], the localPosition values to set
+        :param value: List[float], the localPosition values to set
         """
+        
         self['localPosition'] = value
 
     @property
@@ -56,8 +56,7 @@ class Locator(dagLib.DAGNode):
         """
         Set the worldPosition values
 
-        Returns:
-            List[float], the worldPosition values to set
+        :return: List[float], the worldPosition values to set
         """
 
         return self['worldPosition'][0].value
@@ -67,8 +66,7 @@ class Locator(dagLib.DAGNode):
         """
         Set the worldPositionX values
 
-        Returns:
-            float, the worldPositionX values to set
+        :return: float, the worldPositionX values to set
         """
 
         return self['worldPosition'][0]['worldPositionX'].asFloat()
@@ -78,8 +76,7 @@ class Locator(dagLib.DAGNode):
         """
         Set the worldPositionY values
 
-        Returns:
-            float, the worldPositionY values to set
+        :return: float, the worldPositionY values to set
         """
 
         return self['worldPosition'][0]['worldPositionY'].asFloat()
@@ -89,8 +86,7 @@ class Locator(dagLib.DAGNode):
         """
         Set the worldPositionZ values
 
-        Returns:
-            float, the worldPositionZ values to set
+        :return: float, the worldPositionZ values to set
         """
 
         return self['worldPosition'][0]['worldPositionZ'].asFloat()
@@ -100,9 +96,9 @@ class Locator(dagLib.DAGNode):
         """
         Set the center values
 
-        Returns:
-            List[float], the center values to set
+        :return: List[float], the center values to set
         """
+
         return self['center'].value
 
     @property
@@ -110,8 +106,7 @@ class Locator(dagLib.DAGNode):
         """
         Set the centerX values
 
-        Returns:
-            float, the centerX values to set
+        :return: float, the centerX values to set
         """
         return self['center'][0]['boundingBoxCenterX'].asFloat()
 
@@ -120,9 +115,9 @@ class Locator(dagLib.DAGNode):
         """
         Set the centerY values
 
-        Returns:
-            float, the centerY values to set
+        :return: float, the centerY values to set
         """
+
         return self['center'][0]['boundingBoxCenterY'].asFloat()
 
     @property
@@ -130,9 +125,9 @@ class Locator(dagLib.DAGNode):
         """
         Set the centerZ values
 
-        Returns:
-            float, the centerZ values to set
+        :return: float, the centerZ values to set
         """
+
         return self['center'][0]['boundingBoxCenterZ'].asFloat()
 
 

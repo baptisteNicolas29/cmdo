@@ -16,6 +16,10 @@ class IkHandle(Transform):
 
     @property
     def dForwardAxisList(self) -> List[str]:
+        """
+        
+        :return:
+        """
 
         return [
             'positiveX', 'negativeX',
@@ -25,6 +29,10 @@ class IkHandle(Transform):
 
     @property
     def dWorldUpAxisList(self) -> List[str]:
+        """
+        
+        :return:
+        """
 
         return [
             'positiveY', 'negativeY', 'closestY',
@@ -34,30 +42,60 @@ class IkHandle(Transform):
 
     @property
     def ikSolver(self):
+        """
+        
+        :return:
+        """
 
         return IkSolver(self['ikSolver'].source().node())
 
     @property
     def endEffector(self):
+        """
+
+        :return:
+        """
+
         return IkSolver(self['ikSolver'].source().node())
 
     @property
     def dTwistControlEnable(self) -> bool:
+        """
+
+        :return:
+        """
 
         return self['dTwistControlEnable'].asBool()
 
     @dTwistControlEnable.setter
     def dTwistControlEnable(self, value: bool) -> None:
+        """
+
+        :param value:
+
+        :return:
+        """
 
         self['dTwistControlEnable'] = value
 
     @property
     def dForwardAxis(self) -> int:
+        """
+
+        :return:
+        """
 
         return self['dForwardAxis'].asInt()
 
     @dForwardAxis.setter
     def dForwardAxis(self, value: Union[int, str]) -> None:
+        """
+
+        :param value:
+
+        :return:
+        """
+
         if isinstance(value, int):
             self['dForwardAxis'] = value
 
@@ -66,11 +104,22 @@ class IkHandle(Transform):
 
     @property
     def dWorldUpAxis(self) -> int:
+        """
+
+        :return:
+        """
 
         return self['dWorldUpAxis'].asInt()
 
     @dWorldUpAxis.setter
     def dWorldUpAxis(self, value: Union[int, str]) -> None:
+        """
+
+        :param value:
+
+        :return:
+        """
+
         if isinstance(value, int):
             self['dWorldUpAxis'] = value
 
@@ -79,30 +128,61 @@ class IkHandle(Transform):
 
     @property
     def dWorldUpType(self) -> int:
+        """
+
+        :return:
+        """
 
         return self['dWorldUpType'].asInt()
 
     @dWorldUpType.setter
     def dWorldUpType(self, value: int) -> None:
+        """
 
+        :param value:
+        :return:
+
+        """
         self['dWorldUpType'] = value
 
     @property
     def dWorldUpMatrix(self) -> om.MMatrix:
+        """
+
+        :return:
+        """
 
         return self['dWorldUpMatrix'].value
 
     @dWorldUpMatrix.setter
     def dWorldUpMatrix(self, value: Plug) -> None:
+        """
+
+        :param value:
+
+        :return:
+        """
 
         self['dWorldUpMatrix'] = value
 
     @property
     def dWorldUpMatrixEnd(self) -> om.MMatrix:
+        """
+
+        :return:
+        """
+
         return self['dWorldUpMatrixEnd'].value
 
     @dWorldUpMatrixEnd.setter
     def dWorldUpMatrixEnd(self, value: Plug) -> None:
+        """
+
+        :param value:
+
+        :return:
+        """
+
         self['dWorldUpMatrixEnd'] = value
 
     @property
@@ -111,8 +191,7 @@ class IkHandle(Transform):
         """
         Get the dWorldUpVector value
 
-        Returns:
-            List[float]: the dWorldUpVector value
+        :return: List[float], the dWorldUpVector value
         """
 
         return [
@@ -127,8 +206,7 @@ class IkHandle(Transform):
         """
         Set the dWorldUpVector value
 
-        Args:
-            value: List[float], the dWorldUpVector value
+        :param value: List[float], the dWorldUpVector value
         """
 
         self['dWorldUpVector'] = value
@@ -139,8 +217,7 @@ class IkHandle(Transform):
         """
         Get the dWorldUpVectorX value
 
-        Returns:
-            List[float]: the dWorldUpVectorX value
+        :return: List[float], the dWorldUpVectorX value
         """
 
         return self['dWorldUpVectorX'].asFloat()
@@ -151,8 +228,7 @@ class IkHandle(Transform):
         """
         Set the dWorldUpVectorX value
 
-        Args:
-            value: List[float], the dWorldUpVectorX value
+        :param value: List[float], the dWorldUpVectorX value
         """
 
         self['dWorldUpVectorX'] = value
@@ -163,8 +239,7 @@ class IkHandle(Transform):
         """
         Get the dWorldUpVectorY value
 
-        Returns:
-            List[float]: the dWorldUpVectorY value
+        :return: List[float], the dWorldUpVectorY value
         """
 
         return self['dWorldUpVectorY'].asFloat()
@@ -175,8 +250,7 @@ class IkHandle(Transform):
         """
         Set the dWorldUpVectorY value
 
-        Args:
-            value: List[float], the dWorldUpVectorY value
+        :param value: List[float], the dWorldUpVectorY value
         """
 
         self['dWorldUpVectorY'] = value
@@ -187,8 +261,7 @@ class IkHandle(Transform):
         """
         Get the dWorldUpVectorZ value
 
-        Returns:
-            List[float]: the dWorldUpVector value
+        :return: List[float], the dWorldUpVector value
         """
 
         return self['dWorldUpVectorZ'].asFloat()
@@ -199,8 +272,7 @@ class IkHandle(Transform):
         """
         Set the dWorldUpVectorZ value
 
-        Args:
-            value: List[float], the dWorldUpVectorZ value
+        :param value: List[float], the dWorldUpVectorZ value
         """
 
         self['dWorldUpVectorZ'] = value
@@ -211,8 +283,7 @@ class IkHandle(Transform):
         """
         Get the dWorldUpVectorEnd value
 
-        Returns:
-            List[float]: the dWorldUpVectorEnd value
+        :return: List[float], the dWorldUpVectorEnd value
         """
 
         return [
@@ -227,8 +298,7 @@ class IkHandle(Transform):
         """
         Set the dWorldUpVectorEnd value
 
-        Args:
-            value: List[float], the dWorldUpVectorEnd value
+        :param value: List[float], the dWorldUpVectorEnd value
         """
 
         self['dWorldUpVectorEnd'] = value
@@ -239,8 +309,7 @@ class IkHandle(Transform):
         """
         Get the dWorldUpVectorEndX value
 
-        Returns:
-            List[float]: the dWorldUpVectorEndX value
+        :return: List[float] the dWorldUpVectorEndX value
         """
 
         return self['dWorldUpVectorEndX'].asFloat()
@@ -251,8 +320,7 @@ class IkHandle(Transform):
         """
         Set the dWorldUpVectorEndX value
 
-        Args:
-            value: List[float], the dWorldUpVectorEndX value
+        :param value: List[float], the dWorldUpVectorEndX value
         """
 
         self['dWorldUpVectorEndX'] = value
@@ -263,8 +331,7 @@ class IkHandle(Transform):
         """
         Get the dWorldUpVectorEndY value
 
-        Returns:
-            List[float]: the dWorldUpVectorEndY value
+        :return: List[float] the dWorldUpVectorEndY value
         """
 
         return self['dWorldUpVectorEndY'].asFloat()
@@ -275,8 +342,7 @@ class IkHandle(Transform):
         """
         Set the dWorldUpVectorEndY value
 
-        Args:
-            value: List[float], the dWorldUpVectorEndY value
+        :param value: List[float], the dWorldUpVectorEndY value
         """
 
         self['dWorldUpVectorEndY'] = value
@@ -287,8 +353,7 @@ class IkHandle(Transform):
         """
         Get the dWorldUpVectorEndZ value
 
-        Returns:
-            List[float]: the dWorldUpVectorEnd value
+        :return: List[float] the dWorldUpVectorEnd value
         """
 
         return self['dWorldUpVectorEndZ'].asFloat()
@@ -299,8 +364,7 @@ class IkHandle(Transform):
         """
         Set the dWorldUpVectorEndZ value
 
-        Args:
-            value: List[float], the dWorldUpVectorEndZ value
+        :param value: List[float], the dWorldUpVectorEndZ value
         """
 
         self['dWorldUpVectorEndZ'] = value

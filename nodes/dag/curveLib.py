@@ -15,24 +15,13 @@ class Curve(dagLib.DAGNode):
     _NODE_TYPE = "nurbsCurve"
     _API_TYPE = om.MFn.kNurbsCurve
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of Curve
-
-        Args:
-            name: Optional[str], the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def mfnNurbsCurve(self) -> om.MFnNurbsCurve:
 
         """
         Get MFnNurbsCurve of the om.MObject
 
-        Returns:
+        :return:
             om.MFnNurbsCurve: the curve object
         """
 
@@ -44,8 +33,7 @@ class Curve(dagLib.DAGNode):
         """
         Get curve control vertices positions
 
-        Returns:
-            om.MPointArray: Les CVs de la curve.
+        :return: om.MPointArray: Les CVs de la curve.
         """
 
         return self.mfnNurbsCurve.cvPositions()
@@ -56,11 +44,8 @@ class Curve(dagLib.DAGNode):
         """
         Define curve cvs
 
-        Args:
-            points (om.MPointArray): Les CVs de la curve.
+        :param points: om.MPointArray, Les CVs de la curve.
 
-        Returns
-            None
         """
 
         points = om.MPointArray(list(points))
@@ -74,8 +59,7 @@ class Curve(dagLib.DAGNode):
         """
         Get the number of cvs
 
-        Returns:
-            int: the number of cvs
+        :return: int, the number of cvs
         """
 
         return len(self.cvs) or 0
@@ -86,8 +70,7 @@ class Curve(dagLib.DAGNode):
         """
         Get the curve degree
 
-        Returns:
-            int: the curve degree
+        :return: int, the curve degree
         """
 
         return self.mfnNurbsCurve.degree
@@ -98,8 +81,7 @@ class Curve(dagLib.DAGNode):
         """
         Set the curve degree
 
-        Args:
-            degree: int, the curve degree to set
+        :param degree: int, the curve degree to set
 
         """
 
@@ -112,8 +94,7 @@ class Curve(dagLib.DAGNode):
         """
         Get curve knots -> numberOfPoints + degree - 1
 
-        Returns
-            om.MDoubleArray: the curve knots
+        :return: om.MDoubleArray, the curve knots
         """
 
         return self.mfnNurbsCurve.knots()
@@ -124,11 +105,8 @@ class Curve(dagLib.DAGNode):
         """
         Set the curve knots
 
-        Args:
-            knots: om.MDoubleArray, the curve knots to set
+        :param knots: om.MDoubleArray, the curve knots to set
 
-        Returns
-            None
         """
         knots = om.MDoubleArray(list(knots))
 
@@ -141,8 +119,7 @@ class Curve(dagLib.DAGNode):
         """
         Get the form of the curve
 
-        Returns:
-            int: the form of the curve
+        :return: int: the form of the curve
         """
 
         return self.mfnNurbsCurve.form
@@ -157,8 +134,7 @@ class Curve(dagLib.DAGNode):
             2 = Closed
             3 = Periodic
 
-        Args:
-            form: int, the form of the curve to set
+        :param form: int, the form of the curve to set
 
         """
 
@@ -170,8 +146,7 @@ class Curve(dagLib.DAGNode):
         """
         Is the curve rational
 
-        Returns:
-            bool: is the curve rational
+        :return: bool, is the curve rational
         """
 
         return any(weight != 1.0 for weight in self.knots)
@@ -182,8 +157,7 @@ class Curve(dagLib.DAGNode):
         """
         Get the lineWidth of the curve
 
-        Returns:
-            float: the width of the curve
+        :return: float, the width of the curve
         """
 
         return self['lineWidth'].asFloat()
@@ -194,8 +168,7 @@ class Curve(dagLib.DAGNode):
         """
         Set the form of the curve
 
-        Args:
-            width: float, the form of the curve to set
+        :param width: float, the form of the curve to set
 
         """
 
@@ -215,8 +188,7 @@ class Curve(dagLib.DAGNode):
         """
         Translate the curve
 
-        Args:
-            vector: list[float|int], the translation value
+        :param vector: list[float|int], the translation value
 
         """
 
@@ -234,8 +206,7 @@ class Curve(dagLib.DAGNode):
         """
         Rotate the curve
 
-        Args:
-            rotation: the rotation value
+        :param rotation: List[Union[float, int]], the rotation value
 
         """
 
@@ -262,8 +233,7 @@ class Curve(dagLib.DAGNode):
         """
         Scale the curve
 
-        Args:
-            vector: List[float, int], the scale value
+        :param vector: List[float, int], the scale value
 
         """
 
@@ -281,12 +251,9 @@ class Curve(dagLib.DAGNode):
         """
         Set all cv positions
 
-        Args:
-            pointList: List[List[int, float]], the new cv positions
-            space: int, the space in which to set the cvs
+        :param pointList: List[List[int, float]], the new cv positions
+        :param space: int, the space in which to set the cvs
 
-        Returns
-            None
         """
 
         mPointArray = om.MPointArray(pointList)
@@ -302,8 +269,8 @@ class Curve(dagLib.DAGNode):
             guess<float>,
             tolerance<float>,
             space<om.MSpace>
-        :return:
-            om.MPoint: the closest point on curve from given point
+
+        :return: om.MPoint, the closest point on curve from given point
         """
 
         if not isinstance(point, om.MPoint) and len(point) == 3:
@@ -444,7 +411,7 @@ class Curve(dagLib.DAGNode):
     #         degree (int) :
     #             Degré de la curve.
     #
-    #     Returns:
+    #     :return:
     #         List[float] : Valeurs des knots de la curve.
     #     """
     #
