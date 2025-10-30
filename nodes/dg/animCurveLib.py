@@ -11,17 +11,6 @@ class AnimCurve(dgLib.DGNode):
     _NODE_TYPE = "animCurve"
     _API_TYPE = om.MFn.kAnimCurve
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of Absolute
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
 
 class AnimCurveTA(AnimCurve):
 

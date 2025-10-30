@@ -11,25 +11,13 @@ class Cos(dgLib.DGNode):
     _NODE_TYPE = "cos"
     _API_TYPE = om.MFn.kCos
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of Cos
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def input(self) -> float:
 
         """
         Get the input value
 
-        Returns:
-            float: the input value
+        :return: float, the input value
         """
 
         return self['input'].asFloat()
@@ -40,8 +28,7 @@ class Cos(dgLib.DGNode):
         """
         Set the input value
 
-        Args:
-            value: float, the input value
+        :param value: float, the input value
         """
 
         self['input'] = value
@@ -51,8 +38,7 @@ class Cos(dgLib.DGNode):
         """
         Get the output value
 
-        Returns:
-            float: the output value
+        :return: float, the output value
         """
 
         return self['output'].asFloat()
@@ -62,8 +48,7 @@ class Cos(dgLib.DGNode):
         """
         Set the output value
 
-        Args:
-            value: float, the output value
+        :param value: float, the output value
         """
 
         self['output'] = value

@@ -11,23 +11,12 @@ class PointMatrixMult(dgLib.DGNode):
     _NODE_TYPE = "pointMatrixMult"
     _API_TYPE = om.MFn.kPointMatrixMult
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-        """
-        Initialize an instance of PointMatrixMult
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def inMatrix(self) -> List[float]:
         """
         Get the inMatrix value
 
-        Returns:
-            List[float]: the inMatrix value
+        :return: List[float], the inMatrix value
         """
 
         return self['inMatrix'].value
@@ -37,8 +26,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Set the inMatrix value
 
-        Args:
-            value: List[float] the inMatrix value
+        :param value: List[float] the inMatrix value
         """
 
         self['inMatrix'] = value
@@ -48,8 +36,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Get the inPoint value
 
-        Returns:
-            List[float]: the inPoint value
+        :return: List[float], the inPoint value
         """
 
         return [
@@ -63,8 +50,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Set the inPoint value
 
-        Args:
-            value: List[float], the inPoint value
+        :param value: List[float], the inPoint value
         """
 
         self['inPoint'] = value
@@ -74,8 +60,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Get the inPointX value
 
-        Returns:
-            float: the inPointX value
+        :return: float, the inPointX value
         """
 
         return self['inPointX'].asFloat()
@@ -85,8 +70,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Set the inPointX value
 
-        Args:
-            value: float, the inPointX value
+        :param value: float, the inPointX value
         """
 
         self['inPointX'] = value
@@ -96,8 +80,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Get the inPointY value
 
-        Returns:
-            float: the inPointY value
+        :return: float, the inPointY value
         """
 
         return self['inPointY'].asFloat()
@@ -107,8 +90,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Set the inPointY value
 
-        Args:
-            value: float, the inPointY value
+        :param value: float, the inPointY value
         """
 
         self['inPointY'] = value
@@ -118,8 +100,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Get the inPointZ value
 
-        Returns:
-            float: the inPointZ value
+        :return: float, the inPointZ value
         """
 
         return self['inPointZ'].asFloat()
@@ -129,8 +110,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Set the inPointZ value
 
-        Args:
-            value: float, the inPointZ value
+        :param value: float, the inPointZ value
         """
 
         self['inPointZ'] = value
@@ -140,8 +120,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Get the vectorMultiply value
 
-        Returns:
-            bool: the vectorMultiply value
+        :return: bool, the vectorMultiply value
         """
 
         return self['vectorMultiply'].asBool()
@@ -151,8 +130,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Set the vectorMultiply value
 
-        Args:
-            value: bool, the vectorMultiply value
+        :param value: bool, the vectorMultiply value
         """
 
         self['vectorMultiply'] = value
@@ -162,8 +140,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Get the output value
 
-        Returns:
-            List[float]: the output value
+        :return: List[float], the output value
         """
 
         return [
@@ -177,8 +154,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Set the output value
 
-        Args:
-            value: List[float], the output value
+        :param value: List[float], the output value
         """
 
         self['output'] = value
@@ -188,8 +164,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Get the outputX value
 
-        Returns:
-            float: the outputX value
+        :return: float, the outputX value
         """
 
         return self['outputX'].asFloat()
@@ -199,8 +174,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Set the outputX value
 
-        Args:
-            value: float, the outputX value
+        :param value: float, the outputX value
         """
 
         self['outputX'] = value
@@ -210,8 +184,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Get the outputY value
 
-        Returns:
-            float: the outputY value
+        :return: float, the outputY value
         """
 
         return self['outputY'].asFloat()
@@ -221,8 +194,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Set the outputY value
 
-        Args:
-            value: float, the outputY value
+        :param value: float, the outputY value
         """
 
         self['outputY'] = value
@@ -232,8 +204,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Get the outputZ value
 
-        Returns:
-            float: the outputZ value
+        :return: float, the outputZ value
         """
 
         return self['outputZ'].asFloat()
@@ -243,8 +214,7 @@ class PointMatrixMult(dgLib.DGNode):
         """
         Set the outputZ value
 
-        Args:
-            value: float, the outputZ value
+        :param value: float, the outputZ value
         """
 
         self['outputZ'] = value

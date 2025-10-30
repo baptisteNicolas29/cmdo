@@ -13,24 +13,12 @@ class Reference(dgLib.DGNode):
     _NODE_TYPE = "reference"
     _API_TYPE = om.MFn.kReference
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of Absolute
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def mfnReference(self) -> om.MFnReference:
         """
         Get MFnReference of the om.MObject
 
-        Returns:
-            om.MFnReference: the Reference object
+        :return: om.MFnReference, the Reference object
         """
 
         return om.MFnReference(self)
@@ -40,8 +28,7 @@ class Reference(dgLib.DGNode):
         """
         Get the referenced file path
 
-        Returns:
-            str: the referenced file path
+        :return: str, the referenced file path
         """
 
         return self.mfnReference.fileName(True, False, False)
@@ -51,8 +38,7 @@ class Reference(dgLib.DGNode):
         """
         Get the namespace associated with this reference
 
-        Returns:
-             str: the namespace associated with this reference
+        :return: str, the namespace associated with this reference
         """
 
         return self.mfnReference.associatedNamespace(True)
@@ -62,8 +48,7 @@ class Reference(dgLib.DGNode):
         """
         Check if the reference is valid
 
-        Returns:
-            bool: is the reference valid
+        :return: bool, is the reference valid
         """
 
         return self.mfnReference.isValidReference()
@@ -73,8 +58,7 @@ class Reference(dgLib.DGNode):
         """
         Check if the reference is loaded
 
-        Returns:
-            bool: is the reference loaded
+        :return: bool, is the reference loaded
         """
 
         return self.mfnReference.isLoaded()
@@ -84,8 +68,7 @@ class Reference(dgLib.DGNode):
         """
         Check if the reference is locked
 
-        Returns:
-            bool: is the reference locked
+        :return: bool, is the reference locked
         """
 
         return self.mfnReference.isLocked()
@@ -95,8 +78,7 @@ class Reference(dgLib.DGNode):
         """
         Retrieve the referenced nodes
 
-        Returns:
-            Graph: a list of referenced nodes
+        :return: Graph, a list of referenced nodes
         """
 
         return Graph.ls(*self.mfnReference.nodes())
@@ -106,12 +88,11 @@ class Reference(dgLib.DGNode):
         Check if the node is contained in this reference
          and its children references
 
-        Args:
-            node: om.MObject, the node to check
+        :param node: om.MObject, the node to check
 
-        Returns:
-             bool: is the node contained in this reference
+        :return: bool, is the node contained in this reference
         """
+
         return self.mfnReference.containsNode(node)
 
     def containsNodeExactly(self, node: om.MObject) -> bool:
@@ -119,12 +100,11 @@ class Reference(dgLib.DGNode):
         Check if the node is contained in this reference
          without its children references
 
-        Args:
-            node: om.MObject, the node to check
+        :param node: om.MObject, the node to check
 
-        Returns:
-             bool: is the node contained in this reference
+        :return: bool, is the node contained in this reference
         """
+
         return self.mfnReference.containsNodeExactly(node)
 
 

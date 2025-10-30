@@ -11,25 +11,13 @@ class AimMatrix(dgLib.DGNode):
     _NODE_TYPE = "aimMatrix"
     _API_TYPE = om.MFn.kAimMatrix
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of AimMatrix
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def inputMatrix(self) -> List[float]:
 
         """
         Get the inputMatrix value
 
-        Returns:
-            List[float]: the inputMatrix value
+        :return: List[float] the inputMatrix value
         """
 
         return self['inputMatrix'].value
@@ -40,8 +28,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Set the inputMatrix value
 
-        Args:
-            value: List[float]|om.MMatrix, the inputMatrix value
+        :param value: List[float]|om.MMatrix, the inputMatrix value
         """
 
         self['inputMatrix'] = value
@@ -52,8 +39,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the primaryInputAxis value
 
-        Returns:
-            List[float]: the primaryInputAxis value
+        :return: List[float] the primaryInputAxis value
         """
 
         return self['primaryInputAxis'].value
@@ -64,8 +50,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Set the primaryInputAxis value
 
-        Args:
-            value: List[float], the primaryInputAxis value
+        :param value: List[float], the primaryInputAxis value
         """
 
         self['primaryInputAxis'] = value
@@ -76,8 +61,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the primaryInputAxisX value
 
-        Returns:
-            List[float]: the primaryInputAxisX value
+        :return: List[float] the primaryInputAxisX value
         """
 
         return self['primaryInputAxisX'].asFloat()
@@ -88,8 +72,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Set the primaryInputAxisX value
 
-        Args:
-            value: List[float], the primaryInputAxisX value
+        :param value: List[float], the primaryInputAxisX value
         """
 
         self['primaryInputAxisX'] = value
@@ -100,8 +83,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the primaryInputAxisY value
 
-        Returns:
-            List[float]: the primaryInputAxisY value
+        :return: List[float] the primaryInputAxisY value
         """
 
         return self['primaryInputAxisY'].asFloat()
@@ -112,8 +94,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Set the primaryInputAxisY value
 
-        Args:
-            value: List[float], the primaryInputAxisY value
+        :param value: List[float], the primaryInputAxisY value
         """
 
         self['primaryInputAxisY'] = value
@@ -124,8 +105,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the primaryInputAxisZ value
 
-        Returns:
-            List[float]: the primaryInputAxisZ value
+        :return: List[float] the primaryInputAxisZ value
         """
 
         return self['primaryInputAxisZ'].asFloat()
@@ -136,8 +116,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Set the primaryInputAxisZ value
 
-        Args:
-            value: List[float], the primaryInputAxisZ value
+        :param value: List[float], the primaryInputAxisZ value
         """
 
         self['primaryInputAxisZ'] = value
@@ -148,8 +127,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the primaryMode value
 
-        Returns:
-            int: the primaryMode value
+        :return: int, the primaryMode value
         """
 
         return self['primaryMode'].asInt()
@@ -160,8 +138,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Set the primaryMode value
 
-        Args:
-            value: int, the primaryMode value
+        :param value: int, the primaryMode value
         """
 
         self['primaryMode'] = value
@@ -172,8 +149,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the primaryTargetMatrix value
 
-        Returns:
-            List[float]: the primaryTargetMatrix value
+        :return: List[float] the primaryTargetMatrix value
         """
 
         return self['primaryTargetMatrix'].value
@@ -184,8 +160,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Set the primaryTargetMatrix value
 
-        Args:
-            value: List[float], the primaryTargetMatrix value
+        :param value: List[float], the primaryTargetMatrix value
         """
 
         self['primaryTargetMatrix'] = value
@@ -196,8 +171,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the secondaryInputAxis value
 
-        Returns:
-            List[float]: the secondaryInputAxis value
+        :return: List[float] the secondaryInputAxis value
         """
 
         return self['secondaryInputAxis'].value
@@ -208,8 +182,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Set the secondaryInputAxis value
 
-        Args:
-            value: List[float], the secondaryInputAxis value
+        :param value: List[float], the secondaryInputAxis value
         """
 
         self['secondaryInputAxis'] = value
@@ -220,8 +193,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the secondaryInputAxisX value
 
-        Returns:
-            List[float]: the secondaryInputAxisX value
+        :return: List[float] the secondaryInputAxisX value
         """
 
         return self['secondaryInputAxisX'].asFloat()
@@ -232,8 +204,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Set the secondaryInputAxisX value
 
-        Args:
-            value: List[float], the secondaryInputAxisX value
+        :param value: List[float], the secondaryInputAxisX value
         """
 
         self['secondaryInputAxisX'] = value
@@ -244,8 +215,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the secondaryInputAxisY value
 
-        Returns:
-            List[float]: the secondaryInputAxisY value
+        :return: List[float] the secondaryInputAxisY value
         """
 
         return self['secondaryInputAxisY'].asFloat()
@@ -256,8 +226,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Set the secondaryInputAxisY value
 
-        Args:
-            value: List[float], the secondaryInputAxisY value
+        :param value: List[float], the secondaryInputAxisY value
         """
 
         self['secondaryInputAxisY'] = value
@@ -268,8 +237,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the secondaryInputAxisZ value
 
-        Returns:
-            List[float]: the secondaryInputAxisZ value
+        :return: List[float] the secondaryInputAxisZ value
         """
 
         return self['secondaryInputAxisZ'].asFloat()
@@ -280,8 +248,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Set the secondaryInputAxisZ value
 
-        Args:
-            value: List[float], the secondaryInputAxisZ value
+        :param value: List[float], the secondaryInputAxisZ value
         """
 
         self['secondaryInputAxisZ'] = value
@@ -292,8 +259,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the secondaryMode value
 
-        Returns:
-            int: the secondaryMode value
+        :return: int, the secondaryMode value
         """
 
         return self['secondaryMode'].asInt()
@@ -304,8 +270,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Set the secondaryMode value
 
-        Args:
-            value: int, the secondaryMode value
+        :param value: int, the secondaryMode value
         """
 
         self['secondaryMode'] = value
@@ -316,8 +281,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the secondaryTargetMatrix value
 
-        Returns:
-            List[float]: the secondaryTargetMatrix value
+        :return: List[float] the secondaryTargetMatrix value
         """
 
         return self['secondaryTargetMatrix'].value
@@ -328,8 +292,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Set the secondaryTargetMatrix value
 
-        Args:
-            value: List[float], the secondaryTargetMatrix value
+        :param value: List[float], the secondaryTargetMatrix value
         """
 
         self['secondaryTargetMatrix'] = value
@@ -340,8 +303,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the preSpaceMatrix value
 
-        Returns:
-            List[float]: the preSpaceMatrix value
+        :return: List[float] the preSpaceMatrix value
         """
 
         return self['preSpaceMatrix'].value
@@ -351,8 +313,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the preSpaceMatrix value
 
-        Args:
-            value: List[float], the preSpaceMatrix value
+        :param value: List[float], the preSpaceMatrix value
         """
 
         self['preSpaceMatrix'] = value
@@ -362,8 +323,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the postSpaceMatrix value
 
-        Returns:
-            List[float]: the postSpaceMatrix value
+        :return: List[float] the postSpaceMatrix value
         """
 
         return self['postSpaceMatrix'].value
@@ -373,8 +333,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the postSpaceMatrix value
 
-        Args:
-            value: List[float], the postSpaceMatrix value
+        :param value: List[float], the postSpaceMatrix value
         """
 
         self['postSpaceMatrix'] = value
@@ -385,8 +344,7 @@ class AimMatrix(dgLib.DGNode):
         """
         Get the outputMatrix value
 
-        Returns:
-            Liar[float]: the outputMatrix value
+        :return: List[float]: the outputMatrix value
         """
 
         return self['outputMatrix'].value

@@ -11,23 +11,12 @@ class RemapValue(dgLib.DGNode):
     _NODE_TYPE = "remapValue"
     _API_TYPE = om.MFn.kRemapValue
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-        """
-        Initialize an instance of RemapValue
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def inputMin(self) -> float:
         """
         Get the inputMin value
 
-        Returns:
-            float, the inputMin value
+        :return: float, the inputMin value
         """
 
         return self['inputMin'].asFloat()
@@ -37,8 +26,7 @@ class RemapValue(dgLib.DGNode):
         """
         Set the inputMin value
 
-        Args:
-            value: float, the inputMin value
+        :param value: float, the inputMin value
         """
 
         self['inputMin'] = value
@@ -48,8 +36,7 @@ class RemapValue(dgLib.DGNode):
         """
         Get the inputMax value
 
-        Returns:
-            float, the inputMax value
+        :return: float, the inputMax value
         """
 
         return self['inputMax'].asFloat()
@@ -59,8 +46,7 @@ class RemapValue(dgLib.DGNode):
         """
         Set the inputMax value
 
-        Args:
-            value: float, the inputMax value
+        :param value: float, the inputMax value
         """
 
         self['inputMax'] = value
@@ -70,8 +56,7 @@ class RemapValue(dgLib.DGNode):
         """
         Get the inputValue value
 
-        Returns:
-            float, the inputValue value
+        :return: float, the inputValue value
         """
 
         return self['inputValue'].asFloat()
@@ -81,8 +66,7 @@ class RemapValue(dgLib.DGNode):
         """
         Set the inputValue value
 
-        Args:
-            value: float, the inputValue value
+        :param value: float, the inputValue value
         """
 
         self['inputValue'] = value
@@ -92,8 +76,7 @@ class RemapValue(dgLib.DGNode):
         """
         Get the outputMin value
 
-        Returns:
-            float, the outputMin value
+        :return: float, the outputMin value
         """
 
         return self['outputMin'].asFloat()
@@ -103,8 +86,7 @@ class RemapValue(dgLib.DGNode):
         """
         Set the outputMin value
 
-        Args:
-            value: float, the outputMin value
+        :param value: float, the outputMin value
         """
 
         self['outputMin'] = value
@@ -114,8 +96,7 @@ class RemapValue(dgLib.DGNode):
         """
         Get the outputMax value
 
-        Returns:
-            float, the outputMax value
+        :return: float, the outputMax value
         """
 
         return self['outputMax'].asFloat()
@@ -125,8 +106,7 @@ class RemapValue(dgLib.DGNode):
         """
         Set the outputMax value
 
-        Args:
-            value: float, the outputMax value
+        :param value: float, the outputMax value
         """
 
         self['outputMax'] = value
@@ -136,8 +116,7 @@ class RemapValue(dgLib.DGNode):
         """
         Get the number of color compound attributes (numElements)
 
-        Returns:
-            int: the number of color compound attributes
+        :return: int, the number of color compound attributes
         """
 
         return self['color'].numElements()
@@ -147,8 +126,7 @@ class RemapValue(dgLib.DGNode):
         """
         Get the number of value compound attributes (numElements)
 
-        Returns:
-            int: the number of value compound attributes
+        :return: int, the number of value compound attributes
         """
 
         return self['value'].numElements()
@@ -157,11 +135,9 @@ class RemapValue(dgLib.DGNode):
         """
         Get the color[index].color_Position value
 
-        Args:
-            index: int, the index of the color value to get
+        :param index: int, the index of the color value to get
 
-        Returns:
-            float, the color[index].color_Position value
+        :return: float, the color[index].color_Position value
         """
 
         return self['color'][index]['color_Position'].asFloat()
@@ -170,9 +146,8 @@ class RemapValue(dgLib.DGNode):
         """
         Set the color[index].color_Position value
 
-        Args:
-            index: int, the index of the color value to get
-            value: float, the color[index].color_Position value
+        :param index: int, the index of the color value to get
+        :param value: float, the color[index].color_Position value
         """
 
         self['color'][index]['color_Position'] = value
@@ -181,11 +156,9 @@ class RemapValue(dgLib.DGNode):
         """
         Get the color[index].color_Interp value
 
-        Args:
-            index: int, the index of the color value to get
+        :param index: int, the index of the color value to get
 
-        Returns:
-            float, the color[index].color_Interp value
+        :return: float, the color[index].color_Interp value
         """
 
         return self['color'][index]['color_Interp'].asFloat()
@@ -194,9 +167,8 @@ class RemapValue(dgLib.DGNode):
         """
         Set the color[index].color_Interp value
 
-        Args:
-            index: int, the index of the color value to get
-            value: float, the color[index].color_Interp value
+        :param index: int, the index of the color value to get
+        :param value: float, the color[index].color_Interp value
         """
 
         self['color'][index]['color_Interp'] = value
@@ -205,11 +177,9 @@ class RemapValue(dgLib.DGNode):
         """
         Get the color[index].color_Color value
 
-        Args:
-            index: int, the index of the color value to get
+        :param index: int, the index of the color value to get
 
-        Returns:
-            List[float], the color[index].color_Color value
+        :return: List[float], the color[index].color_Color value
         """
 
         return self['color'][index]['color_Color'].asFloat()
@@ -218,9 +188,8 @@ class RemapValue(dgLib.DGNode):
         """
         Set the color[index].color_Color value
 
-        Args:
-            index: int, the index of the color value to get
-            value: List[float], the color[index].color_Color value
+        :param index: int, the index of the color value to get
+        :param value: List[float], the color[index].color_Color value
         """
 
         self['color'][index]['color_Color'] = value
@@ -229,11 +198,9 @@ class RemapValue(dgLib.DGNode):
         """
         Get the color[index].color_ColorR value
 
-        Args:
-            index: int, the index of the color value to get
+        :param index: int, the index of the color value to get
 
-        Returns:
-            float, the color[index].color_ColorR value
+        :return: float, the color[index].color_ColorR value
         """
 
         return self['color'][index]['color_ColorR'].asFloat()
@@ -242,9 +209,8 @@ class RemapValue(dgLib.DGNode):
         """
         Set the color[index].color_ColorR value
 
-        Args:
-            index: int, the index of the color value to get
-            value: float, the color[index].color_ColorR value
+        :param index: int, the index of the color value to get
+        :param value: float, the color[index].color_ColorR value
         """
 
         self['color'][index]['color_ColorR'] = value
@@ -253,11 +219,9 @@ class RemapValue(dgLib.DGNode):
         """
         Get the color[index].color_ColorG value
 
-        Args:
-            index: int, the index of the color value to get
+        :param index: int, the index of the color value to get
 
-        Returns:
-            float, the color[index].color_ColorG value
+        :return: float, the color[index].color_ColorG value
         """
 
         return self['color'][index]['color_ColorG'].asFloat()
@@ -266,9 +230,8 @@ class RemapValue(dgLib.DGNode):
         """
         Set the color[index].color_ColorG value
 
-        Args:
-            index: int, the index of the color value to get
-            value: float, the color[index].color_ColorG value
+        :param index: int, the index of the color value to get
+        :param value: float, the color[index].color_ColorG value
         """
 
         self['color'][index]['color_ColorG'] = value
@@ -277,11 +240,9 @@ class RemapValue(dgLib.DGNode):
         """
         Get the color[index].color_ColorB value
 
-        Args:
-            index: int, the index of the color value to get
+        :param index: int, the index of the color value to get
 
-        Returns:
-            float, the color[index].color_ColorB value
+        :return: float, the color[index].color_ColorB value
         """
 
         return self['color'][index]['color_ColorB'].asFloat()
@@ -290,9 +251,8 @@ class RemapValue(dgLib.DGNode):
         """
         Set the color[index].color_ColorB value
 
-        Args:
-            index: int, the index of the color value to get
-            value: float, the color[index].color_ColorB value
+        :param index: int, the index of the color value to get
+        :param value: float, the color[index].color_ColorB value
         """
 
         self['color'][index]['color_ColorB'] = value
@@ -301,11 +261,9 @@ class RemapValue(dgLib.DGNode):
         """
         Get the value[index].value_Position value
 
-        Args:
-            index: int, the index of the value Position to get
+        :param index: int, the index of the value Position to get
 
-        Returns:
-            float, the value[index].value_Position value
+        :return: float, the value[index].value_Position value
         """
 
         return self['value'][index]['value_Position'].asFloat()
@@ -314,9 +272,8 @@ class RemapValue(dgLib.DGNode):
         """
         Set the value[index].value_Position value
 
-        Args:
-            index: int, the index of the value Position to get
-            value: float, the value[index].value_Position value
+        :param index: int, the index of the value Position to get
+        :param value: float, the value[index].value_Position value
         """
 
         self['value'][index]['value_Position'] = value
@@ -325,11 +282,9 @@ class RemapValue(dgLib.DGNode):
         """
         Get the value[index].value_Interp value
 
-        Args:
-            index: int, the index of the value Interp to get
+        :param index: int, the index of the value Interp to get
 
-        Returns:
-            int, the value[index].value_Interp value
+        :return: int, the value[index].value_Interp value
         """
 
         return self['value'][index]['value_Interp'].asInt()
@@ -338,9 +293,8 @@ class RemapValue(dgLib.DGNode):
         """
         Set the value[index].value_Interp value
 
-        Args:
-            index: int, the index of the value Interp to get
-            value: int, the value[index].value_Interp value
+        :param index: int, the index of the value Interp to get
+        :param value: int, the value[index].value_Interp value
         """
 
         self['value'][index]['value_Interp'] = value
@@ -349,11 +303,9 @@ class RemapValue(dgLib.DGNode):
         """
         Get the value[index].value_FloatValue value
 
-        Args:
-            index: int, the index of the value FloatValue to get
+        :param index: int, the index of the value FloatValue to get
 
-        Returns:
-            float, the value[index].value_FloatValue value
+        :return: float, the value[index].value_FloatValue value
         """
 
         return self['value'][index]['value_FloatValue'].asFloat()
@@ -362,9 +314,8 @@ class RemapValue(dgLib.DGNode):
         """
         Set the value[index].value_FloatValue value
 
-        Args:
-            index: int, the index of the value FloatValue to get
-            value: float, the value[index].value_FloatValue value
+        :param index: int, the index of the value FloatValue to get
+        :param value: float, the value[index].value_FloatValue value
         """
 
         self['value'][index]['value_FloatValue'] = value

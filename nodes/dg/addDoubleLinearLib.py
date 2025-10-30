@@ -11,24 +11,12 @@ class AddDoubleLinear(dgLib.DGNode):
     _NODE_TYPE = "addDoubleLinear"
     _API_TYPE = om.MFn.kAddDoubleLinear
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of AddDoubleLinear
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def input1(self) -> float:
         """
         Get the value of the input1 plug
 
-        Returns:
-            float: the value of the input1 plug
+        :return: float, the value of the input1 plug
         """
 
         return self['input1'].asFloat()
@@ -38,8 +26,7 @@ class AddDoubleLinear(dgLib.DGNode):
         """
         Set the value of the input1 plug
 
-        Args:
-            value: float, the value of the input1 plug
+        :param value: float, the value of the input1 plug
         """
 
         self['input1'] = value
@@ -50,8 +37,7 @@ class AddDoubleLinear(dgLib.DGNode):
         """
         Get the value of the input2 plug
 
-        Returns:
-            float: the value of the input2 plug
+        :return: float, the value of the input2 plug
         """
 
         return self['input2'].asFloat()
@@ -61,8 +47,7 @@ class AddDoubleLinear(dgLib.DGNode):
         """
         Set the value of the input2 plug
 
-        Args:
-            value: float, the value of the input2 plug
+        :param value: float, the value of the input2 plug
         """
 
         self['input2'] = value
@@ -73,8 +58,7 @@ class AddDoubleLinear(dgLib.DGNode):
         """
         Get the value of the output plug
 
-        Returns:
-            float: the value of the output plug
+        :return: float, the value of the output plug
         """
 
         return self['output'].asFloat()

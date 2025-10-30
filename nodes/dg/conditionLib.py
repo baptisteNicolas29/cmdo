@@ -11,25 +11,13 @@ class Condition(dgLib.DGNode):
     _NODE_TYPE = "condition"
     _API_TYPE = om.MFn.kCondition
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of Condition
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def firstTerm(self) -> float:
         
         """
         Get the firstTerm value
 
-        Returns:
-            float: the firstTerm value
+        :return: float, the firstTerm value
         """
         
         return self['firstTerm'].asFloat()
@@ -40,8 +28,7 @@ class Condition(dgLib.DGNode):
         """
         Set the firstTerm value
 
-        Args:
-            value: float, the firstTerm value
+        :param value: float, the firstTerm value
         """
         
         self['firstTerm'] = value
@@ -52,8 +39,7 @@ class Condition(dgLib.DGNode):
         """
         Get the secondTerm value
 
-        Returns:
-            float: the secondTerm value
+        :return: float, the secondTerm value
         """
 
         return self['secondTerm'].asFloat()
@@ -64,8 +50,7 @@ class Condition(dgLib.DGNode):
         """
         Set the secondTerm value
 
-        Args:
-            value: float, the secondTerm value
+        :param value: float, the secondTerm value
         """
 
         self['secondTerm'] = value
@@ -76,8 +61,7 @@ class Condition(dgLib.DGNode):
         """
         Get the list of available operations
 
-        Returns:
-            List[str]: the list of available operations
+        :return: List[str], the list of available operations
         """
 
         return [
@@ -91,8 +75,7 @@ class Condition(dgLib.DGNode):
         """
         Get the operation value
 
-        Returns:
-            int: the operation value
+        :return: int, the operation value
         """
 
         return self['operation'].asInt()
@@ -103,9 +86,8 @@ class Condition(dgLib.DGNode):
         """
         Set the operation value
 
-        Args:
-            value: int | str, the operation to set, either the index or the
-                string (ie: "xyz")
+        :param value: int | str, the operation to set, 
+        either the index or the string (ie: "xyz")
         """
 
         if isinstance(value, int) and 0 < value < len(self.operationList):
@@ -126,8 +108,7 @@ class Condition(dgLib.DGNode):
         """
         Get the colorIfTrue value
 
-        Returns:
-            List[float]: the colorIfTrue value
+        :return: List[float], the colorIfTrue value
         """
 
         return [
@@ -141,8 +122,7 @@ class Condition(dgLib.DGNode):
         """
         Set the colorIfTrue value
 
-        Args:
-            value: List[float], the colorIfTrue value
+        :param value: List[float], the colorIfTrue value
         """
 
         self['colorIfTrue'] = value
@@ -152,8 +132,7 @@ class Condition(dgLib.DGNode):
         """
         Get the colorIfTrueR value
 
-        Returns:
-            float: the colorIfTrueR value
+        :return: float, the colorIfTrueR value
         """
 
         return self['colorIfTrueR'].asFloat()
@@ -163,8 +142,7 @@ class Condition(dgLib.DGNode):
         """
         Set the colorIfTrueR value
 
-        Args:
-            value: float, the colorIfTrueR value
+        :param value: float, the colorIfTrueR value
         """
 
         self['colorIfTrueR'] = value
@@ -174,8 +152,7 @@ class Condition(dgLib.DGNode):
         """
         Get the colorIfTrueG value
 
-        Returns:
-            float: the colorIfTrueG value
+        :return: float, the colorIfTrueG value
         """
 
         return self['colorIfTrueG'].asFloat()
@@ -185,8 +162,7 @@ class Condition(dgLib.DGNode):
         """
         Set the colorIfTrueG value
 
-        Args:
-            value: float, the colorIfTrueG value
+        :param value: float, the colorIfTrueG value
         """
 
         self['colorIfTrueG'] = value
@@ -196,8 +172,7 @@ class Condition(dgLib.DGNode):
         """
         Get the colorIfTrueB value
 
-        Returns:
-            float: the colorIfTrueB value
+        :return: float, the colorIfTrueB value
         """
 
         return self['colorIfTrueB'].asFloat()
@@ -207,8 +182,7 @@ class Condition(dgLib.DGNode):
         """
         Set the colorIfTrueB value
 
-        Args:
-            value: float, the colorIfTrueB value
+        :param value: float, the colorIfTrueB value
         """
 
         self['colorIfTrueB'] = value
@@ -218,8 +192,7 @@ class Condition(dgLib.DGNode):
         """
         Get the colorIfFalse value
 
-        Returns:
-            List[float]: the colorIfFalse value
+        :return: List[float], the colorIfFalse value
         """
 
         return [
@@ -233,8 +206,7 @@ class Condition(dgLib.DGNode):
         """
         Set the colorIfFalse value
 
-        Args:
-            value: List[float], the colorIfFalse value
+        :param value: List[float], the colorIfFalse value
         """
 
         self['colorIfFalse'] = value
@@ -244,8 +216,7 @@ class Condition(dgLib.DGNode):
         """
         Get the colorIfFalseR value
 
-        Returns:
-            float: the colorIfFalseR value
+        :return: float, the colorIfFalseR value
         """
 
         return self['colorIfFalseR'].asFloat()
@@ -255,8 +226,7 @@ class Condition(dgLib.DGNode):
         """
         Set the colorIfFalseR value
 
-        Args:
-            value: float, the colorIfFalseR value
+        :param value: float, the colorIfFalseR value
         """
 
         self['colorIfFalseR'] = value
@@ -266,8 +236,7 @@ class Condition(dgLib.DGNode):
         """
         Get the colorIfFalseG value
 
-        Returns:
-            float: the colorIfFalseG value
+        :return: float, the colorIfFalseG value
         """
 
         return self['colorIfFalseG'].asFloat()
@@ -277,8 +246,7 @@ class Condition(dgLib.DGNode):
         """
         Set the colorIfFalseG value
 
-        Args:
-            value: float, the colorIfFalseG value
+        :param value: float, the colorIfFalseG value
         """
 
         self['colorIfFalseG'] = value
@@ -288,8 +256,7 @@ class Condition(dgLib.DGNode):
         """
         Get the colorIfFalseB value
 
-        Returns:
-            float: the colorIfFalseB value
+        :return: float, the colorIfFalseB value
         """
 
         return self['colorIfFalseB'].asFloat()
@@ -299,8 +266,7 @@ class Condition(dgLib.DGNode):
         """
         Set the colorIfFalseB value
 
-        Args:
-            value: float, the colorIfFalseB value
+        :param value: float, the colorIfFalseB value
         """
 
         self['colorIfFalseB'] = value

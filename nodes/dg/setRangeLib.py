@@ -11,23 +11,12 @@ class SetRange(dgLib.DGNode):
     _NODE_TYPE = "setRange"
     _API_TYPE = om.MFn.kSetRange
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-        """
-        Initialize an instance of SetRange
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def min(self) -> List[float]:
         """
         Get the min value
 
-        Returns:
-            List[float]: the min value
+        :return: List[float], the min value
         """
 
         return [
@@ -41,8 +30,7 @@ class SetRange(dgLib.DGNode):
         """
         Set the min value
 
-        Args:
-            value: List[float], the min value
+        :param value: List[float], the min value
         """
 
         self['min'] = value
@@ -52,8 +40,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the minX value
 
-        Returns:
-            List[float]: the minX value
+        :return: List[float], the minX value
         """
 
         return self['minX'].asFloat()
@@ -63,8 +50,7 @@ class SetRange(dgLib.DGNode):
         """
         Set the minX value
 
-        Args:
-            value: List[float], the minX value
+        :param value: List[float], the minX value
         """
 
         self['minX'] = value
@@ -74,8 +60,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the minY value
 
-        Returns:
-            List[float]: the minY value
+        :return: List[float], the minY value
         """
 
         return self['minY'].asFloat()
@@ -85,8 +70,7 @@ class SetRange(dgLib.DGNode):
         """
         Set the minY value
 
-        Args:
-            value: List[float], the minY value
+        :param value: List[float], the minY value
         """
 
         self['minY'] = value
@@ -96,8 +80,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the minZ value
 
-        Returns:
-            List[float]: the minZ value
+        :return: List[float], the minZ value
         """
 
         return self['minZ'].asFloat()
@@ -107,8 +90,7 @@ class SetRange(dgLib.DGNode):
         """
         Set the minZ value
 
-        Args:
-            value: List[float], the minZ value
+        :param value: List[float], the minZ value
         """
 
         self['minZ'] = value
@@ -118,8 +100,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the max value
 
-        Returns:
-            List[float]: the max value
+        :return: List[float], the max value
         """
 
         return [
@@ -133,8 +114,7 @@ class SetRange(dgLib.DGNode):
         """
         Set the max value
 
-        Args:
-            value: List[float], the max value
+        :param value: List[float], the max value
         """
 
         self['max'] = value
@@ -144,8 +124,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the maxX value
 
-        Returns:
-            List[float]: the maxX value
+        :return: List[float], the maxX value
         """
 
         return self['maxX'].asFloat()
@@ -155,8 +134,7 @@ class SetRange(dgLib.DGNode):
         """
         Set the maxX value
 
-        Args:
-            value: List[float], the maxX value
+        :param value: List[float], the maxX value
         """
 
         self['maxX'] = value
@@ -166,8 +144,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the maxY value
 
-        Returns:
-            List[float]: the maxY value
+        :return: List[float], the maxY value
         """
 
         return self['maxY'].asFloat()
@@ -177,8 +154,7 @@ class SetRange(dgLib.DGNode):
         """
         Set the maxY value
 
-        Args:
-            value: List[float], the maxY value
+        :param value: List[float], the maxY value
         """
 
         self['maxY'] = value
@@ -188,8 +164,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the maxZ value
 
-        Returns:
-            List[float]: the maxZ value
+        :return: List[float], the maxZ value
         """
 
         return self['maxZ'].asFloat()
@@ -199,8 +174,7 @@ class SetRange(dgLib.DGNode):
         """
         Set the maxZ value
 
-        Args:
-            value: List[float], the maxZ value
+        :param value: List[float], the maxZ value
         """
 
         self['maxZ'] = value
@@ -210,8 +184,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the oldMin value
 
-        Returns:
-            List[float]: the oldMin value
+        :return: List[float], the oldMin value
         """
 
         return [
@@ -225,8 +198,7 @@ class SetRange(dgLib.DGNode):
         """
         Set the oldMin value
 
-        Args:
-            value: List[float], the oldMin value
+        :param value: List[float], the oldMin value
         """
 
         self['oldMin'] = value
@@ -236,8 +208,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the oldMinX value
 
-        Returns:
-            List[float]: the oldMinX value
+        :return: List[float], the oldMinX value
         """
 
         return self['oldMinX'].asFloat()
@@ -247,8 +218,7 @@ class SetRange(dgLib.DGNode):
         """
         Set the oldMinX value
 
-        Args:
-            value: List[float], the oldMinX value
+        :param value: List[float], the oldMinX value
         """
 
         self['oldMinX'] = value
@@ -258,8 +228,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the oldMinY value
 
-        Returns:
-            List[float]: the oldMinY value
+        :return: List[float], the oldMinY value
         """
 
         return self['oldMinY'].asFloat()
@@ -269,8 +238,7 @@ class SetRange(dgLib.DGNode):
         """
         Set the oldMinY value
 
-        Args:
-            value: List[float], the oldMinY value
+        :param value: List[float], the oldMinY value
         """
 
         self['oldMinY'] = value
@@ -280,8 +248,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the oldMinZ value
 
-        Returns:
-            List[float]: the oldMinZ value
+        :return: List[float], the oldMinZ value
         """
 
         return self['oldMinZ'].asFloat()
@@ -291,8 +258,7 @@ class SetRange(dgLib.DGNode):
         """
         Set the oldMinZ value
 
-        Args:
-            value: List[float], the oldMinZ value
+        :param value: List[float], the oldMinZ value
         """
 
         self['oldMinZ'] = value
@@ -302,8 +268,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the oldMax value
 
-        Returns:
-            List[float]: the oldMax value
+        :return: List[float], the oldMax value
         """
 
         return [
@@ -317,8 +282,7 @@ class SetRange(dgLib.DGNode):
         """
         Set the oldMax value
 
-        Args:
-            value: List[float], the oldMax value
+        :param value: List[float], the oldMax value
         """
 
         self['oldMax'] = value
@@ -328,8 +292,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the oldMaxX value
 
-        Returns:
-            List[float]: the oldMaxX value
+        :return: List[float], the oldMaxX value
         """
 
         return self['oldMaxX'].asFloat()
@@ -339,8 +302,7 @@ class SetRange(dgLib.DGNode):
         """
         Set the oldMaxX value
 
-        Args:
-            value: List[float], the oldMaxX value
+        :param value: List[float], the oldMaxX value
         """
 
         self['oldMaxX'] = value
@@ -350,8 +312,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the oldMaxY value
 
-        Returns:
-            List[float]: the oldMaxY value
+        :return: List[float], the oldMaxY value
         """
 
         return self['oldMaxY'].asFloat()
@@ -361,8 +322,7 @@ class SetRange(dgLib.DGNode):
         """
         Set the oldMaxY value
 
-        Args:
-            value: List[float], the oldMaxY value
+        :param value: List[float], the oldMaxY value
         """
 
         self['oldMaxY'] = value
@@ -372,8 +332,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the oldMaxZ value
 
-        Returns:
-            List[float]: the oldMaxZ value
+        :return: List[float], the oldMaxZ value
         """
 
         return self['oldMaxZ'].asFloat()
@@ -383,8 +342,7 @@ class SetRange(dgLib.DGNode):
         """
         Set the oldMaxZ value
 
-        Args:
-            value: List[float], the oldMaxZ value
+        :param value: List[float], the oldMaxZ value
         """
 
         self['oldMaxZ'] = value
@@ -394,8 +352,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the outValue value
 
-        Returns:
-            List[float]: the outValue value
+        :return: List[float], the outValue value
         """
 
         return [
@@ -409,8 +366,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the outValueX value
 
-        Returns:
-            List[float]: the outValueX value
+        :return: List[float], the outValueX value
         """
 
         return self['outValueX'].asFloat()
@@ -420,8 +376,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the outValueY value
 
-        Returns:
-            List[float]: the outValueY value
+        :return: List[float], the outValueY value
         """
 
         return self['outValueY'].asFloat()
@@ -431,8 +386,7 @@ class SetRange(dgLib.DGNode):
         """
         Get the outValueZ value
 
-        Returns:
-            List[float]: the outValueZ value
+        :return: List[float], the outValueZ value
         """
 
         return self['outValueZ'].asFloat()

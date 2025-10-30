@@ -18,7 +18,7 @@ class AnimLayer(dgLib.DGNode):
         Just keeping the code somewhere.
         This mel commande will merge all anim layers
         The command looks like this (admitting we have 3 animation layers)
-            -> animLayerMerge {"AnimLayer1","AnimLayer2","BaseAnimation"}
+        -> animLayerMerge {"AnimLayer1","AnimLayer2","BaseAnimation"}
         """
         animLayers = cmds.ls(type='animLayer')
         if not animLayers:
@@ -31,16 +31,6 @@ class AnimLayer(dgLib.DGNode):
             [f'"{layer}"' for layer in cmds.ls(type='animLayer')]
         )
         mel.eval(melCmd)
-
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-        """
-        Initialize an instance of AnimLayer
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
 
 
 NodeRegistry()[AnimLayer.nodeType()] = AnimLayer

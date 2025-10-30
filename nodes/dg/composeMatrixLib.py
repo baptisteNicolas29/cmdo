@@ -11,25 +11,13 @@ class ComposeMatrix(dgLib.DGNode):
     _NODE_TYPE = "composeMatrix"
     _API_TYPE = om.MFn.kComposeMatrix
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of ComposeMatrix
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def rotateOrderList(self) -> List[str]:
 
         """
         Get the list of available Rotate Orders
 
-        Returns:
-            List[str]: the list of available rotate orders
+        :return: List[str] the list of available rotate orders
         """
 
         return ['xyz', 'yzx', 'zxy', 'xzy', 'yxz', 'zyx']
@@ -40,8 +28,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputRotateOrder value
 
-        Returns:
-            int: the inputRotateOrder value
+        :return: int, the inputRotateOrder value
         """
 
         return self['inputRotateOrder'].asInt()
@@ -52,9 +39,8 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputRotateOrder value
 
-        Args:
-            value: int | str, the rotate order to set, either the index or the
-                string (ie: "xyz")
+        :param value: Union[int, str], the rotate order to set, 
+        either the index or the string (ie: "xyz")
         """
 
         if isinstance(value, int) and 0 < value < len(self.rotateOrderList):
@@ -75,8 +61,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the useEulerRotation value
 
-        Returns:
-            int: the useEulerRotation value
+        :return: int, the useEulerRotation value
         """
 
         return self['useEulerRotation'].asInt()
@@ -86,8 +71,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the useEulerRotation value
 
-        Args:
-            value: int, the useEulerRotation value
+        :param value: int, the useEulerRotation value
         """
 
         self['useEulerRotation'] = value
@@ -98,8 +82,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputTranslate value
 
-        Returns:
-            List[float]: the inputTranslate value
+        :return: List[float] the inputTranslate value
         """
         
         return [
@@ -114,8 +97,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputTranslate value
 
-        Args:
-            value: List[float], the inputTranslate value
+        :param value: List[float], the inputTranslate value
         """
 
         self['inputTranslate'] = value
@@ -126,8 +108,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputTranslateX value
 
-        Returns:
-            float: the inputTranslateX value
+        :return: float the inputTranslateX value
         """
 
         return self['inputTranslateX'].asFloat()
@@ -138,8 +119,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputTranslateX value
 
-        Args:
-            value: float, the inputTranslateX value
+        :param value: float, the inputTranslateX value
         """
 
         self['inputTranslateX'] = value
@@ -149,8 +129,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputTranslateY value
 
-        Returns:
-            float: the inputTranslateY value
+        :return: float the inputTranslateY value
         """
 
         return self['inputTranslateY'].asFloat()
@@ -160,8 +139,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputTranslateY value
 
-        Args:
-            value: float, the inputTranslateY value
+        :param value: float, the inputTranslateY value
         """
 
         self['inputTranslateY'] = value
@@ -171,8 +149,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputTranslateZ value
 
-        Returns:
-            float: the inputTranslateZ value
+        :return: float the inputTranslateZ value
         """
 
         return self['inputTranslateZ'].asFloat()
@@ -182,8 +159,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputTranslateZ value
 
-        Args:
-            value: float, the inputTranslateZ value
+        :param value: float, the inputTranslateZ value
         """
 
         self['inputTranslateZ'] = value
@@ -193,8 +169,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputRotate value
 
-        Returns:
-            List[float]: the inputRotate value
+        :return: List[float] the inputRotate value
         """
         return [
             self.inputRotateX,
@@ -207,8 +182,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputRotate value
 
-        Args:
-            value: List[float], the inputRotate value
+        :param value: List[float], the inputRotate value
         """
 
         self['inputRotate'] = value
@@ -218,8 +192,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputRotateX value
 
-        Returns:
-            float: the inputRotateX value
+        :return: float the inputRotateX value
         """
 
         return self['inputRotateX'].asFloat()
@@ -229,8 +202,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputRotateX value
 
-        Args:
-            value: float, the inputRotateX value
+        :param value: float, the inputRotateX value
         """
 
         self['inputRotateX'] = value
@@ -240,8 +212,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputRotateY value
 
-        Returns:
-            float: the inputRotateY value
+        :return: float the inputRotateY value
         """
 
         return self['inputRotateY'].asFloat()
@@ -251,8 +222,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputRotateY value
 
-        Args:
-            value: float, the inputRotateY value
+        :param value: float, the inputRotateY value
         """
 
         self['inputRotateY'] = value
@@ -262,8 +232,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputRotateZ value
 
-        Returns:
-            float: the inputRotateZ value
+        :return: float the inputRotateZ value
         """
 
         return self['inputRotateZ'].asFloat()
@@ -273,8 +242,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputRotateZ value
 
-        Args:
-            value: float, the inputRotateZ value
+        :param value: float, the inputRotateZ value
         """
 
         self['inputRotateZ'] = value
@@ -285,8 +253,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputScale value
 
-        Returns:
-            List[float]: the inputScale value
+        :return: List[float] the inputScale value
         """
 
         return [
@@ -300,8 +267,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputScale value
 
-        Args:
-            value: List[float], the inputScale value
+        :param value: List[float], the inputScale value
         """
 
         self['inputScale'] = value
@@ -311,8 +277,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputScaleX value
 
-        Returns:
-            List[float]: the inputScaleX value
+        :return: List[float] the inputScaleX value
         """
 
         return self['inputScaleX'].asFloat()
@@ -322,8 +287,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputScaleX value
 
-        Args:
-            value: List[float], the inputScaleX value
+        :param value: List[float], the inputScaleX value
         """
 
         self['inputScaleX'] = value
@@ -333,8 +297,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputScaleY value
 
-        Returns:
-            List[float]: the inputScaleY value
+        :return: List[float] the inputScaleY value
         """
 
         return self['inputScaleY'].asFloat()
@@ -344,8 +307,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputScaleY value
 
-        Args:
-            value: List[float], the inputScaleY value
+        :param value: List[float], the inputScaleY value
         """
 
         self['inputScaleY'] = value
@@ -355,8 +317,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputScaleZ value
 
-        Returns:
-            List[float]: the inputScaleZ value
+        :return: List[float] the inputScaleZ value
         """
 
         return self['inputScaleZ'].asFloat()
@@ -366,8 +327,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputScaleZ value
 
-        Args:
-            value: List[float], the inputScaleZ value
+        :param value: List[float], the inputScaleZ value
         """
 
         self['inputScaleZ'] = value
@@ -378,8 +338,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputShear value
 
-        Returns:
-            List[float]: the inputShear value
+        :return: List[float] the inputShear value
         """
         
         return [
@@ -394,8 +353,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputShear value
 
-        Args:
-            value: List[float], the inputShear value
+        :param value: List[float], the inputShear value
         """
 
         self['inputShear'] = value
@@ -406,8 +364,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputShearX value
 
-        Returns:
-            float: the inputShearX value
+        :return: float the inputShearX value
         """
 
         return self['inputShearX'].asFloat()
@@ -418,8 +375,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputShearX value
 
-        Args:
-            value: float, the inputShearX value
+        :param value: float, the inputShearX value
         """
 
         self['inputShearX'] = value
@@ -430,8 +386,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputShearY value
 
-        Returns:
-            float: the inputShearY value
+        :return: float the inputShearY value
         """
 
         return self['inputShearY'].asFloat()
@@ -442,8 +397,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputShearY value
 
-        Args:
-            value: float, the inputShearY value
+        :param value: float, the inputShearY value
         """
 
         self['inputShearY'] = value
@@ -454,8 +408,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputShearZ value
 
-        Returns:
-            float: the inputShearZ value
+        :return: float the inputShearZ value
         """
 
         return self['inputShearZ'].asFloat()
@@ -466,8 +419,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputShearZ value
 
-        Args:
-            value: float, the inputShearZ value
+        :param value: float, the inputShearZ value
         """
 
         self['inputShearZ'] = value
@@ -477,8 +429,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputQuat value
 
-        Returns:
-            List[float]: the inputQuat value
+        :return: List[float] the inputQuat value
         """
         return [
             self.inputQuatX,
@@ -492,8 +443,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputQuat value
 
-        Args:
-            value: List[float], the inputQuat value
+        :param value: List[float], the inputQuat value
         """
 
         self['inputQuat'] = value
@@ -504,8 +454,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputQuatX value
 
-        Returns:
-            float: the inputQuatX value
+        :return: float the inputQuatX value
         """
 
         return self['inputQuatX'].asFloat()
@@ -516,8 +465,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputQuatX value
 
-        Args:
-            value: float, the inputQuatX value
+        :param value: float, the inputQuatX value
         """
 
         self['inputQuatX'] = value
@@ -528,8 +476,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputQuatY value
 
-        Returns:
-            float: the inputQuatY value
+        :return: float the inputQuatY value
         """
 
         return self['inputQuatY'].asFloat()
@@ -540,8 +487,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputQuatY value
 
-        Args:
-            value: float, the inputQuatY value
+        :param value: float, the inputQuatY value
         """
 
         self['inputQuatY'] = value
@@ -552,8 +498,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputQuatZ value
 
-        Returns:
-            float: the inputQuatZ value
+        :return: float the inputQuatZ value
         """
 
         return self['inputQuatZ'].asFloat()
@@ -564,8 +509,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputQuatZ value
 
-        Args:
-            value: float, the inputQuatZ value
+        :param value: float, the inputQuatZ value
         """
 
         self['inputQuatZ'] = value
@@ -576,8 +520,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the inputQuatW value
 
-        Returns:
-            float: the inputQuatW value
+        :return: float the inputQuatW value
         """
 
         return self['inputQuatW'].asFloat()
@@ -588,8 +531,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Set the inputQuatW value
 
-        Args:
-            value: float, the inputQuatW value
+        :param value: float, the inputQuatW value
         """
 
         self['inputQuatW'] = value
@@ -600,8 +542,7 @@ class ComposeMatrix(dgLib.DGNode):
         """
         Get the outputMatrix value
 
-        Returns:
-            List[float]: the outputMatrix value
+        :return: List[float] the outputMatrix value
         """
 
         return self['outputMatrix'].value

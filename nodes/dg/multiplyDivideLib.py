@@ -11,24 +11,13 @@ class MultiplyDivide(dgLib.DGNode):
     _NODE_TYPE = "multiplyDivide"
     _API_TYPE = om.MFn.kMultiplyDivide
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-        """
-        Initialize an instance of MultiplyDivide
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def operationList(self) -> List[str]:
 
         """
         Get the list of available operations
 
-        Returns:
-            List[str]: the list of available operations
+        :return: List[str] the list of available operations
         """
 
         return ['No Operation', 'Multiply', 'Divide', 'Power']
@@ -38,8 +27,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Get the operation value
 
-        Returns:
-            int: the operation value
+        :return: int, the operation value
         """
 
         return self['operation'].asInt()
@@ -50,9 +38,8 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Set the operation value
 
-        Args:
-            value: int | str, the operation to set, either the index or the
-                string (ie: "xyz")
+        :param value: Union[int, str], the operation to set, 
+        either the index or the string (ie: "xyz")
         """
 
         if isinstance(value, int) and 0 < value < len(self.operationList):
@@ -73,8 +60,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Get the input1 value
 
-        Returns:
-            List[float]: the input1 value
+        :return: List[float], the input1 value
         """
 
         return [
@@ -88,8 +74,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Set the input1 value
 
-        Args:
-            value: List[float], the input1 value
+        :param value: List[float], the input1 value
         """
 
         self['input1'] = value
@@ -99,8 +84,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Get the input1X value
 
-        Returns:
-            List[float]: the input1X value
+        :return: List[float], the input1X value
         """
 
         return self['input1X'].asFloat()
@@ -110,8 +94,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Set the input1X value
 
-        Args:
-            value: List[float], the input1X value
+        :param value: List[float], the input1X value
         """
 
         self['input1X'] = value
@@ -121,8 +104,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Get the input1Y value
 
-        Returns:
-            List[float]: the input1Y value
+        :return: List[float], the input1Y value
         """
 
         return self['input1Y'].asFloat()
@@ -132,8 +114,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Set the input1Y value
 
-        Args:
-            value: List[float], the input1Y value
+        :param value: List[float], the input1Y value
         """
 
         self['input1Y'] = value
@@ -143,8 +124,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Get the input1Z value
 
-        Returns:
-            List[float]: the input1Z value
+        :return: List[float], the input1Z value
         """
 
         return self['input1Z'].asFloat()
@@ -154,8 +134,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Set the input1Z value
 
-        Args:
-            value: List[float], the input1Z value
+        :param value: List[float], the input1Z value
         """
 
         self['input1Z'] = value
@@ -165,8 +144,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Get the input2 value
 
-        Returns:
-            List[float]: the input2 value
+        :return: List[float], the input2 value
         """
 
         return [
@@ -180,8 +158,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Set the input2 value
 
-        Args:
-            value: List[float], the input2 value
+        :param value: List[float], the input2 value
         """
 
         self['input2'] = value
@@ -191,8 +168,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Get the input2X value
 
-        Returns:
-            List[float]: the input2X value
+        :return: List[float], the input2X value
         """
 
         return self['input2X'].asFloat()
@@ -202,8 +178,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Set the input2X value
 
-        Args:
-            value: List[float], the input2X value
+        :param value: List[float], the input2X value
         """
 
         self['input2X'] = value
@@ -213,8 +188,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Get the input2Y value
 
-        Returns:
-            List[float]: the input2Y value
+        :return: List[float], the input2Y value
         """
 
         return self['input2Y'].asFloat()
@@ -224,8 +198,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Set the input2Y value
 
-        Args:
-            value: List[float], the input2Y value
+        :param value: List[float], the input2Y value
         """
 
         self['input2Y'] = value
@@ -235,8 +208,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Get the input2Z value
 
-        Returns:
-            List[float]: the input2Z value
+        :return: List[float], the input2Z value
         """
 
         return self['input2Z'].asFloat()
@@ -246,8 +218,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Set the input2Z value
 
-        Args:
-            value: List[float], the input2Z value
+        :param value: List[float], the input2Z value
         """
 
         self['input2Z'] = value
@@ -257,8 +228,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Get the output value
 
-        Returns:
-            List[float]: the output value
+        :return: List[float], the output value
         """
 
         return [
@@ -272,8 +242,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Get the outputX value
     
-        Returns:
-            List[float]: the outputX value
+        :return: List[float], the outputX value
         """
     
         return self['outputX'].asFloat()
@@ -283,8 +252,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Get the outputY value
     
-        Returns:
-            List[float]: the outputY value
+        :return: List[float], the outputY value
         """
     
         return self['outputY'].asFloat()
@@ -294,8 +262,7 @@ class MultiplyDivide(dgLib.DGNode):
         """
         Get the outputZ value
     
-        Returns:
-            List[float]: the outputZ value
+        :return: List[float], the outputZ value
         """
     
         return self['outputZ'].asFloat()

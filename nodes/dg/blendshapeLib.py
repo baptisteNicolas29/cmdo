@@ -13,16 +13,6 @@ class BlendShape(dgLib.DGNode):
     _NODE_TYPE = 'blendShape'
     _API_TYPE = om.MFn.kBlendShape
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-        """
-        Initialize an instance of BlendShape
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     # TODO: move transfer to api
     def transferTo(self, arg: Union[str, om.MObject]):
         return NotImplementedError(f'Transferring target to obj {arg}')

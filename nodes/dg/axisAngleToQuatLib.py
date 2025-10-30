@@ -11,25 +11,13 @@ class AxisAngleToQuat(dgLib.DGNode):
     _NODE_TYPE = "axisAngleToQuat"
     _API_TYPE = om.MFn.kPluginDependNode
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of AxisAngleToQuat
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def inputAngle(self) -> float:
 
         """
         Get the inputAngle value
 
-        Returns:
-             float: the inputAngle value
+        :return: float, the inputAngle value
         """
 
         return self['inputAngle'].asFloat()
@@ -39,8 +27,7 @@ class AxisAngleToQuat(dgLib.DGNode):
         """
         Set the inputAngle value
 
-        Args:
-             value: float, the inputAngle value
+        :param value: float, the inputAngle value
         """
 
         self['inputAngle'] = value
@@ -50,8 +37,7 @@ class AxisAngleToQuat(dgLib.DGNode):
         """
         Get the inputAxis value
 
-        Returns:
-             float: the inputAxis value
+        :return: float, the inputAxis value
         """
 
         return self['inputAxis'].value
@@ -61,8 +47,7 @@ class AxisAngleToQuat(dgLib.DGNode):
         """
         Set the inputAxis value
 
-        Args:
-             value: float, the inputAxis value
+        :param value: float, the inputAxis value
         """
 
         self['inputAxis'] = value
@@ -72,8 +57,7 @@ class AxisAngleToQuat(dgLib.DGNode):
         """
         Get the inputAxisX value
 
-        Returns:
-             float: the inputAxisX value
+        :return: float, the inputAxisX value
         """
 
         return self['inputAxisX'].value
@@ -83,8 +67,7 @@ class AxisAngleToQuat(dgLib.DGNode):
         """
         Set the inputAxisX value
 
-        Args:
-             value: float, the inputAxisX value
+        :param value: float, the inputAxisX value
         """
 
         self['inputAxisX'] = value
@@ -94,8 +77,7 @@ class AxisAngleToQuat(dgLib.DGNode):
         """
         Get the inputAxisY value
 
-        Returns:
-             float: the inputAxisY value
+        :return: float, the inputAxisY value
         """
 
         return self['inputAxisY'].value
@@ -105,8 +87,7 @@ class AxisAngleToQuat(dgLib.DGNode):
         """
         Set the inputAxisY value
 
-        Args:
-             value: float, the inputAxisY value
+        :param value: float, the inputAxisY value
         """
 
         self['inputAxisY'] = value
@@ -116,8 +97,7 @@ class AxisAngleToQuat(dgLib.DGNode):
         """
         Get the inputAxisZ value
 
-        Returns:
-             float: the inputAxisZ value
+        :return: float, the inputAxisZ value
         """
 
         return self['inputAxisZ'].value
@@ -127,8 +107,7 @@ class AxisAngleToQuat(dgLib.DGNode):
         """
         Set the inputAxisZ value
 
-        Args:
-             value: float, the inputAxisZ value
+        :param value: float, the inputAxisZ value
         """
 
         self['inputAxisZ'] = value
@@ -138,8 +117,7 @@ class AxisAngleToQuat(dgLib.DGNode):
         """
         Get the outputQuat value
 
-        Returns:
-             float: the outputQuat value
+        :return: float, the outputQuat value
         """
 
         return self['outputQuat'].value
@@ -149,8 +127,7 @@ class AxisAngleToQuat(dgLib.DGNode):
         """
         Get the outputQuatX value
 
-        Returns:
-             float: the outputQuatX value
+        :return: float, the outputQuatX value
         """
 
         return self['outputQuatX'].value
@@ -160,8 +137,7 @@ class AxisAngleToQuat(dgLib.DGNode):
         """
         Get the outputQuatY value
 
-        Returns:
-             float: the outputQuatY value
+        :return: float, the outputQuatY value
         """
 
         return self['outputQuatY'].value
@@ -171,8 +147,7 @@ class AxisAngleToQuat(dgLib.DGNode):
         """
         Get the outputQuatZ value
 
-        Returns:
-             float: the outputQuatZ value
+        :return: float, the outputQuatZ value
         """
 
         return self['outputQuatZ'].value
@@ -182,8 +157,7 @@ class AxisAngleToQuat(dgLib.DGNode):
         """
         Get the outputQuatW value
 
-        Returns:
-             float: the outputQuatW value
+        :return: float, the outputQuatW value
         """
 
         return self['outputQuatW'].value

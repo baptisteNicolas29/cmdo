@@ -11,25 +11,13 @@ class BlendMatrix(dgLib.DGNode):
     _NODE_TYPE = "blendMatrix"
     _API_TYPE = om.MFn.kBlendMatrix
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of BlendMatrix
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def inputMatrix(self) -> List[float]:
 
         """
         Get the inputMatrix value
 
-        Returns:
-            List[float]: the inputMatrix value
+        :return: List[float] the inputMatrix value
         """
 
         return self['inputMatrix'].value
@@ -40,8 +28,7 @@ class BlendMatrix(dgLib.DGNode):
         """
         Set the inputMatrix value
 
-        Args:
-            value: List[float] | om.MPlug, the inputMatrix value
+        :param value: List[float] | om.MPlug, the inputMatrix value
         """
 
         self['inputMatrix'] = value
@@ -52,8 +39,7 @@ class BlendMatrix(dgLib.DGNode):
         """
         Get the number of target compound attributes (numElements)
 
-        Returns:
-            int: the number of target compound attributes
+        :return: int, the number of target compound attributes
         """
 
         return self['target'].numElements()
@@ -64,8 +50,7 @@ class BlendMatrix(dgLib.DGNode):
         """
         Get the outputMatrix value
 
-        Returns:
-            om.MMatrix: the outputMatrix value
+        :return: om.MMatrix, the outputMatrix value
         """
 
         return self['outputMatrix'].value
@@ -74,11 +59,9 @@ class BlendMatrix(dgLib.DGNode):
         """
         Get the targetMatrix from a target index value
 
-        Args:
-            index: int, the index of the target to get value from
+        :param index: int, the index of the target to get value from
 
-        Returns:
-            List[float]: the targetMatrix value
+        :return: List[float] the targetMatrix value
         """
 
         return self['target'][index]['targetMatrix'].value
@@ -87,9 +70,8 @@ class BlendMatrix(dgLib.DGNode):
         """
         Set the targetMatrix from a target index value
 
-        Args:
-            index: int, the index of the target to get value from
-            value: List[float], the targetMatrix value
+        :param index: int, the index of the target to get value from
+        :param value: List[float], the targetMatrix value
         """
 
         self['target'][index]['targetMatrix'] = value
@@ -98,11 +80,9 @@ class BlendMatrix(dgLib.DGNode):
         """
         Get the targetUseMatrix from a target index value
 
-        Args:
-            index: int, the index of the target to get value from
+        :param index: int, the index of the target to get value from
 
-        Returns:
-            List[float]: the targetUseMatrix value
+        :return: List[float] the targetUseMatrix value
         """
 
         return self['target'][index]['useMatrix'].asBool()
@@ -111,9 +91,8 @@ class BlendMatrix(dgLib.DGNode):
         """
         Set the targetUseMatrix from a target index value
 
-        Args:
-            index: int, the index of the target to get value from
-            value: List[float], the targetUseMatrix value
+        :param index: int, the index of the target to get value from
+        :param value: List[float], the targetUseMatrix value
         """
 
         self['target'][index]['useMatrix'] = value
@@ -122,11 +101,9 @@ class BlendMatrix(dgLib.DGNode):
         """
         Get the targetWeight from a target index value
 
-        Args:
-            index: int, the index of the target to get value from
+        :param index: int, the index of the target to get value from
 
-        Returns:
-            List[float]: the targetWeight value
+        :return: List[float] the targetWeight value
         """
 
         return self['target'][index]['weight'].asFloat()
@@ -135,9 +112,8 @@ class BlendMatrix(dgLib.DGNode):
         """
         Set the targetWeight from a target index value
 
-        Args:
-            index: int, the index of the target to get value from
-            value: List[float], the targetWeight value
+        :param index: int, the index of the target to get value from
+        :param value: List[float], the targetWeight value
         """
 
         self['target'][index]['weight'] = value
@@ -146,11 +122,9 @@ class BlendMatrix(dgLib.DGNode):
         """
         Get the targetScaleWeight from a target index value
 
-        Args:
-            index: int, the index of the target to get value from
+        :param index: int, the index of the target to get value from
 
-        Returns:
-            List[float]: the targetScaleWeight value
+        :return: List[float] the targetScaleWeight value
         """
 
         return self['target'][index]['scaleWeight'].asFloat()
@@ -159,9 +133,8 @@ class BlendMatrix(dgLib.DGNode):
         """
         Set the targetScaleWeight from a target index value
 
-        Args:
-            index: int, the index of the target to get value from
-            value: List[float], the targetScaleWeight value
+        :param index: int, the index of the target to get value from
+        :param value: List[float], the targetScaleWeight value
         """
 
         self['target'][index]['scaleWeight'] = value
@@ -170,11 +143,9 @@ class BlendMatrix(dgLib.DGNode):
         """
         Get the targetTranslateWeight from a target index value
 
-        Args:
-            index: int, the index of the target to get value from
+        :param index: int, the index of the target to get value from
 
-        Returns:
-            List[float]: the targetTranslateWeight value
+        :return: List[float] the targetTranslateWeight value
         """
 
         return self['target'][index]['translateWeight'].asFloat()
@@ -183,9 +154,8 @@ class BlendMatrix(dgLib.DGNode):
         """
         Set the targetTranslateWeight from a target index value
 
-        Args:
-            index: int, the index of the target to get value from
-            value: List[float], the targetTranslateWeight value
+        :param index: int, the index of the target to get value from
+        :param value: List[float], the targetTranslateWeight value
         """
 
         self['target'][index]['translateWeight'] = value
@@ -194,11 +164,9 @@ class BlendMatrix(dgLib.DGNode):
         """
         Get the targetRotateWeight from a target index value
 
-        Args:
-            index: int, the index of the target to get value from
+        :param index: int, the index of the target to get value from
 
-        Returns:
-            List[float]: the targetRotateWeight value
+        :return: List[float] the targetRotateWeight value
         """
 
         return self['target'][index]['rotateWeight'].asFloat()
@@ -207,9 +175,8 @@ class BlendMatrix(dgLib.DGNode):
         """
         Set the targetRotateWeight from a target index value
 
-        Args:
-            index: int, the index of the target to get value from
-            value: List[float], the targetRotateWeight value
+        :param index: int, the index of the target to get value from
+        :param value: List[float], the targetRotateWeight value
         """
 
         self['target'][index]['rotateWeight'] = value
@@ -218,11 +185,9 @@ class BlendMatrix(dgLib.DGNode):
         """
         Get the targetShearWeight from a target index value
 
-        Args:
-            index: int, the index of the target to get value from
+        :param index: int, the index of the target to get value from
 
-        Returns:
-            List[float]: the targetShearWeight value
+        :return: List[float] the targetShearWeight value
         """
 
         return self['target'][index]['shearWeight'].asFloat()
@@ -231,9 +196,8 @@ class BlendMatrix(dgLib.DGNode):
         """
         Set the targetShearWeight from a target index value
 
-        Args:
-            index: int, the index of the target to get value from
-            value: List[float], the targetShearWeight value
+        :param index: int, the index of the target to get value from
+        :param value: List[float], the targetShearWeight value
         """
 
         self['target'][index]['shearWeight'] = value

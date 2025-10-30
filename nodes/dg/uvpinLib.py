@@ -13,25 +13,13 @@ class UVPin(dgLib.DGNode):
     _NODE_TYPE = "uvPin"
     _API_TYPE = om.MFn.kUVPin
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of UVPin
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def axisList(self) -> List[str]:
 
         """
         Get the list of available Axis
 
-        Returns:
-            List[str]: the list of available axis
+        :return: List[str] the list of available axis
         """
 
         return ['x', 'y', 'z', '-x', '-y', '-z']
@@ -42,8 +30,7 @@ class UVPin(dgLib.DGNode):
         """
         Get the list of available Normal Overrides
 
-        Returns:
-            List[str]: the list of available normal overrides
+        :return: List[str] the list of available normal overrides
         """
 
         return ['Auto', 'Rail Curve']
@@ -54,8 +41,7 @@ class UVPin(dgLib.DGNode):
         """
         Get the list of available Relative Spaces
 
-        Returns:
-            List[str]: the list of available relative spaces
+        :return: List[str] the list of available relative spaces
         """
 
         return ['World', 'Local', 'Custom']
@@ -66,8 +52,7 @@ class UVPin(dgLib.DGNode):
         Get the number of child coordinate attributes
         from the compound (numElements)
 
-        Returns:
-            int: the number of child coordinate attributes from the compound
+        :return: int, the number of child coordinate attributes from the compound
         """
 
         return self['coordinate'].numElements()
@@ -78,8 +63,7 @@ class UVPin(dgLib.DGNode):
         Get the number of child outputMatrix attributes
         from the compound (numElements)
 
-        Returns:
-            int: the number of child outputMatrix attributes from the compound
+        :return: int, the number of child outputMatrix attributes from the compound
         """
 
         return self['outputMatrix'].numElements()
@@ -90,8 +74,7 @@ class UVPin(dgLib.DGNode):
         """
         Get the deformedGeometry source plug
 
-        Returns:
-             Union[om.MObject, None]: the deformedGeometry source plug or None
+        :return: Union[om.MObject, None], the deformedGeometry source plug or None
         """
 
         deformedGeometry = self['deformedGeometry']
@@ -106,8 +89,7 @@ class UVPin(dgLib.DGNode):
         """
         Set the deformedGeometry source plug
 
-        Args:
-             value: om.MPlug, the deformedGeometry source plug
+        :param value: om.MPlug, the deformedGeometry source plug
         """
 
         self['deformedGeometry'] = value
@@ -118,8 +100,7 @@ class UVPin(dgLib.DGNode):
         """
         Get the originalGeometry source plug
 
-        Returns:
-             Union[om.MObject, None]: the originalGeometry source plug or None
+        :return: Union[om.MObject, None], the originalGeometry source plug or None
         """
 
         originalGeometry = self['originalGeometry']
@@ -134,8 +115,7 @@ class UVPin(dgLib.DGNode):
         """
         Set the originalGeometry source plug
 
-        Args:
-             value: om.MPlug, the originalGeometry source plug
+        :param value: om.MPlug, the originalGeometry source plug
         """
 
         self['originalGeometry'] = value
@@ -146,8 +126,7 @@ class UVPin(dgLib.DGNode):
         """
         Get the normalAxis value
 
-        Returns:
-            int: the normalAxis value
+        :return: int, the normalAxis value
         """
 
         return self['normalAxis'].asInt()
@@ -158,9 +137,8 @@ class UVPin(dgLib.DGNode):
         """
         Set the normalAxis value
 
-        Args:
-            value: Union[int, str], the normal axis to set, either the index or the
-                string (ie: "y")
+        :param value: Union[int, str], the normal axis to set, 
+        either the index or the string (ie: "y")
         """
 
         if isinstance(value, int):
@@ -180,8 +158,7 @@ class UVPin(dgLib.DGNode):
         """
         Get the tangentAxis value
 
-        Returns:
-            int: the tangentAxis value
+        :return: int, the tangentAxis value
         """
 
         return self['tangentAxis'].asInt()
@@ -192,9 +169,8 @@ class UVPin(dgLib.DGNode):
         """
         Set the tangentAxis value
 
-        Args:
-            value: Union[int, str], the normal axis to set, either the index or the
-                string (ie: "-y")
+        :param value: Union[int, str], the normal axis to set,
+        either the index or the string (ie: "-y")
         """
 
         if isinstance(value, int):
@@ -214,8 +190,7 @@ class UVPin(dgLib.DGNode):
         """
         Get the uvSetName value
 
-        Returns:
-            str: the uvSetName value
+        :return: str, the uvSetName value
         """
 
         return self['uvSetName'].asString()
@@ -226,8 +201,7 @@ class UVPin(dgLib.DGNode):
         """
         Set the uvSetName value
 
-        Args:
-            value: str, the uvSetName value
+        :param value: str, the uvSetName value
         """
 
         self['uvSetName'] = value
@@ -238,8 +212,7 @@ class UVPin(dgLib.DGNode):
         """
         Get the normalizedIsoparms value
 
-        Returns:
-            bool: the normalizedIsoparms value
+        :return: bool, the normalizedIsoparms value
         """
 
         return self['normalizedIsoparms'].asBool()
@@ -250,8 +223,7 @@ class UVPin(dgLib.DGNode):
         """
         Set the normalizedIsoparms value
 
-        Args:
-            value: bool, the normalizedIsoparms value
+        :param value: bool, the normalizedIsoparms value
         """
 
         self['normalizedIsoparms'] = value
@@ -262,8 +234,7 @@ class UVPin(dgLib.DGNode):
         """
         Get the normalOverride value
 
-        Returns:
-            int: the normalOverride value
+        :return: int, the normalOverride value
         """
 
         return self['normalOverride'].asInt()
@@ -274,9 +245,8 @@ class UVPin(dgLib.DGNode):
         """
         Set the normalOverride value
 
-        Args:
-            value: Union[int, str], the normal override to set, either the index or
-                the string (ie: "Auto")
+        :param value: Union[int, str], the normal override to set, 
+        either the index or the string (ie: "Auto")
         """
 
         if isinstance(value, int):
@@ -296,8 +266,7 @@ class UVPin(dgLib.DGNode):
         """
         Get the relativeSpaceMode value
 
-        Returns:
-            int: the relativeSpaceMode value
+        :return: int, the relativeSpaceMode value
         """
 
         return self['relativeSpaceMode'].asInt()
@@ -308,9 +277,8 @@ class UVPin(dgLib.DGNode):
         """
         Set the relativeSpaceMode value
 
-        Args:
-            value: Union[int, str], the relative space to set, either the index or
-                the string (ie: "World")
+        :param value: Union[int, str], the relative space to set, 
+        either the index or the string (ie: "World")
         """
 
         if isinstance(value, int):
@@ -329,8 +297,7 @@ class UVPin(dgLib.DGNode):
         """
         Get the relativeSpaceMatrix value
 
-        Returns:
-            List[float]: the relativeSpaceMatrix value
+        :return: List[float], the relativeSpaceMatrix value
         """
 
         return self['relativeSpaceMatrix'].value
@@ -341,8 +308,7 @@ class UVPin(dgLib.DGNode):
         """
         Set the relativeSpaceMatrix value
 
-        Args:
-            value: bool, the relativeSpaceMatrix value
+        :param value: bool, the relativeSpaceMatrix value
         """
 
         self['relativeSpaceMatrix'] = value
@@ -351,11 +317,9 @@ class UVPin(dgLib.DGNode):
         """
         Get the coordinate from a target index value
 
-        Args:
-            index: int, the index of the coordinate to get
+        :param index: int, the index of the coordinate to get
 
-        Returns:
-            Tuple[float, float]: the coordinate value
+        :return: Tuple[float, float], the coordinate value
         """
 
         return self['coordinate'][index].value
@@ -364,9 +328,8 @@ class UVPin(dgLib.DGNode):
         """
         Set the coordinate from a target index value
 
-        Args:
-            index: int, the index of the coordinate to get
-            value: Tuple[float, float], the coordinate value
+        :param index: int, the index of the coordinate to get
+        :param value: Tuple[float, float], the coordinate value
         """
 
         self['coordinate'][index] = value
@@ -375,11 +338,9 @@ class UVPin(dgLib.DGNode):
         """
         Get the coordinateU from a target index value
 
-        Args:
-            index: int, the index of the coordinateU to get
+        :param index: int, the index of the coordinateU to get
 
-        Returns:
-            Tuple[float, float]: the coordinateU value
+        :return: Tuple[float, float], the coordinateU value
         """
 
         return self['coordinate'][index]['coordinateU'].asFloat()
@@ -388,9 +349,8 @@ class UVPin(dgLib.DGNode):
         """
         Set the coordinateU from a target index value
 
-        Args:
-            index: int, the index of the coordinateU to get
-            value: Tuple[float, float], the coordinateU value
+        :param index: int, the index of the coordinateU to get
+        :param value: Tuple[float, float], the coordinateU value
         """
 
         self['coordinate'][index]['coordinateU'] = value
@@ -399,11 +359,9 @@ class UVPin(dgLib.DGNode):
         """
         Get the coordinateV from a target index value
 
-        Args:
-            index: int, the index of the coordinateV to get
+        :param index: int, the index of the coordinateV to get
 
-        Returns:
-            Tuple[float, float]: the coordinateV value
+        :return: Tuple[float, float], the coordinateV value
         """
 
         return self['coordinate'][index]['coordinateV'].asFloat()
@@ -412,9 +370,8 @@ class UVPin(dgLib.DGNode):
         """
         Set the coordinateV from a target index value
 
-        Args:
-            index: int, the index of the coordinateV to get
-            value: Tuple[float, float], the coordinateV value
+        :param index: int, the index of the coordinateV to get
+        :param value: Tuple[float, float], the coordinateV value
         """
 
         self['coordinate'][index]['coordinateV'] = value
@@ -423,11 +380,9 @@ class UVPin(dgLib.DGNode):
         """
         Get the outputMatrix from a target index value
 
-        Args:
-            index: int, the index of the outputMatrix to get
+        :param index: int, the index of the outputMatrix to get
 
-        Returns:
-            List[float]: the outputMatrix value
+        :return: List[float], the outputMatrix value
         """
 
         return self['outputMatrix'][index].value

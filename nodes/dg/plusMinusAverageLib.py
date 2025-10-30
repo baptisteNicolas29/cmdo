@@ -25,24 +25,13 @@ class PlusMinusAverage(dgLib.DGNode):
     _NODE_TYPE = "plusMinusAverage"
     _API_TYPE = om.MFn.kPlusMinusAverage
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-        """
-        Initialize an instance of PlusMinusAverage
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def operationList(self) -> List[str]:
 
         """
         Get the list of available operations
 
-        Returns:
-            List[str]: the list of available operations
+        :return: List[str], the list of available operations
         """
 
         return ['No Operation', 'Sum', 'Subtract', 'Average']
@@ -52,8 +41,7 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the operation value
 
-        Returns:
-            int: the operation value
+        :return: int, the operation value
         """
 
         return self['operation'].asInt()
@@ -64,9 +52,8 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Set the operation value
 
-        Args:
-            value: int | str, the operation to set, either the index or the
-                string (ie: "xyz")
+       :param value: Union[int, str], the operation to set, 
+       either the index or the string (ie: "xyz")
         """
 
         if isinstance(value, int) and 0 < value < len(self.operationList):
@@ -87,8 +74,7 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the number of input1D compound attributes (numElements)
 
-        Returns:
-            int: the number of input1D compound attributes
+        :return: int, the number of input1D compound attributes
         """
 
         return self['input1D'].numElements()
@@ -98,8 +84,7 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the number of input2D compound attributes (numElements)
 
-        Returns:
-            int: the number of input2D compound attributes
+        :return: int, the number of input2D compound attributes
         """
 
         return self['input2D'].numElements()
@@ -109,8 +94,7 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the number of input3D compound attributes (numElements)
 
-        Returns:
-            int: the number of input3D compound attributes
+        :return: int, the number of input3D compound attributes
         """
 
         return self['input3D'].numElements()
@@ -119,11 +103,9 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the input1D from a target index value
 
-        Args:
-            index: int, the index of the input1D to get value from
+        :param index: int, the index of the input1D to get value from
 
-        Returns:
-            List[float]: the input1D value
+        :return: List[float] the input1D value
         """
 
         return self['input1D'][index].asFloat()
@@ -132,9 +114,8 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Set the input1D from a target index value
 
-        Args:
-            index: int, the index of the input1D to get value from
-            value: List[float], the input1D value
+        :param index: int, the index of the input1D to get value from
+        :param value: List[float], the input1D value
         """
 
         self['input1D'][index] = value
@@ -143,11 +124,9 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the input2D from a target index value
 
-        Args:
-            index: int, the index of the input2D to get value from
+        :param index: int, the index of the input2D to get value from
 
-        Returns:
-            List[float]: the input2D value
+        :return: List[float] the input2D value
         """
 
         return self['input2D'][index].value
@@ -156,9 +135,8 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Set the input2D from a target index value
 
-        Args:
-            index: int, the index of the input2D to get value from
-            value: List[float], the input2D value
+        :param index: int, the index of the input2D to get value from
+        :param value: List[float], the input2D value
         """
 
         self['input2D'][index] = value
@@ -167,11 +145,9 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the input2Dx from a target index value
 
-        Args:
-            index: int, the index of the input2Dx to get value from
+        :param index: int, the index of the input2Dx to get value from
 
-        Returns:
-            List[float]: the input2Dx value
+        :return: List[float] the input2Dx value
         """
 
         return self['input2D'][index]['input2Dx'].asFloat()
@@ -180,9 +156,8 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Set the input2Dx from a target index value
 
-        Args:
-            index: int, the index of the input2Dx to get value from
-            value: List[float], the input2Dx value
+        :param index: int, the index of the input2Dx to get value from
+        :param value: List[float], the input2Dx value
         """
 
         self['input2D'][index]['input2Dx'] = value
@@ -191,11 +166,9 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the input2Dy from a target index value
 
-        Args:
-            index: int, the index of the input2Dy to get value from
+        :param index: int, the index of the input2Dy to get value from
 
-        Returns:
-            List[float]: the input2Dy value
+        :return: List[float] the input2Dy value
         """
 
         return self['input2D'][index]['input2Dy'].asFloat()
@@ -204,9 +177,8 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Set the input2Dy from a target index value
 
-        Args:
-            index: int, the index of the input2Dy to get value from
-            value: List[float], the input2Dy value
+        :param index: int, the index of the input2Dy to get value from
+        :param value: List[float], the input2Dy value
         """
 
         self['input2D'][index]['input2Dy'] = value
@@ -215,11 +187,9 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the input3D from a target index value
 
-        Args:
-            index: int, the index of the input3D to get value from
+        :param index: int, the index of the input3D to get value from
 
-        Returns:
-            List[float]: the input3D value
+        :return: List[float] the input3D value
         """
 
         return self['input3D'][index].value
@@ -228,9 +198,8 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Set the input3D from a target index value
 
-        Args:
-            index: int, the index of the input3D to get value from
-            value: List[float], the input3D value
+        :param index: int, the index of the input3D to get value from
+        :param value: List[float], the input3D value
         """
 
         self['input3D'][index] = value
@@ -239,11 +208,9 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the input3Dx from a target index value
 
-        Args:
-            index: int, the index of the input3Dx to get value from
+        :param index: int, the index of the input3Dx to get value from
 
-        Returns:
-            List[float]: the input3Dx value
+        :return: List[float] the input3Dx value
         """
 
         return self['input3D'][index]['input3Dx'].asFloat()
@@ -252,9 +219,8 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Set the input3Dx from a target index value
 
-        Args:
-            index: int, the index of the input3Dx to get value from
-            value: List[float], the input3Dx value
+        :param index: int, the index of the input3Dx to get value from
+        :param value: List[float], the input3Dx value
         """
 
         self['input3D'][index]['input3Dx'] = value
@@ -263,11 +229,9 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the input3Dy from a target index value
 
-        Args:
-            index: int, the index of the input3Dy to get value from
+        :param index: int, the index of the input3Dy to get value from
 
-        Returns:
-            List[float]: the input3Dy value
+        :return: List[float] the input3Dy value
         """
 
         return self['input3D'][index]['input3Dy'].asFloat()
@@ -276,9 +240,8 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Set the input3Dy from a target index value
 
-        Args:
-            index: int, the index of the input3Dy to get value from
-            value: List[float], the input3Dy value
+        :param index: int, the index of the input3Dy to get value from
+        :param value: List[float], the input3Dy value
         """
 
         self['input3D'][index]['input3Dy'] = value
@@ -287,11 +250,9 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the input3Dz from a target index value
 
-        Args:
-            index: int, the index of the input3Dz to get value from
+        :param index: int, the index of the input3Dz to get value from
 
-        Returns:
-            List[float]: the input3Dz value
+        :return: List[float] the input3Dz value
         """
 
         return self['input3D'][index]['input3Dz'].asFloat()
@@ -300,9 +261,8 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Set the input3Dz from a target index value
 
-        Args:
-            index: int, the index of the input3Dz to get value from
-            value: List[float], the input3Dz value
+        :param index: int, the index of the input3Dz to get value from
+        :param value: List[float], the input3Dz value
         """
 
         self['input3D'][index]['input3Dz'] = value
@@ -312,8 +272,7 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the output1D value
 
-        Returns:
-            float: the output1D value
+        :return: float, the output1D value
         """
 
         return self['output1D'].asFloat()
@@ -323,8 +282,7 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the output2D value
 
-        Returns:
-            List[float]: the output2D value
+        :return: List[float], the output2D value
         """
 
         return [
@@ -337,8 +295,7 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the output2DX value
 
-        Returns:
-            float: the output2DX value
+        :return: float, the output2DX value
         """
 
         return self['output2Dx'].asFloat()
@@ -348,8 +305,7 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the output2DY value
 
-        Returns:
-            float: the output2DY value
+        :return: float, the output2DY value
         """
 
         return self['output2Dy'].asFloat()
@@ -359,8 +315,7 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the output3D value
 
-        Returns:
-            List[float]: the output3D value
+        :return: List[float], the output3D value
         """
 
         return [
@@ -374,8 +329,7 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the output3DX value
 
-        Returns:
-            List[float]: the output3DX value
+        :return: List[float], the output3DX value
         """
 
         return self['output3Dx'].asFloat()
@@ -385,8 +339,7 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the output3DY value
 
-        Returns:
-            List[float]: the output3DY value
+        :return: List[float], the output3DY value
         """
 
         return self['output3Dy'].asFloat()
@@ -396,8 +349,7 @@ class PlusMinusAverage(dgLib.DGNode):
         """
         Get the output3DZ value
 
-        Returns:
-            List[float]: the output3DZ value
+        :return: List[float], the output3DZ value
         """
 
         return self['output3Dz'].asFloat()

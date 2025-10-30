@@ -11,46 +11,34 @@ class HoldMatrix(dgLib.DGNode):
     _NODE_TYPE = "holdMatrix"
     _API_TYPE = om.MFn.kMatrixHold
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-        """
-        Initialize an instance of HoldMatrix
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
-    def inMatrix(self) -> List[float]:
+    def inMatrix(self) -> Union[List[float], om.MMatrix]:
         """
         Get the inMatrix value
 
-        Returns:
-            List[float]: the inMatrix value
+        :return: Union[List[float], om.MMatrix], the inMatrix value
         """
 
         return self['inMatrix'].value
 
     @inMatrix.setter
-    def inMatrix(self, value: List[float]) -> None:
+    def inMatrix(self, value: Union[List[float], om.MMatrix, om.MPlug]) -> None:
 
         """
         Set the inMatrix value
 
         Args:
-            value: List[float] the inMatrix value
+            value: Union[List[float], om.MMatrix, om.MPlug], the inMatrix value
         """
 
         self['inMatrix'] = value
 
     @property
-    def outMatrix(self) -> List[float]:
+    def outMatrix(self) -> Union[List[float], om.MMatrix]:
         """
         Get the outMatrix value
 
-        Returns:
-            List[float]: the outMatrix value
+        :return: Union[List[float], om.MMatrix], the outMatrix value
         """
 
         return self['outMatrix'].value

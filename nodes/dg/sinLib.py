@@ -11,24 +11,12 @@ class Sin(dgLib.DGNode):
     _NODE_TYPE = "sin"
     _API_TYPE = om.MFn.kSin
 
-    def __init__(self, name: str = None) -> None:
-
-        """
-        Initialize an instance of Sin
-
-        Args:
-            name: str, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def input(self) -> List[float]:
         """
         Get the input value
 
-        Returns:
-            List[float]: the input value
+        :return: List[float] the input value
         """
 
         return self['input'].asFloat()
@@ -38,8 +26,7 @@ class Sin(dgLib.DGNode):
         """
         Set the input value
 
-        Args:
-            value: List[float], the input value
+        :param value: List[float], the input value
         """
 
         self['input'] = value
@@ -49,8 +36,7 @@ class Sin(dgLib.DGNode):
         """
         Get the output value
 
-        Returns:
-            List[float]: the output value
+        :return: List[float] the output value
         """
 
         return self['output'].asFloat()
@@ -60,8 +46,7 @@ class Sin(dgLib.DGNode):
         """
         Set the output value
 
-        Args:
-            value: List[float], the output value
+        :param value: List[float], the output value
         """
 
         self['output'] = value

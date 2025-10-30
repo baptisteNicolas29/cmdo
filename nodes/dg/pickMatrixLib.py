@@ -11,24 +11,13 @@ class PickMatrix(dgLib.DGNode):
     _NODE_TYPE = "pickMatrix"
     _API_TYPE = om.MFn.kPickMatrix
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-        """
-        Initialize an instance of PickMatrix
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def inputMatrix(self) -> List[float]:
 
         """
         Get the inputMatrix value
 
-        Returns:
-            List[float]: the inputMatrix value
+        :return: List[float], the inputMatrix value
         """
 
         return self['inputMatrix'].value
@@ -38,8 +27,7 @@ class PickMatrix(dgLib.DGNode):
         """
         Set the inputMatrix value
 
-        Args:
-            value: List[float], the inputMatrix value
+        :param value: List[float], the inputMatrix value
         """
 
         self['inputMatrix'] = value
@@ -49,8 +37,7 @@ class PickMatrix(dgLib.DGNode):
         """
         Get the useTranslate value
 
-        Returns:
-            bool: the useTranslate value
+        :return: bool, the useTranslate value
         """
 
         return self['useTranslate'].asBool()
@@ -60,8 +47,7 @@ class PickMatrix(dgLib.DGNode):
         """
         Set the useTranslate value
 
-        Args:
-            value: bool, the useTranslate value
+        :param value: bool, the useTranslate value
         """
 
         self['useTranslate'] = value
@@ -71,8 +57,7 @@ class PickMatrix(dgLib.DGNode):
         """
         Get the useRotate value
 
-        Returns:
-            bool: the useRotate value
+        :return: bool, the useRotate value
         """
 
         return self['useRotate'].asBool()
@@ -82,8 +67,7 @@ class PickMatrix(dgLib.DGNode):
         """
         Set the useRotate value
 
-        Args:
-            value: bool, the useRotate value
+        :param value: bool, the useRotate value
         """
 
         self['useRotate'] = value
@@ -93,8 +77,7 @@ class PickMatrix(dgLib.DGNode):
         """
         Get the useScale value
 
-        Returns:
-            bool: the useScale value
+        :return: bool, the useScale value
         """
 
         return self['useScale'].asBool()
@@ -104,8 +87,7 @@ class PickMatrix(dgLib.DGNode):
         """
         Set the useScale value
 
-        Args:
-            value: bool, the useScale value
+        :param value: bool, the useScale value
         """
 
         self['useScale'] = value
@@ -115,8 +97,7 @@ class PickMatrix(dgLib.DGNode):
         """
         Get the useShear value
 
-        Returns:
-            bool: the useShear value
+        :return: bool, the useShear value
         """
 
         return self['useShear'].asBool()
@@ -126,8 +107,7 @@ class PickMatrix(dgLib.DGNode):
         """
         Set the useShear value
 
-        Args:
-            value: bool, the useShear value
+        :param value: bool, the useShear value
         """
 
         self['useShear'] = value
@@ -137,8 +117,7 @@ class PickMatrix(dgLib.DGNode):
         """
         Get the outputMatrix value
 
-        Returns:
-            bool: the outputMatrix value
+        :return: bool, the outputMatrix value
         """
 
         return self['outputMatrix'].value

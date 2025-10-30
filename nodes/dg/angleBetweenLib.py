@@ -11,25 +11,13 @@ class AngleBetween(dgLib.DGNode):
     _NODE_TYPE = "angleBetween"
     _API_TYPE = om.MFn.kAngleBetween
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of AngleBetween
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def vector1(self) -> List[float]:
 
         """
         Get the vector1 value
 
-        Returns:
-            List[float]: the vector1 value
+        :return: List[float], the vector1 value
         """
 
         return self['vector1'].value
@@ -40,8 +28,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Set the vector1 value
 
-        Args:
-            value: List[float], the vector1 value
+        :param value: List[float], the vector1 value
         """
 
         self['vector1'] = value
@@ -52,8 +39,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Get the vector1X value
 
-        Returns:
-            float: the vector1X value
+        :return: float, the vector1X value
         """
 
         return self['vector1X'].asFloat()
@@ -64,8 +50,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Set the vector1X value
 
-        Args:
-            value: float, the vector1X value
+        :param value: float, the vector1X value
         """
 
         self['vector1X'] = value
@@ -76,8 +61,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Get the vector1Y value
 
-        Returns:
-            float: the vector1Y value
+        :return: float, the vector1Y value
         """
 
         return self['vector1Y'].asFloat()
@@ -88,8 +72,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Set the vector1Y value
 
-        Args:
-            value: float, the vector1Y value
+        :param value: float, the vector1Y value
         """
 
         self['vector1Y'] = value
@@ -100,8 +83,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Get the vector1Z value
 
-        Returns:
-            float: the vector1Z value
+        :return: float, the vector1Z value
         """
 
         return self['vector1Z'].asFloat()
@@ -112,8 +94,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Set the vector1Z value
 
-        Args:
-            value: float, the vector1Z value
+        :param value: float, the vector1Z value
         """
 
         self['vector1Z'] = value
@@ -124,8 +105,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Get the vector2 value
 
-        Returns:
-            List[float]: the vector2 value
+        :return: List[float], the vector2 value
         """
 
         return self['vector2'].value
@@ -136,8 +116,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Set the vector2 value
 
-        Args:
-            value: List[float], the vector2 value
+        :param value: List[float], the vector2 value
         """
 
         self['vector2'] = value
@@ -148,8 +127,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Get the vector2X value
 
-        Returns:
-            float: the vector2X value
+        :return: float, the vector2X value
         """
 
         return self['vector2X'].asFloat()
@@ -160,8 +138,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Set the vector2X value
 
-        Args:
-            value: float, the vector2X value
+        :param value: float, the vector2X value
         """
 
         self['vector2X'] = value
@@ -172,8 +149,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Get the vector2Y value
 
-        Returns:
-            float: the vector2Y value
+        :return: float, the vector2Y value
         """
 
         return self['vector2Y'].asFloat()
@@ -184,8 +160,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Set the vector2Y value
 
-        Args:
-            value: float, the vector2Y value
+        :param value: float, the vector2Y value
         """
 
         self['vector2Y'] = value
@@ -196,8 +171,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Get the vector2Z value
 
-        Returns:
-            float: the vector2Z value
+        :return: float, the vector2Z value
         """
 
         return self['vector2Z'].asFloat()
@@ -208,8 +182,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Set the vector2Z value
 
-        Args:
-            value: float, the vector2Z value
+        :param value: float, the vector2Z value
         """
 
         self['vector2Z'] = value
@@ -220,8 +193,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Get euler value
 
-        Returns:
-            List[float]: the euler value
+        :return: List[float], the euler value
         """
 
         return self['euler'].value
@@ -232,8 +204,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Get eulerX value
 
-        Returns:
-            List[float]: the eulerX value
+        :return: List[float], the eulerX value
         """
 
         return self['eulerX'].value
@@ -244,8 +215,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Get eulerY value
 
-        Returns:
-            List[float]: the eulerY value
+        :return: List[float], the eulerY value
         """
 
         return self['eulerY'].value
@@ -256,8 +226,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Get eulerZ value
 
-        Returns:
-            List[float]: the eulerZ value
+        :return: List[float], the eulerZ value
         """
 
         return self['eulerZ'].value
@@ -268,8 +237,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Get the angle value
 
-        Returns:
-            float: the angle value
+        :return: float, the angle value
         """
 
         return self['angle'].value
@@ -280,8 +248,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Get the axis value
 
-        Returns:
-            List[float]: the axis value
+        :return: List[float], the axis value
         """
 
         return self['axis'].value
@@ -292,8 +259,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Get the axisX value
 
-        Returns:
-            float: the axisX value
+        :return: float, the axisX value
         """
 
         return self['axisX'].asFloat()
@@ -304,8 +270,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Get the axisY value
 
-        Returns:
-            float: the axisY value
+        :return: float, the axisY value
         """
 
         return self['axisY'].asFloat()
@@ -316,8 +281,7 @@ class AngleBetween(dgLib.DGNode):
         """
         Get the axisZ value
 
-        Returns:
-            float: the axisZ value
+        :return: float, the axisZ value
         """
 
         return self['axisZ'].asFloat()

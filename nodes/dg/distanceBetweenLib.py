@@ -11,24 +11,12 @@ class DistanceBetween(dgLib.DGNode):
     _NODE_TYPE = "distanceBetween"
     _API_TYPE = om.MFn.kDistanceBetween
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of DistanceBetween
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def point1(self) -> List[float]:
         """
         Get the point1 value
 
-        Returns:
-            List[float]: the point1 value
+        :return: List[float], the point1 value
         """
 
         return [
@@ -42,8 +30,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Set the point1 value
 
-        Args:
-            value: List[float], the point1 value
+        :param value: List[float], the point1 value
         """
 
         self['point1'] = value
@@ -53,8 +40,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Get the point1X value
 
-        Returns:
-            List[float]: the point1X value
+        :return: List[float], the point1X value
         """
 
         return self['point1X'].asFloat()
@@ -64,8 +50,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Set the point1X value
 
-        Args:
-            value: List[float], the point1X value
+        :param value: List[float], the point1X value
         """
 
         self['point1X'] = value
@@ -75,8 +60,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Get the point1Y value
 
-        Returns:
-            List[float]: the point1Y value
+        :return: List[float], the point1Y value
         """
 
         return self['point1Y'].asFloat()
@@ -86,8 +70,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Set the point1Y value
 
-        Args:
-            value: List[float], the point1Y value
+        :param value: List[float], the point1Y value
         """
 
         self['point1Y'] = value
@@ -97,8 +80,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Get the point1Z value
 
-        Returns:
-            List[float]: the point1Z value
+        :return: List[float], the point1Z value
         """
 
         return self['point1Z'].asFloat()
@@ -108,8 +90,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Set the point1Z value
 
-        Args:
-            value: List[float], the point1Z value
+        :param value: List[float], the point1Z value
         """
 
         self['point1Z'] = value
@@ -119,8 +100,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Get the point2 value
 
-        Returns:
-            List[float]: the point2 value
+        :return: List[float], the point2 value
         """
 
         return [
@@ -134,8 +114,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Set the point2 value
 
-        Args:
-            value: List[float], the point2 value
+        :param value: List[float], the point2 value
         """
 
         self['point2'] = value
@@ -145,8 +124,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Get the point2X value
 
-        Returns:
-            List[float]: the point2X value
+        :return: List[float], the point2X value
         """
 
         return self['point2X'].asFloat()
@@ -156,8 +134,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Set the point2X value
 
-        Args:
-            value: List[float], the point2X value
+        :param value: List[float], the point2X value
         """
 
         self['point2X'] = value
@@ -167,8 +144,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Get the point2Y value
 
-        Returns:
-            List[float]: the point2Y value
+        :return: List[float], the point2Y value
         """
 
         return self['point2Y'].asFloat()
@@ -178,8 +154,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Set the point2Y value
 
-        Args:
-            value: List[float], the point2Y value
+        :param value: List[float], the point2Y value
         """
 
         self['point2Y'] = value
@@ -189,8 +164,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Get the point2Z value
 
-        Returns:
-            List[float]: the point2Z value
+        :return: List[float], the point2Z value
         """
 
         return self['point2Z'].asFloat()
@@ -200,8 +174,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Set the point2Z value
 
-        Args:
-            value: List[float], the point2Z value
+        :param value: List[float], the point2Z value
         """
 
         self['point2Z'] = value
@@ -211,8 +184,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Get the inMatrix1 value
 
-        Returns:
-            List[float]: the inMatrix1 value
+        :return: List[float], the inMatrix1 value
         """
 
         return self['inMatrix1'].value
@@ -222,8 +194,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Set the inMatrix1 value
 
-        Args:
-            value: List[float], the inMatrix1 value
+        :param value: List[float], the inMatrix1 value
         """
 
         self['inMatrix1'] = value
@@ -233,8 +204,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Get the inMatrix2 value
 
-        Returns:
-            List[float]: the inMatrix2 value
+        :return: List[float], the inMatrix2 value
         """
 
         return self['inMatrix2'].value
@@ -244,8 +214,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Set the inMatrix2 value
 
-        Args:
-            value: List[float], the inMatrix2 value
+        :param value: List[float], the inMatrix2 value
         """
 
         self['inMatrix2'] = value
@@ -255,8 +224,7 @@ class DistanceBetween(dgLib.DGNode):
         """
         Get the distance value
 
-        Returns:
-            List[float]: the distance value
+        :return: List[float], the distance value
         """
 
         return self['distance'].value

@@ -11,25 +11,13 @@ class ClampRange(dgLib.DGNode):
     _NODE_TYPE = "clampRange"
     _API_TYPE = om.MFn.kClampRange
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of ClampRange
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def input(self) -> float:
 
         """
         Get the input value
 
-        Returns:
-            float: the input value
+        :return: float, the input value
         """
 
         return self['input'].asFloat()
@@ -40,8 +28,7 @@ class ClampRange(dgLib.DGNode):
         """
         Set the input value
 
-        Args:
-            value: float, the input value
+        :param value: float, the input value
         """
 
         self['input'] = value
@@ -51,8 +38,7 @@ class ClampRange(dgLib.DGNode):
         """
         Get the minimum value
 
-        Returns:
-            float: the minimum value
+        :return: float, the minimum value
         """
 
         return self['minimum'].asFloat()
@@ -62,8 +48,7 @@ class ClampRange(dgLib.DGNode):
         """
         Set the minimum value
 
-        Args:
-            value: float, the minimum value
+        :param value: float, the minimum value
         """
 
         self['minimum'] = value
@@ -73,8 +58,7 @@ class ClampRange(dgLib.DGNode):
         """
         Get the maximum value
 
-        Returns:
-            float: the maximum value
+        :return: float, the maximum value
         """
 
         return self['maximum'].asFloat()
@@ -84,8 +68,7 @@ class ClampRange(dgLib.DGNode):
         """
         Set the maximum value
 
-        Args:
-            value: float, the maximum value
+        :param value: float, the maximum value
         """
 
         self['maximum'] = value
@@ -95,8 +78,7 @@ class ClampRange(dgLib.DGNode):
         """
         Get the output value
 
-        Returns:
-            float: the output value
+        :return: float, the output value
         """
 
         return self['output'].asFloat()

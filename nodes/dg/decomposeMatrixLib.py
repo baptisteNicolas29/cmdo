@@ -11,25 +11,13 @@ class DecomposeMatrix(dgLib.DGNode):
     _NODE_TYPE = "decomposeMatrix"
     _API_TYPE = om.MFn.kDecomposeMatrix
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of DecomposeMatrix
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def rotateOrderList(self) -> List[str]:
 
         """
         Get the list of available Rotate Orders
 
-        Returns:
-            List[str]: the list of available rotate orders
+        :return: List[str], the list of available rotate orders
         """
 
         return ['xyz', 'yzx', 'zxy', 'xzy', 'yxz', 'zyx']
@@ -40,8 +28,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the inputRotateOrder value
 
-        Returns:
-            int: the inputRotateOrder value
+        :return: int, the inputRotateOrder value
         """
 
         return self['inputRotateOrder'].asInt()
@@ -51,8 +38,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the inputMatrix value
 
-        Returns:
-            List[float]: the inputMatrix value
+        :return: List[float], the inputMatrix value
         """
 
         return self['inputMatrix'].value
@@ -62,8 +48,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Set the inputMatrix value
 
-        Args:
-            value: List[float] | om.MPlug, the inputMatrix value
+        :param value: Union[List[float], om.MPlug], the inputMatrix value
         """
 
         self['inputMatrix'] = value
@@ -74,8 +59,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputTranslate value
 
-        Returns:
-            List[float]: the outputTranslate value
+        :return: List[float], the outputTranslate value
         """
 
         return [
@@ -90,8 +74,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputTranslateX value
 
-        Returns:
-            float: the outputTranslateX value
+        :return: float, the outputTranslateX value
         """
 
         return self['outputTranslateX'].asFloat()
@@ -101,8 +84,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputTranslateY value
 
-        Returns:
-            float: the outputTranslateY value
+        :return: float, the outputTranslateY value
         """
 
         return self['outputTranslateY'].asFloat()
@@ -112,8 +94,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputTranslateZ value
 
-        Returns:
-            float: the outputTranslateZ value
+        :return: float, the outputTranslateZ value
         """
 
         return self['outputTranslateZ'].asFloat()
@@ -123,8 +104,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputRotate value
 
-        Returns:
-            List[float]: the outputRotate value
+        :return: List[float], the outputRotate value
         """
         return [
             self.outputRotateX,
@@ -137,8 +117,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputRotateX value
 
-        Returns:
-            float: the outputRotateX value
+        :return: float, the outputRotateX value
         """
 
         return self['outputRotateX'].asFloat()
@@ -148,8 +127,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputRotateY value
 
-        Returns:
-            float: the outputRotateY value
+        :return: float, the outputRotateY value
         """
 
         return self['outputRotateY'].asFloat()
@@ -159,8 +137,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputRotateZ value
 
-        Returns:
-            float: the outputRotateZ value
+        :return: float, the outputRotateZ value
         """
 
         return self['outputRotateZ'].asFloat()
@@ -171,8 +148,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputScale value
 
-        Returns:
-            List[float]: the outputScale value
+        :return: List[float], the outputScale value
         """
 
         return [
@@ -186,8 +162,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputScaleX value
 
-        Returns:
-            List[float]: the outputScaleX value
+        :return: List[float], the outputScaleX value
         """
 
         return self['outputScaleX'].asFloat()
@@ -197,8 +172,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputScaleY value
 
-        Returns:
-            List[float]: the outputScaleY value
+        :return: List[float], the outputScaleY value
         """
 
         return self['outputScaleY'].asFloat()
@@ -208,8 +182,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputScaleZ value
 
-        Returns:
-            List[float]: the outputScaleZ value
+        :return: List[float], the outputScaleZ value
         """
 
         return self['outputScaleZ'].asFloat()
@@ -220,8 +193,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputShear value
 
-        Returns:
-            List[float]: the outputShear value
+        :return: List[float], the outputShear value
         """
 
         return [
@@ -236,8 +208,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputShearX value
 
-        Returns:
-            float: the outputShearX value
+        :return: float, the outputShearX value
         """
 
         return self['outputShearX'].asFloat()
@@ -248,8 +219,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputShearY value
 
-        Returns:
-            float: the outputShearY value
+        :return: float, the outputShearY value
         """
 
         return self['outputShearY'].asFloat()
@@ -260,8 +230,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputShearZ value
 
-        Returns:
-            float: the outputShearZ value
+        :return: float, the outputShearZ value
         """
 
         return self['outputShearZ'].asFloat()
@@ -271,8 +240,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputQuat value
 
-        Returns:
-            List[float]: the outputQuat value
+        :return: List[float], the outputQuat value
         """
         return [
             self.outputQuatX,
@@ -287,8 +255,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputQuatX value
 
-        Returns:
-            float: the outputQuatX value
+        :return: float, the outputQuatX value
         """
 
         return self['outputQuatX'].asFloat()
@@ -299,8 +266,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputQuatY value
 
-        Returns:
-            float: the outputQuatY value
+        :return: float, the outputQuatY value
         """
 
         return self['outputQuatY'].asFloat()
@@ -311,8 +277,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputQuatZ value
 
-        Returns:
-            float: the outputQuatZ value
+        :return: float, the outputQuatZ value
         """
 
         return self['outputQuatZ'].asFloat()
@@ -323,8 +288,7 @@ class DecomposeMatrix(dgLib.DGNode):
         """
         Get the outputQuatW value
 
-        Returns:
-            float: the outputQuatW value
+        :return: float, the outputQuatW value
         """
 
         return self['outputQuatW'].asFloat()

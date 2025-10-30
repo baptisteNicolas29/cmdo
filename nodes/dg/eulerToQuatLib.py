@@ -11,24 +11,13 @@ class EulerToQuat(dgLib.DGNode):
     _NODE_TYPE = "eulerToQuat"
     _API_TYPE = om.MFn.kPluginDependNode
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-        """
-        Initialize an instance of EulerToQuat
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def rotateOrderList(self) -> List[str]:
 
         """
         Get the list of available Rotate Orders
 
-        Returns:
-            List[str]: the list of available rotate orders
+        :return: List[str], the list of available rotate orders
         """
 
         return ['xyz', 'yzx', 'zxy', 'xzy', 'yxz', 'zyx']
@@ -39,8 +28,7 @@ class EulerToQuat(dgLib.DGNode):
         """
         Get the inputRotateOrder value
 
-        Returns:
-            int: the inputRotateOrder value
+        :return: int, the inputRotateOrder value
         """
 
         return self['inputRotateOrder'].asInt()
@@ -51,9 +39,8 @@ class EulerToQuat(dgLib.DGNode):
         """
         Set the inputRotateOrder value
 
-        Args:
-            value: int | str, the rotate order to set, either the index or the
-                string (ie: "xyz")
+        :param value: Union[int, str], the rotate order to set, 
+        either the index or the string (ie: "xyz")
         """
 
         if isinstance(value, int):
@@ -72,8 +59,7 @@ class EulerToQuat(dgLib.DGNode):
         """
         Get the inputRotate value
 
-        Returns:
-            List[float]: the inputRotate value
+        :return: List[float], the inputRotate value
         """
         return [
             self.inputRotateX,
@@ -86,8 +72,7 @@ class EulerToQuat(dgLib.DGNode):
         """
         Set the inputRotate value
 
-        Args:
-            value: List[float], the inputRotate value
+        :param value: List[float], the inputRotate value
         """
 
         self['inputRotate'] = value
@@ -97,8 +82,7 @@ class EulerToQuat(dgLib.DGNode):
         """
         Get the inputRotateX value
 
-        Returns:
-            float: the inputRotateX value
+        :return: float, the inputRotateX value
         """
 
         return self['inputRotateX'].asFloat()
@@ -108,8 +92,7 @@ class EulerToQuat(dgLib.DGNode):
         """
         Set the inputRotateX value
 
-        Args:
-            value: float, the inputRotateX value
+        :param value: float, the inputRotateX value
         """
 
         self['inputRotateX'] = value
@@ -119,8 +102,7 @@ class EulerToQuat(dgLib.DGNode):
         """
         Get the inputRotateY value
 
-        Returns:
-            float: the inputRotateY value
+        :return: float, the inputRotateY value
         """
 
         return self['inputRotateY'].asFloat()
@@ -130,8 +112,7 @@ class EulerToQuat(dgLib.DGNode):
         """
         Set the inputRotateY value
 
-        Args:
-            value: float, the inputRotateY value
+        :param value: float, the inputRotateY value
         """
 
         self['inputRotateY'] = value
@@ -141,8 +122,7 @@ class EulerToQuat(dgLib.DGNode):
         """
         Get the inputRotateZ value
 
-        Returns:
-            float: the inputRotateZ value
+        :return: float, the inputRotateZ value
         """
 
         return self['inputRotateZ'].asFloat()
@@ -152,8 +132,7 @@ class EulerToQuat(dgLib.DGNode):
         """
         Set the inputRotateZ value
 
-        Args:
-            value: float, the inputRotateZ value
+        :param value: float, the inputRotateZ value
         """
 
         self['inputRotateZ'] = value
@@ -163,8 +142,7 @@ class EulerToQuat(dgLib.DGNode):
         """
         Get the outputQuat value
 
-        Returns:
-            List[float]: the outputQuat value
+        :return: List[float] the outputQuat value
         """
         return [
             self.outputQuatX,
@@ -179,8 +157,7 @@ class EulerToQuat(dgLib.DGNode):
         """
         Get the outputQuatX value
 
-        Returns:
-            float: the outputQuatX value
+        :return: float, the outputQuatX value
         """
 
         return self['outputQuatX'].asFloat()
@@ -191,8 +168,7 @@ class EulerToQuat(dgLib.DGNode):
         """
         Get the outputQuatY value
 
-        Returns:
-            float: the outputQuatY value
+        :return: float, the outputQuatY value
         """
 
         return self['outputQuatY'].asFloat()
@@ -203,8 +179,7 @@ class EulerToQuat(dgLib.DGNode):
         """
         Get the outputQuatZ value
 
-        Returns:
-            float: the outputQuatZ value
+        :return: float, the outputQuatZ value
         """
 
         return self['outputQuatZ'].asFloat()
@@ -215,8 +190,7 @@ class EulerToQuat(dgLib.DGNode):
         """
         Get the outputQuatW value
 
-        Returns:
-            float: the outputQuatW value
+        :return: float, the outputQuatW value
         """
 
         return self['outputQuatW'].asFloat()

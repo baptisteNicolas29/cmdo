@@ -11,24 +11,13 @@ class QuatToEuler(dgLib.DGNode):
     _NODE_TYPE = "quatToEuler"
     _API_TYPE = om.MFn.kPluginDependNode
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-        """
-        Initialize an instance of QuatToEuler
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def rotateOrderList(self) -> List[str]:
 
         """
         Get the list of available Rotate Orders
 
-        Returns:
-            List[str]: the list of available rotate orders
+        :return: List[str], the list of available rotate orders
         """
 
         return ['xyz', 'yzx', 'zxy', 'xzy', 'yxz', 'zyx']
@@ -39,8 +28,7 @@ class QuatToEuler(dgLib.DGNode):
         """
         Get the inputRotateOrder value
 
-        Returns:
-            int: the inputRotateOrder value
+        :return: int, the inputRotateOrder value
         """
 
         return self['inputRotateOrder'].asInt()
@@ -51,8 +39,7 @@ class QuatToEuler(dgLib.DGNode):
         """
         Set the inputRotateOrder value
 
-        Args:
-            value: int | str, the rotate order to set, either the index or the
+        :param value: Union[int, str], the rotate order to set, either the index or the
                 string (ie: "xyz")
         """
 
@@ -72,8 +59,7 @@ class QuatToEuler(dgLib.DGNode):
         """
         Get the inputQuat value
 
-        Returns:
-            List[float]: the inputQuat value
+        :return: List[float], the inputQuat value
         """
         return [
             self.inputQuatX,
@@ -87,8 +73,7 @@ class QuatToEuler(dgLib.DGNode):
         """
         Set the inputQuat value
 
-        Args:
-            value: List[float], the inputQuat value
+        :param value: List[float], the inputQuat value
         """
 
         self['inputQuat'] = value
@@ -99,8 +84,7 @@ class QuatToEuler(dgLib.DGNode):
         """
         Get the inputQuatX value
 
-        Returns:
-            float: the inputQuatX value
+        :return: float, the inputQuatX value
         """
 
         return self['inputQuatX'].asFloat()
@@ -111,8 +95,7 @@ class QuatToEuler(dgLib.DGNode):
         """
         Set the inputQuatX value
 
-        Args:
-            value: float, the inputQuatX value
+        :param value: float, the inputQuatX value
         """
 
         self['inputQuatX'] = value
@@ -123,8 +106,7 @@ class QuatToEuler(dgLib.DGNode):
         """
         Get the inputQuatY value
 
-        Returns:
-            float: the inputQuatY value
+        :return: float, the inputQuatY value
         """
 
         return self['inputQuatY'].asFloat()
@@ -135,8 +117,7 @@ class QuatToEuler(dgLib.DGNode):
         """
         Set the inputQuatY value
 
-        Args:
-            value: float, the inputQuatY value
+        :param value: float, the inputQuatY value
         """
 
         self['inputQuatY'] = value
@@ -147,8 +128,7 @@ class QuatToEuler(dgLib.DGNode):
         """
         Get the inputQuatZ value
 
-        Returns:
-            float: the inputQuatZ value
+        :return: float, the inputQuatZ value
         """
 
         return self['inputQuatZ'].asFloat()
@@ -159,8 +139,7 @@ class QuatToEuler(dgLib.DGNode):
         """
         Set the inputQuatZ value
 
-        Args:
-            value: float, the inputQuatZ value
+        :param value: float, the inputQuatZ value
         """
 
         self['inputQuatZ'] = value
@@ -171,8 +150,7 @@ class QuatToEuler(dgLib.DGNode):
         """
         Get the inputQuatW value
 
-        Returns:
-            float: the inputQuatW value
+        :return: float, the inputQuatW value
         """
 
         return self['inputQuatW'].asFloat()
@@ -183,8 +161,7 @@ class QuatToEuler(dgLib.DGNode):
         """
         Set the inputQuatW value
 
-        Args:
-            value: float, the inputQuatW value
+        :param value: float, the inputQuatW value
         """
 
         self['inputQuatW'] = value
@@ -194,8 +171,7 @@ class QuatToEuler(dgLib.DGNode):
         """
         Get the outputRotate value
 
-        Returns:
-            List[float]: the outputRotate value
+        :return: List[float] the outputRotate value
         """
         return [
             self.outputRotateX,
@@ -208,8 +184,7 @@ class QuatToEuler(dgLib.DGNode):
         """
         Get the outputRotateX value
 
-        Returns:
-            float: the outputRotateX value
+        :return: float, the outputRotateX value
         """
 
         return self['outputRotateX'].asFloat()
@@ -219,8 +194,7 @@ class QuatToEuler(dgLib.DGNode):
         """
         Get the outputRotateY value
 
-        Returns:
-            float: the outputRotateY value
+        :return: float, the outputRotateY value
         """
 
         return self['outputRotateY'].asFloat()
@@ -230,8 +204,7 @@ class QuatToEuler(dgLib.DGNode):
         """
         Get the outputRotateZ value
 
-        Returns:
-            float: the outputRotateZ value
+        :return: float, the outputRotateZ value
         """
 
         return self['outputRotateZ'].asFloat()

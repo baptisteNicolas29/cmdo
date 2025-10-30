@@ -11,23 +11,12 @@ class MultMatrix(dgLib.DGNode):
     _NODE_TYPE = "multMatrix"
     _API_TYPE = om.MFn.kMatrixMult
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-        """
-        Initialize an instance of MultMatrix
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def matrixInCount(self) -> int:
         """
         Get the number of matrixIn compound attributes (numElements)
 
-        Returns:
-            int: the number of matrixIn compound attributes
+        :return: int, the number of matrixIn compound attributes
         """
 
         return self['matrixIn'].numElements()
@@ -36,11 +25,9 @@ class MultMatrix(dgLib.DGNode):
         """
         Get the matrixIn from a target index value
 
-        Args:
-            index: int, the index of the matrix to get
+        :param index: int, the index of the matrix to get
 
-        Returns:
-            List[float]: the matrixIn value
+        :return: List[float], the matrixIn value
         """
 
         return self['matrixIn'][index].value
@@ -49,9 +36,8 @@ class MultMatrix(dgLib.DGNode):
         """
         Set the matrixIn from a target index value
 
-        Args:
-            index: int, the index of the matrix to get
-            value: List[float], the matrixIn value
+        :param index: int, the index of the matrix to get
+        :param value: List[float], the matrixIn value
         """
 
         self['matrixIn'][index] = value
@@ -61,8 +47,7 @@ class MultMatrix(dgLib.DGNode):
         """
         Get the matrixSum value
 
-        Returns:
-            int: the matrixSum value
+        :return: int, the matrixSum value
         """
 
         return self['matrixSum'].value

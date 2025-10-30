@@ -11,25 +11,13 @@ class WtAddMatrix(dgLib.DGNode):
     _NODE_TYPE = "wtAddMatrix"
     _API_TYPE = om.MFn.kMatrixWtAdd
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of WtAddMatrix
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def wtMatrixCount(self) -> int:
         """
         Get the number of child wtMatrix attributes
         from the compound (numElements)
 
-        Returns:
-            int: the number of child wtMatrix attributes from the compound
+        :return: int, the number of child wtMatrix attributes from the compound
         """
 
         return self['wtMatrix'].numElements()
@@ -39,8 +27,7 @@ class WtAddMatrix(dgLib.DGNode):
         """
         Get the wtMatrix parent plug
 
-        Returns:
-            om.MPlug: the wtMatrix parent plug
+        :return: om.MPlug, the wtMatrix parent plug
         """
 
         return self['wtMatrix']
@@ -50,8 +37,7 @@ class WtAddMatrix(dgLib.DGNode):
         """
         Get the matrixSum value
 
-        Returns:
-             List[float]: the matrixSum value
+        :return: List[float], the matrixSum value
         """
 
         return self['matrixSum'].value
@@ -60,11 +46,9 @@ class WtAddMatrix(dgLib.DGNode):
         """
         Get the wtMatrix from a target index value
 
-        Args:
-            index: int, the index of the wtMatrix to get
+        :param index: int, the index of the wtMatrix to get
 
-        Returns:
-            om.MPlug: the wtMatrix value
+        :return: om.MPlug, the wtMatrix value
         """
 
         return self['wtMatrix'][index]
@@ -73,9 +57,8 @@ class WtAddMatrix(dgLib.DGNode):
         """
         Set the wtMatrix from a target index value
 
-        Args:
-            index: int, the index of the wtMatrix to get
-            value: om.MPlug, the plug to connect to wtMatrix
+        :param index: int, the index of the wtMatrix to get
+        :param value: om.MPlug, the plug to connect to wtMatrix
         """
 
         self['wtMatrix'][index] = value
@@ -84,11 +67,9 @@ class WtAddMatrix(dgLib.DGNode):
         """
         Get the matrixIn from a target index value
 
-        Args:
-            index: int, the index of the matrixIn to get
+        :param index: int, the index of the matrixIn to get
 
-        Returns:
-            List[float]: the matrixIn value
+        :return: List[float], the matrixIn value
         """
 
         return self['wtMatrix'][index]['matrixIn'].value
@@ -97,9 +78,8 @@ class WtAddMatrix(dgLib.DGNode):
         """
         Set the matrixIn from a target index value
 
-        Args:
-            index: int, the index of the matrixIn to get
-            value: List[float] | om.MPlug, the matrixIn value
+        :param index: int, the index of the matrixIn to get
+        :param value: Union[List[float], om.MPlug], the matrixIn value
         """
 
         self['wtMatrix'][index]['matrixIn'] = value
@@ -108,11 +88,9 @@ class WtAddMatrix(dgLib.DGNode):
         """
         Get the weightIn from a target index value
 
-        Args:
-            index: int, the index of the weightIn to get
+        :param index: int, the index of the weightIn to get
 
-        Returns:
-            float: the weightIn value
+        :return: float, the weightIn value
         """
 
         return self['wtMatrix'][index]['weightIn'].value
@@ -121,9 +99,8 @@ class WtAddMatrix(dgLib.DGNode):
         """
         Set the weightIn from a target index value
 
-        Args:
-            index: int, the index of the weightIn to get
-            value: float | om.MPlug, the weightIn value
+        :param index: int, the index of the weightIn to get
+        :param value: Union[float, om.MPlug], the weightIn value
         """
 
         self['wtMatrix'][index]['weightIn'] = value

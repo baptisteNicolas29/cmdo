@@ -11,23 +11,12 @@ class Divide(dgLib.DGNode):
     _NODE_TYPE = "divide"
     _API_TYPE = om.MFn.kDivide
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-        """
-        Initialize an instance of Divide
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def input1(self) -> float:
         """
         Get the input1 value
 
-        Returns:
-            List[float]: the input1 value
+        :return: List[float] the input1 value
         """
 
         return self['input1'].asFloat()
@@ -37,8 +26,7 @@ class Divide(dgLib.DGNode):
         """
         Set the input1 value
 
-        Args:
-            value: float, the input1 value
+        :param value: float, the input1 value
         """
 
         self['input1'] = value
@@ -48,8 +36,7 @@ class Divide(dgLib.DGNode):
         """
         Get the input2 value
 
-        Returns:
-            float: the input2 value
+        :return: float the input2 value
         """
 
         return self['input2'].asFloat()
@@ -59,8 +46,7 @@ class Divide(dgLib.DGNode):
         """
         Set the input2 value
 
-        Args:
-            value: List[float], the input2 value
+        :param value: List[float], the input2 value
         """
 
         self['input2'] = value
@@ -70,8 +56,7 @@ class Divide(dgLib.DGNode):
         """
         Get the output value
 
-        Returns:
-            float: the output value
+        :return: float the output value
         """
 
         return self['output'].asFloat()

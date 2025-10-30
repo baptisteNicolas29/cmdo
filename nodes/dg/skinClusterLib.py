@@ -14,24 +14,12 @@ class SkinCluster(dgLib.DGNode):
     _NODE_TYPE = "skinCluster"
     _API_TYPE = om.MFn.kSkinClusterFilter
 
-    def __init__(self, name: str = None, *args, **kwargs) -> None:
-
-        """
-        Initialize an instance of SkinCluster
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def mfnSkinCluster(self) -> oma.MFnSkinCluster:
         """
         Get mfnSkinCluster of the om.MObject
 
-        Returns:
-            oma.mfnSkinCluster: the skinCluster object
+        :return: oma.mfnSkinCluster, the skinCluster object
         """
         return oma.MFnSkinCluster(self)
 
@@ -41,9 +29,9 @@ class SkinCluster(dgLib.DGNode):
         """
         Get the DagPose node connected to bindPose attr
 
-        Returns:
-            DagPose: the DagPose node connected to bindPose attr
+        :return: DagPose, the DagPose node connected to bindPose attr
         """
+        
         dagPoseNode = self['bindPose'].source().node()
         return NodeRegistry().get(dagPoseNode)(dagPoseNode)
 
@@ -52,8 +40,7 @@ class SkinCluster(dgLib.DGNode):
         """
         Get an om.MSelectionList of all influence objects
 
-        Returns:
-            om.MSelectionList, a list of influence objects
+        :return: om.MSelectionList, a list of influence objects
         """
 
         graph = Graph()
@@ -67,8 +54,7 @@ class SkinCluster(dgLib.DGNode):
         """
         Get the deformed mesh objects
 
-        Returns:
-            om.MObject, the deformed mesh object
+        :return: om.MObject, the deformed mesh object
         """
         # TODO: we assume one mesh per skinCluster for now
         obj = self['outputGeometry'][0].destinations()[0].node()
@@ -78,12 +64,11 @@ class SkinCluster(dgLib.DGNode):
     def weights(self) -> om.MDoubleArray:
 
         """
-        Renvoie la liste des weights du node courant.
+        Get the list of current weights
 
-        Returns:
-            om.MDoubleArray
-                La liste des weights du node courant.
+        :return: om.MDoubleArray, the list of current weights
         """
+
         vtxList = f'{self.deformedMesh.name}.vtx[*]'
         compMObj = om.MGlobal.getSelectionListByName(vtxList).getComponent(0)[1]
         meshDagPath = self.deformedMesh.dagPath

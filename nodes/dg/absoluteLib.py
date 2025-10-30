@@ -11,25 +11,13 @@ class Absolute(dgLib.DGNode):
     _NODE_TYPE = "absolute"
     _API_TYPE = om.MFn.kAbsolute
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of Absolute
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def input(self) -> float:
 
         """
         Get the value of the input plug
 
-        Returns:
-            float: the value of the input plug
+        :return: float, the value of the input plug
         """
 
         return self['input'].asFloat()
@@ -40,8 +28,7 @@ class Absolute(dgLib.DGNode):
         """
         Set the value of the input plus
 
-        Args:
-            value (float): The value to set the input to
+        :param value: float, The value to set the input to
         """
         self['input'] = value
 
@@ -51,8 +38,7 @@ class Absolute(dgLib.DGNode):
         """
         Get the value of the output plug
 
-        Returns:
-            float: the value of the output plug
+        :return: float, the value of the output plug
         """
 
         return self['output'].asFloat()

@@ -12,24 +12,12 @@ class DagPose(dgLib.DGNode):
     _NODE_TYPE = "dagPose"
     _API_TYPE = om.MFn.kDagPose
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-
-        """
-        Initialize an instance of DagPose
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def bindPose(self) -> bool:
         """
         Get the bindPose value
 
-        Returns:
-            bool, the bindPose value
+        :return: bool, the bindPose value
         """
         return self['bindPose'].asBool()
 
@@ -38,8 +26,7 @@ class DagPose(dgLib.DGNode):
         """
         Get the global value
 
-        Returns:
-            bool, the global value
+        :return: bool, the global value
         """
         return self['global'].asBool()
 
@@ -48,8 +35,7 @@ class DagPose(dgLib.DGNode):
         """
         Get the number of members
 
-        Returns:
-            int: the number of members
+        :return: int, the number of members
         """
         return self['members'].numElements()
 
@@ -58,8 +44,7 @@ class DagPose(dgLib.DGNode):
         """
         Get the number of parents
 
-        Returns:
-            int: the number of parents
+        :return: int, the number of parents
         """
         return self['parents'].numElements()
 
@@ -68,8 +53,7 @@ class DagPose(dgLib.DGNode):
         """
         Get the number of worldMatrices
 
-        Returns:
-            int: the number of worldMatrices
+        :return: int, the number of worldMatrices
         """
         return self['worldMatrix'].numElements()
 
@@ -78,8 +62,7 @@ class DagPose(dgLib.DGNode):
         """
         Get a plugArray of all members
 
-        Returns:
-            om.MPlugArray, a plugArray of all members
+        :return: om.MPlugArray, a plugArray of all members
         """
         memberArray = PlugArray()
 
@@ -93,8 +76,7 @@ class DagPose(dgLib.DGNode):
         """
         Get a plugArray of all parents
 
-        Returns:
-            om.MPlugArray, a plugArray of all parents
+        :return: om.MPlugArray, a plugArray of all parents
         """
         parentArray = PlugArray()
 
@@ -108,8 +90,7 @@ class DagPose(dgLib.DGNode):
         """
         Get a plugArray of all worldMatrices
 
-        Returns:
-            om.MPlugArray, a plugArray of all worldMatrices
+        :return: om.MPlugArray, a plugArray of all worldMatrices
         """
         worldMatrixArray = PlugArray()
 
@@ -123,8 +104,7 @@ class DagPose(dgLib.DGNode):
         """
         Get a plugArray of all world
 
-        Returns:
-            om.MPlugArray, a plugArray of all world
+        :return: om.MPlugArray, a plugArray of all world
         """
         worldArray = PlugArray()
 
@@ -138,8 +118,7 @@ class DagPose(dgLib.DGNode):
         """
         Get an om.MSelectionList of all connected skinClusters
 
-        Returns:
-            om.MSelectionList, a MSelectionList of all skinCluster nodes
+        :return: om.MSelectionList, a MSelectionList of all skinCluster nodes
         """
         skinclusterList = om.MSelectionList()
 
@@ -152,11 +131,9 @@ class DagPose(dgLib.DGNode):
         """
         Get a specific member
         
-        Args:
-            value: int, the index of the member to get
+        :param value: int, the index of the member to get
         
-        Returns:
-            om.MPlug, the connected member plug
+        :return: om.MPlug, the connected member plug
         """
         
         return self['members'][value].source()
@@ -165,11 +142,9 @@ class DagPose(dgLib.DGNode):
         """
         Get a specific parent
 
-        Args:
-            value: int, the index of the parent to get
+        :param value: int, the index of the parent to get
 
-        Returns:
-            om.MPlug, the connected parent plug
+        :return: om.MPlug, the connected parent plug
         """
 
         return self['parents'][value].source()
@@ -178,11 +153,9 @@ class DagPose(dgLib.DGNode):
         """
         Get a specific worldMatrix
 
-        Args:
-            value: int, the index of the worldMatrix to get
+        :param value: int, the index of the worldMatrix to get
 
-        Returns:
-            om.MPlug, worldMatrix value
+        :return: om.MPlug, worldMatrix value
         """
 
         return self['worldMatrix'][value].value

@@ -11,23 +11,12 @@ class Normalize(dgLib.DGNode):
     _NODE_TYPE = "normalize"
     _API_TYPE = om.MFn.kNormalize
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-        """
-        Initialize an instance of Normalize
-
-        Args:
-            name: str | om.MObject, the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def input(self) -> List[float]:
         """
         Get the input value
 
-        Returns:
-            List[float]: the input value
+        :return: List[float], the input value
         """
 
         return [
@@ -41,8 +30,7 @@ class Normalize(dgLib.DGNode):
         """
         Set the input value
 
-        Args:
-            value: List[float], the input value
+        :param value: List[float], the input value
         """
 
         self['input'] = value
@@ -52,8 +40,7 @@ class Normalize(dgLib.DGNode):
         """
         Get the inputX value
 
-        Returns:
-            List[float]: the inputX value
+        :return: List[float], the inputX value
         """
 
         return self['inputX'].asFloat()
@@ -63,8 +50,7 @@ class Normalize(dgLib.DGNode):
         """
         Set the inputX value
 
-        Args:
-            value: List[float], the inputX value
+        :param value: List[float], the inputX value
         """
 
         self['inputX'] = value
@@ -74,8 +60,7 @@ class Normalize(dgLib.DGNode):
         """
         Get the inputY value
 
-        Returns:
-            List[float]: the inputY value
+        :return: List[float], the inputY value
         """
 
         return self['inputY'].asFloat()
@@ -85,8 +70,7 @@ class Normalize(dgLib.DGNode):
         """
         Set the inputY value
 
-        Args:
-            value: List[float], the inputY value
+        :param value: List[float], the inputY value
         """
 
         self['inputY'] = value
@@ -96,8 +80,7 @@ class Normalize(dgLib.DGNode):
         """
         Get the inputZ value
 
-        Returns:
-            List[float]: the inputZ value
+        :return: List[float], the inputZ value
         """
 
         return self['inputZ'].asFloat()
@@ -107,8 +90,7 @@ class Normalize(dgLib.DGNode):
         """
         Set the inputZ value
 
-        Args:
-            value: List[float], the inputZ value
+        :param value: List[float], the inputZ value
         """
 
         self['inputZ'] = value
@@ -118,8 +100,7 @@ class Normalize(dgLib.DGNode):
         """
         Get the output value
 
-        Returns:
-            List[float]: the output value
+        :return: List[float], the output value
         """
 
         return [
@@ -133,8 +114,7 @@ class Normalize(dgLib.DGNode):
         """
         Get the outputX value
 
-        Returns:
-            List[float]: the outputX value
+        :return: List[float], the outputX value
         """
 
         return self['outputX'].asFloat()
@@ -144,8 +124,7 @@ class Normalize(dgLib.DGNode):
         """
         Get the outputY value
 
-        Returns:
-            List[float]: the outputY value
+        :return: List[float], the outputY value
         """
 
         return self['outputY'].asFloat()
@@ -155,8 +134,7 @@ class Normalize(dgLib.DGNode):
         """
         Get the outputZ value
 
-        Returns:
-            List[float]: the outputZ value
+        :return: List[float], the outputZ value
         """
 
         return self['outputZ'].asFloat()
