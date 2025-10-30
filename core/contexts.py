@@ -7,7 +7,7 @@ from maya import cmds
 # TODO: we should probably update / refactor this
 
 @contextlib.contextmanager
-def undo_chunk_context(undo_chunk_name=None):
+def undoChunkContext(undo_chunk_name=None):
 	if undo_chunk_name is None:
 		cmds.undoInfo(openChunk=True)
 	else:
@@ -22,16 +22,16 @@ def undo_chunk_context(undo_chunk_name=None):
 
 
 @contextlib.contextmanager
-def undo_after_context(undo_chunk_name=None):
+def undoAfterContext(undo_chunk_name=None):
 
-	with undo_chunk_context(undo_chunk_name=undo_chunk_name):
+	with undoChunkContext(undo_chunk_name=undo_chunk_name):
 		yield
 
 	cmds.undo()
 
 
 @contextlib.contextmanager
-def time_it_context(name):
+def timeItContext(name):
 	print(f'\n[time_it_context] - {name}')
 
 	start_timer = time.time()

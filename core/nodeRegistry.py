@@ -47,6 +47,7 @@ class NodeRegistry(dict, metaclass=SingletonMeta):
         We have wierd import because of maya (and other stuff)
         So we can t use the built-in issubclass to check classes
         """
+
         # print(f'{repr(cls2)} - {repr(cls1.mro())}')
         return repr(cls2) in repr(cls1.mro())
 

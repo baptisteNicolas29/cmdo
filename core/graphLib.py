@@ -4,7 +4,7 @@ from maya import cmds
 from maya.api import OpenMaya as om
 
 from . import plugsLib
-from .cmdoTyping import CmdoObject
+from .cmdoTyping import CmdoObject, CmdoList
 
 from .abstract import nodeLib
 from .abstract import dgLib
@@ -30,15 +30,13 @@ class Graph(om.MSelectionList):
         return repr(cls2) in repr(cls1.__class__.mro())
 
     @staticmethod
-    def __filterObjects(obj: Union[str, om.MObject, om.MFnDependencyNode, om.MPlug]) -> str:
+    def __filterObjects(obj: Union[CmdoObject, om.MFnDependencyNode, om.MPlug]) -> str:
         """
         Filter function to convert the input node to str name for maya commands
 
-        Args:
-             obj: str | MObject, a maya node to convert
+        :param obj: Union[CmdoObject, om.MFnDependencyNode, om.MPlug], a maya node to convert
 
-        Returns:
-            str: the name of the node
+        :return: str, the name of the node
         """
         if isinstance(obj, str):
             return obj
@@ -58,17 +56,14 @@ class Graph(om.MSelectionList):
         return str(obj)
 
     @classmethod
-    def __initRegistered(cls, value: Union[str, om.MObject], default: om.MObject = nodeLib.Node, **kwargs) -> Any:
+    def __initRegistered(cls, value: CmdoObject, default: om.MObject = nodeLib.Node, **kwargs) -> Any:
         """
         Get node class instance from type
 
-        Args:
-            value: MObject | str, MObject or name
-            default: MObject, the default object if nothing is found in
-                NodeRegistry
+        :param value:CmdoObject, MObject or name
+        :param default: MObject, the default object if nothing is found in NodeRegistry
 
-        Returns:
-            MObject: a subclass of nodeLib.Node
+        :return: MObject: a subclass of nodeLib.Node
         """
 
         return cls.__nodeRegistry.get(value, default)(value, **kwargs)
@@ -77,11 +72,9 @@ class Graph(om.MSelectionList):
     def __createList(cls, data: List) -> 'Graph':
         """
 
-        Args:
-            data: list, a list of data to add to the graph
+        :param data: list, a list of data to add to the graph
 
-        Returns:
-            Graph: a graph containing the given data
+        :return: Graph, a graph containing the given data
         """
         graph = cls()
         for item in data:
@@ -152,9 +145,11 @@ class Graph(om.MSelectionList):
     @classmethod
     def listHistory(cls, *args, **kwargs) -> 'Graph':
         """
-        desc: this function is a reimplementation of the cmds.listHistory function
+        This function is a reimplementation of the cmds.listHistory function
+
         allow user to gather nodes from string list
         args and kwargs work like cmds.listHistory command
+
         """
 
         objects = list(map(cls.__filterObjects, args))
@@ -168,9 +163,11 @@ class Graph(om.MSelectionList):
     @classmethod
     def listRelatives(cls, *args, **kwargs) -> 'Graph':
         """
-        desc: this function is a reimplementation of the cmds.listHistory function
+        This function is a reimplementation of the cmds.listHistory function
+
         allow user to gather nodes from string list
         args and kwargs work like cmds.listHistory command
+
         """
 
         objects = list(map(cls.__filterObjects, args))
@@ -185,9 +182,10 @@ class Graph(om.MSelectionList):
     @classmethod
     def listConnections(cls, *args, **kwargs) -> 'Graph':
         """
-        Reimplementation of the listConnections command
+        Reimplementation of the cmds.listConnections command
 
         """
+
         objects = list(map(cls.__filterObjects, args))
 
         # remove the fullNodeName flag if it is present in kwargs
@@ -198,16 +196,14 @@ class Graph(om.MSelectionList):
         return cls.__createList(result)
 
     @classmethod
-    def getHighestNodesInList(cls, nodes, safe=True) -> 'Graph':
+    def getHighestNodesInList(cls, nodes: CmdoList, safe: bool = True) -> 'Graph':
         """
-        This method get hightest nodes in given nodes
+        This method get the highest parent nodes in given nodes
 
-        Args:
-            nodes: nodes you want dag roots on
-            safe: raise an error or not
+        :param nodes: CmdoList, nodes you want dag roots on
+        :param safe: bol, raise an error or not
 
-        Returns:
-            Graph: the founded relative dagRoots
+        :return: Graph, the founded relative dagRoots
         """
 
         if isinstance(nodes, list):
@@ -248,12 +244,10 @@ class Graph(om.MSelectionList):
         """
         Get all children of node
 
-        Args:
-            node: node to get children for
-            graph: the graph to search in
+        :param node: node to get children for
+        :param graph: the graph to search in
 
-        Returns:
-            Graph: a Graph object holding node children
+        :return: Graph, a Graph object holding node children
         """
 
         node = nodeLib.Node(node)
@@ -294,13 +288,12 @@ class Graph(om.MSelectionList):
         """
         Get all parents of node
 
-        Args:
-            node: node to get parents for
-            graph: the graph to search in
+        :param node: node to get parents for
+        :param graph: the graph to search in
 
-        Returns:
-            Graph: a Graph object holding node parents
+        :return: Graph, a Graph object holding node parents
         """
+
         node = nodeLib.Node(node)
 
         if isinstance(graph, om.MSelectionList):
@@ -339,9 +332,10 @@ class Graph(om.MSelectionList):
     @classmethod
     def select(cls, *args, **kwargs):
         """
-        Reimplementation of the select command
+        Reimplementation of the cmds.select command
 
         """
+
         objects = list(map(cls.__filterObjects, args))
 
         cmds.select(*objects, **kwargs)
@@ -349,7 +343,7 @@ class Graph(om.MSelectionList):
     @classmethod
     def duplicate(cls, *args, **kwargs):
         """
-        Reimplementation of the duplicate command
+        Reimplementation of the cmds.duplicate command
 
         """
         objects = list(map(cls.__filterObjects, args))
@@ -366,11 +360,11 @@ class Graph(om.MSelectionList):
         """
         Set attribute for all members if they correspond or have the attribute
 
-        Args:
-            attr: Union[str, plugsLib.Plug], the name of the attribute or plug to set
-            value: Any, the value to set the attribute to
-            raiseOnError: bool, if true raise a CmdoPlugException if
-                the attribute is locked or connected
+        :param attr: Union[str, plugsLib.Plug], the name of the attribute
+            or plug to set
+        :param value: Any, the value to set the attribute to
+        :param raiseOnError: bool, if true raise a CmdoPlugException if
+            the attribute is locked or connected
 
         """
         dgDagType = [
@@ -424,11 +418,10 @@ class Graph(om.MSelectionList):
         """
         Get attribute for all members if they correspond or have the attribute
 
-        Args:
-            attr: Union[str, plugsLib.Plug], the name of the attribute or
-                plug to set
-            raiseOnError: bool, if true raise a CmdoPlugException if
-                the attribute is locked or connected
+        :param attr: Union[str, plugsLib.Plug], the name of the attribute or
+            plug to set
+        :param raiseOnError: bool, if true raise a CmdoPlugException if
+            the attribute is locked or connected
 
         """
         dgDagType = [
@@ -465,6 +458,14 @@ class Graph(om.MSelectionList):
         return result
 
     def pop(self, value: int) -> om.MObject:
+        """
+        Implement list.pop function
+
+        :param value: int, the index of the item to remove
+
+        :return: om.MObject, the removed item
+
+        """
         # check negative indices
         value = value if value >= 0 else len(self) + value
 
@@ -475,13 +476,28 @@ class Graph(om.MSelectionList):
 
     def append(self, value: Union[om.MObject, om.MPlug]) -> None:
         """
-        Append a value to the list
+        Implement list.append function
 
-        :param value: the value to append
-
+        :param value: Union[om.MObject, om.MPlug], the value to append
         """
 
         self.add(value)
+
+    def extend(self, value: CmdoList) -> 'Graph':
+        """
+        Add each element of a list to the current graph
+
+        :param value: the list to extend with
+
+        :return: Graph, the current extended list
+        """
+        objects = list(map(self.__filterObjects, value))
+
+        result = cmds.ls(*objects) or []
+        for item in result:
+            self.add(item)
+
+        return self
 
     def __str__(self) -> str:
         args = ', '.join([f'"{x}"' for x in self])
@@ -501,12 +517,10 @@ class Graph(om.MSelectionList):
         """
         Get attribute for all members if they correspond or have the attribute
 
-        Args:
-            attr: Union[str, plugsLib.Plug], the name of the attribute or
-                plug to set
+        :param attr: Union[str, plugsLib.Plug], the name of the attribute or
+            plug to set
 
-        Returns:
-            List[Any]: the list of attribute values
+        :return: List[Any], the list of attribute values
 
         """
         return self.getMembersAttributeValue(attr)
@@ -515,10 +529,9 @@ class Graph(om.MSelectionList):
         """
         Set attribute for all members if they correspond or have the attribute
 
-        Args:
-            attr: Union[str, plugsLib.Plug], the name of the attribute or
-                plug to set
-            value: Any, the value to set the attribute to
+        :param attr: Union[str, plugsLib.Plug], the name of the attribute or
+            plug to set
+        :param value: Any, the value to set the attribute to
 
         """
         self.setMembersAttributeValue(attr, value)
@@ -565,8 +578,9 @@ class Graph(om.MSelectionList):
 
     def __and__(self, other: om.MSelectionList) -> 'Graph':
         """
-        intersection "&" symbol
+        Intersection "&" symbol
         """
+
         if not isinstance(other, om.MSelectionList):
             raise TypeError(f'can not intersect Graph and {type(other)}')
 
@@ -575,8 +589,9 @@ class Graph(om.MSelectionList):
 
     def __or__(self, other: om.MSelectionList) -> 'Graph':
         """
-        union "|" symbole
+        Union "|" symbole
         """
+
         if not isinstance(other, om.MSelectionList):
             raise TypeError(f'can not unify Graph and {type(other)}')
 
@@ -587,9 +602,10 @@ class Graph(om.MSelectionList):
 
     def __xor__(self, other: om.MSelectionList) -> 'Graph':
         """
-        symmetrical difference "^" symbole
+        Symmetrical difference "^" symbole
 
         """
+
         copy = self.__class__().copy(self)
         return copy.merge(other, strategy=om.MSelectionList.kXORWithList)
 
@@ -630,11 +646,10 @@ class Graph(om.MSelectionList):
     def __iadd__(self, other: Any) -> 'Graph':
         """
         Implement "+=" operation
-        Args:
-            other: Any, objects to add to the graph
 
-        Returns:
-            Graph: returns the current instance with added nodes
+        :param other: Any, objects to add to the graph
+
+        :return: Graph, returns the current instance with added nodes
         """
 
         # if isinstance(other, om.MSelectionList):
@@ -651,11 +666,10 @@ class Graph(om.MSelectionList):
     def __isub__(self, other: Any) -> 'Graph':
         """
         Implement "-=" operation
-        Args:
-            other: Any, objects to remove from the graph
 
-        Returns:
-            Graph: returns the current instance with removed nodes
+        :param other: Any, objects to remove from the graph
+
+        :return: Graph, returns the current instance with removed nodes
         """
         return self.merge(other, strategy=om.MSelectionList.kRemoveFromList)
 

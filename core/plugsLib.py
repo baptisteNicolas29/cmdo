@@ -13,8 +13,10 @@ class Plug(om.MPlug):
     def __hash__(self) -> int:
         """
         Make hash using long name and uuid to try having a unique hash
+
         We "cache" the hash to avoid it changing in the middle of maya operation
         """
+
         if hasattr(self, '_HASH'):
             return self._HASH
 
@@ -27,11 +29,9 @@ class Plug(om.MPlug):
             - plug["childPlug"]
             - plug[1]
 
-        Args:
-            value: int | str, name or index of the child or multi attribute
+        :param value: Union[int, str], name or index of the child or multi attribute
 
-        Returns:
-            om.MPlug: retrieve the asked plug
+        :return: om.MPlug, retrieve the asked plug
         """
 
         # implement str input (for child version)
@@ -126,8 +126,7 @@ class Plug(om.MPlug):
         Implement "/" symbol for disconnecting plugs
         Works in either direction: plug1 / plug2 OR plug2 / plug1
 
-        Args:
-            other: om.MPlug, a plug to disconnect
+        :param other: om.MPlug, a plug to disconnect
         """
 
         if not isinstance(other, self.__class__):
@@ -143,13 +142,12 @@ class Plug(om.MPlug):
         """
         Get the wanted plug from its name plug.get("childPlug")
 
-        Args:
-            keyname: int | str, index or name of the asked plug
+        :param keyname: Union[int, str], index or name of the asked plug
 
-        Returns:
-            om.MPlug: found plug or null plug if not found
+        :return: om.MPlug, found plug or null plug if not found
 
         """
+
         mfn = self.node().dependencyNode
 
         if self.node().dependencyNode.hasAttribute(keyname):
@@ -230,33 +228,33 @@ class Plug(om.MPlug):
 
         return NodeRegistry().get(mObject)(mObject)
 
-    def child(self, *args, **kwargs):
+    def child(self, *args, **kwargs) -> 'Plug':
+        """
+        Get the child plug from given arguments
+
+        :return: Plug, the child plug
         """
 
-        :param args:
-        :param kwargs:
-        :return:
-        """
         return self.__class__(super().child(*args, **kwargs))
 
     def source(self, *args, **kwargs) -> 'Plug':
         """
         Get the source of the plug
 
-        Returns:
-            Plug: source of the plug
+        :return: Plug, source of the plug
 
         """
+
         return self.__class__(super().source())
 
     def destinations(self, *args, **kwargs) -> 'PlugArray':
         """
          Get the destinations of the plug
 
-        Returns:
-            PlugArray: an array of destination plugs
+        :return: PlugArray, an array of destination plugs
 
         """
+
         return PlugArray(super().destinations())
 
     def connect(self, other: "Plug", force=False) -> None:
@@ -291,15 +289,14 @@ class Plug(om.MPlug):
         """
         Get the current instance hash
 
-        Returns:
-             int: the hash value
+        :return: int, the hash value
         """
         return hash(self)
 
     @property
     def multi(self) -> bool:
-        mfn = om.MFnAttribute(self.attribute())
-        return mfn.array
+
+        return om.MFnAttribute(self.attribute()).array
 
     @property
     def value(self) -> Any:
@@ -307,8 +304,7 @@ class Plug(om.MPlug):
         Yeah... it s maya commands to get the value of the plug
         This is more flexible than OpenMaya and isn't too demanding
 
-        Returns:
-             Any: the value of the current plug
+        :return: Any, the value of the current plug
         """
 
         # TODO: start with check for the attribute
@@ -336,8 +332,7 @@ class Plug(om.MPlug):
         """
         Set the value of the current plug
 
-        Args:
-            value: Any, the value to set the plug to
+        :param value: Any, the value to set the plug to
 
         """
 
@@ -348,8 +343,7 @@ class Plug(om.MPlug):
         """
         Get the type of attribute this plug represents
 
-        Returns:
-            str: the type of attribute this plug represents
+        :return: str, the type of attribute this plug represents
         """
 
         return cmds.getAttr(self.name(), type=True)
