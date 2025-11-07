@@ -3,6 +3,7 @@ from typing import Optional, List, Union
 from maya import cmds
 from maya.api import OpenMaya as om
 
+from ...core.exceptions import CmdoPlugException
 from ...core.cmdoTyping import CmdoObject
 from ...core.plugsLib import Plug
 from ...core.abstract import dagLib
@@ -356,6 +357,25 @@ class Transform(dagLib.DAGNode):
 
         elif isinstance(value, str) and value in self.rotateOrderList:
             self['rotateOrder'] = self.rotateOrderList.index(value)
+
+    def resetMatrixToOffsetParentMatrix(self, raiseOnError: bool = False) -> None:
+        """
+        Set the offset parent matrix with the current matrix and
+        reset the current matrix
+
+        :param raiseOnError: bool, raise exception if the offsetParentMatrix is connected
+
+        """
+        if raiseOnError and (self['offsetParentMatrix'].isDestination or self['offsetParentMatrix'].isLocked):
+            raise CmdoPlugException(
+                f'Cannot reset matrix to offsetParentMatrix for {self}, '
+                'the offsetParentMatrix plug is already connected'
+            )
+
+        self['offsetParentMatrix'] = self['matrix'].value
+        self.translate = [0, 0, 0]
+        self.rotate = [0, 0, 0]
+        self.scale = [1, 1, 1]
 
 
 NodeRegistry()[Transform.nodeType()] = Transform
