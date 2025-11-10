@@ -487,13 +487,13 @@ class Graph(om.MSelectionList):
         """
         Add each element of a list to the current graph
 
-        :param value: the list to extend with
+        :param value: CmdoList, the list to extend with
 
         :return: Graph, the current extended list
         """
         objects = list(map(self.__filterObjects, value))
 
-        result = cmds.ls(*objects) or []
+        result = cmds.ls(*objects) if objects else []
         for item in result:
             self.add(item)
 
