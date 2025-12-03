@@ -399,7 +399,8 @@ class Node(om.MObject):
 
         cmds.addAttr(self.name, **kwargs)
 
-        return self[attrName]
+        # we need to do this because of compounds attributes
+        return self[attrName] if self.hasAttr(attrName) else None
 
     # TODO: implement delete attribute function
     def deleteAttr(self, attribute: Union[str, Plug]) -> None:
