@@ -358,11 +358,30 @@ class Transform(dagLib.DAGNode):
         elif isinstance(value, str) and value in self.rotateOrderList:
             self['rotateOrder'] = self.rotateOrderList.index(value)
 
-    def resetMatrixToOffsetParentMatrix(self, raiseOnError: bool = False) -> None:
+    @property
+    def transformationMatrix(self) -> om.MTransformationMatrix:
         """
-        Set the offset parent matrix with the current matrix and
+        Return the world Matrix as a MTransformationMatrix
+
+        :return: om.MTransformationMatrix, the world transformation matrix
+        """
+        return om.MTransformationMatrix(self.worldMatrix)
+
+    def resetTransforms(self):
+        """
+
+        :return:
+        """
+        self.translate = [0, 0, 0]
+        self.rotate = [0, 0, 0]
+        self.scale = [1, 1, 1]
+
+    def resetMatrixToOffsetParentMatrix(self, world: bool = False, raiseOnError: bool = False) -> None:
+        """
+        Set the offset parent matrix with the current worldMatrix and
         reset the current matrix
 
+        :param world: bool, if resetting should happen in world space or local matrix space
         :param raiseOnError: bool, raise exception if the offsetParentMatrix is connected
 
         """
@@ -372,10 +391,8 @@ class Transform(dagLib.DAGNode):
                 'the offsetParentMatrix plug is already connected'
             )
 
-        self['offsetParentMatrix'] = self['matrix'].value
-        self.translate = [0, 0, 0]
-        self.rotate = [0, 0, 0]
-        self.scale = [1, 1, 1]
+        self['offsetParentMatrix'] = self['worldMatrix'].value if world else self['matrix'].value
+        self.resetTransforms()
 
 
 NodeRegistry()[Transform.nodeType()] = Transform

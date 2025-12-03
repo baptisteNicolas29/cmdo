@@ -144,6 +144,86 @@ class AimMatrix(dgLib.DGNode):
         self['primaryMode'] = value
 
     @property
+    def primaryTargetVector(self) -> List[float]:
+        """
+        Get the primaryTargetVector value
+
+        :return: List[float] the primaryTargetVector value
+        """
+
+        return self['primaryTargetVector'].value
+
+    @primaryTargetVector.setter
+    def primaryTargetVector(self, value: Union[List[float], om.MPlug]) -> None:
+        """
+        Set the primaryTargetVector value
+
+        :param value: List[float], the primaryTargetVector value
+        """
+
+        self['primaryTargetVector'] = value
+
+    @property
+    def primaryTargetVectorX(self) -> float:
+        """
+        Get the primaryTargetVectorX value
+
+        :return: List[float] the primaryTargetVectorX value
+        """
+
+        return self['primaryTargetVectorX'].asFloat()
+
+    @primaryTargetVectorX.setter
+    def primaryTargetVectorX(self, value: Union[List[float], om.MPlug]) -> None:
+        """
+        Set the primaryTargetVectorX value
+
+        :param value: List[float], the primaryTargetVectorX value
+        """
+
+        self['primaryTargetVectorX'] = value
+
+    @property
+    def primaryTargetVectorY(self) -> float:
+        """
+        Get the primaryTargetVectorY value
+
+        :return: List[float] the primaryTargetVectorY value
+        """
+
+        return self['primaryTargetVectorY'].asFloat()
+
+    @primaryTargetVectorY.setter
+    def primaryTargetVectorY(self, value: Union[List[float], om.MPlug]) -> None:
+        """
+        Set the primaryTargetVectorY value
+
+        :param value: List[float], the primaryTargetVectorY value
+        """
+
+        self['primaryTargetVectorY'] = value
+
+    @property
+    def primaryTargetVectorZ(self) -> float:
+        """
+        Get the primaryTargetVectorZ value
+
+        :return: List[float] the primaryTargetVectorZ value
+        """
+
+        return self['primaryTargetVectorZ'].asFloat()
+
+    @primaryTargetVectorZ.setter
+    def primaryTargetVectorZ(self, value: Union[List[float], om.MPlug]) -> None:
+        """
+        Set the primaryTargetVectorZ value
+
+        :param value: List[float], the primaryTargetVectorZ value
+        """
+
+        self['primaryTargetVectorZ'] = value
+
+    @property
     def primaryTargetMatrix(self) -> List[float]:
 
         """
@@ -274,6 +354,86 @@ class AimMatrix(dgLib.DGNode):
         """
 
         self['secondaryMode'] = value
+
+    @property
+    def secondaryTargetVector(self) -> List[float]:
+        """
+        Get the secondaryTargetVector value
+
+        :return: List[float] the secondaryTargetVector value
+        """
+
+        return self['secondaryTargetVector'].value
+
+    @secondaryTargetVector.setter
+    def secondaryTargetVector(self, value: Union[List[float], om.MPlug]) -> None:
+        """
+        Set the secondaryTargetVector value
+
+        :param value: List[float], the secondaryTargetVector value
+        """
+
+        self['secondaryTargetVector'] = value
+
+    @property
+    def secondaryTargetVectorX(self) -> float:
+        """
+        Get the secondaryTargetVectorX value
+
+        :return: List[float] the secondaryTargetVectorX value
+        """
+
+        return self['secondaryTargetVectorX'].asFloat()
+
+    @secondaryTargetVectorX.setter
+    def secondaryTargetVectorX(self, value: Union[List[float], om.MPlug]) -> None:
+        """
+        Set the secondaryTargetVectorX value
+
+        :param value: List[float], the secondaryTargetVectorX value
+        """
+
+        self['secondaryTargetVectorX'] = value
+
+    @property
+    def secondaryTargetVectorY(self) -> float:
+        """
+        Get the secondaryTargetVectorY value
+
+        :return: List[float] the secondaryTargetVectorY value
+        """
+
+        return self['secondaryTargetVectorY'].asFloat()
+
+    @secondaryTargetVectorY.setter
+    def secondaryTargetVectorY(self, value: Union[List[float], om.MPlug]) -> None:
+        """
+        Set the secondaryTargetVectorY value
+
+        :param value: List[float], the secondaryTargetVectorY value
+        """
+
+        self['secondaryTargetVectorY'] = value
+
+    @property
+    def secondaryTargetVectorZ(self) -> float:
+        """
+        Get the secondaryTargetVectorZ value
+
+        :return: List[float] the secondaryTargetVectorZ value
+        """
+
+        return self['secondaryTargetVectorZ'].asFloat()
+
+    @secondaryTargetVectorZ.setter
+    def secondaryTargetVectorZ(self, value: Union[List[float], om.MPlug]) -> None:
+        """
+        Set the secondaryTargetVectorZ value
+
+        :param value: List[float], the secondaryTargetVectorZ value
+        """
+
+        self['secondaryTargetVectorZ'] = value
 
     @property
     def secondaryTargetMatrix(self) -> List[float]:

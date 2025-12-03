@@ -382,6 +382,35 @@ class Node(om.MObject):
 
         return self.dependencyNode.hasAttribute(attr)
 
+    def addAttr(self, *args, **kwargs) -> Plug:
+        """
+        Re-implementation of cmds.addAttr
+
+        :param kwargs: Dict[str, Any], a dict of {attrName: attrValue} pairs
+
+        :return: Plug, the newly created attribute plug
+        """
+
+        attrName = (
+            args[0] if args else
+            kwargs.get("longName") or kwargs.get("ln") or
+            kwargs.get("shortName") or kwargs.get("sn")
+        )
+
+        cmds.addAttr(self.name, **kwargs)
+
+        return self[attrName]
+
+    # TODO: implement delete attribute function
+    def deleteAttr(self, attribute: Union[str, Plug]) -> None:
+        """
+        Re-implementation of cmds.deleteAttr
+
+        :param attribute: Union[str, Plug], the attribute to delete
+
+        """
+        raise NotImplementedError('deleteAttr not implemented')
+
     @property
     def connectedPlugs(self) -> PlugArray:
         """
@@ -440,7 +469,7 @@ class Node(om.MObject):
             if not plug.isSource:
                 continue
 
-            connection_dict[plug] = plug.source()
+            connection_dict[plug] = plug.destinations()
 
         return connection_dict
 

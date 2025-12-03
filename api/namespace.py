@@ -73,34 +73,34 @@ def getAllUnusedNamespaces(recursive: bool = True) -> List[str]:
 
 def addNamespace(
     namespace: str,
-    parent_namespace: str = None,
-    set_current: bool = False
+    parentNamespace: str = None,
+    setCurrent: bool = False
 ) -> None:
     """
     Create the given namespace to the scene
 
     :param namespace: str, the name of the new namespace to create
-    :param parent_namespace: str, the name of the parent namespace if any
-    :param set_current: whether to set the new namespace as current
+    :param parentNamespace: str, the name of the parent namespace if any
+    :param setCurrent: whether to set the new namespace as current
     """
 
     if namespaceExists(namespace):
         return
 
-    om.MNamespace.addNamespace(namespace, parent=parent_namespace)
+    om.MNamespace.addNamespace(namespace, parent=parentNamespace)
 
-    if set_current:
+    if setCurrent:
         om.MNamespace.setCurrentNamespace(namespace)
 
 
-def removeNamespace(namespace: str, delete_content: bool = False) -> None:
+def removeNamespace(namespace: str, deleteContent: bool = False) -> None:
     """
     Delete the given namespace and move content to root
 
     :param namespace: str, the namespace to remove
-    :param delete_content: bool, delete namespace content with namespace
-
+    :param deleteContent: bool, delete namespace content with namespace
     """
+
     if not om.MNamespace.namespaceExists(namespace):
         cmds.warning(
             f'Namespace does not exist : {namespace}'
@@ -108,7 +108,7 @@ def removeNamespace(namespace: str, delete_content: bool = False) -> None:
         )
         return
 
-    if delete_content:
+    if deleteContent:
         m_objects = getObjectsFromNamespace(namespace)
 
         for m_object in m_objects:

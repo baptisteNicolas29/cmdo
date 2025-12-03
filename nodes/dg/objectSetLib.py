@@ -80,6 +80,9 @@ class ObjectSet(DGNode):
         self.addMembers(nodes)
         return self
 
+    def __len__(self):
+        return self.mfnSet.getMembers(False).length()
+
     @property
     def size(self) -> int:
         """
@@ -88,7 +91,7 @@ class ObjectSet(DGNode):
         :return: int, the number of members
         """
 
-        return self.mfnSet.getMembers(False).length()
+        return len(self)
 
     @property
     def members(self) -> Graph:
@@ -156,14 +159,18 @@ class ObjectSet(DGNode):
 
         cmds.sets(*Graph.ls(value).getSelectionStrings(), anyMember=self.name)
 
-    def addMembers(self, value: Union[List, str, om.MObject, Graph]) -> None:
+    def addMembers(self, value: Union[List, str, om.MObject, Graph], force=False) -> None:
         """
         Add members to set
 
         :param value: Union[List, str, om.MObject], the name of the node(s)
+        :param force: bool, force the addition of the members to this set
         """
+        if not force:
+            cmds.sets(*Graph.ls(value).getSelectionStrings(), addElement=self.name)
 
-        cmds.sets(*Graph.ls(value).getSelectionStrings(), addElement=self.name)
+        else:
+            cmds.sets(*Graph.ls(value).getSelectionStrings(), forceElement=self.name)
 
     def removeMembers(self, value: Union[List, str, om.MObject]):
         """
@@ -179,6 +186,10 @@ class ShadingEngine(ObjectSet):
 
     _NODE_TYPE = "shadingEngine"
     _API_TYPE = om.MFn.kShadingEngine
+
+    def assignToMesh(self, value):
+        cmds.sets(value, edit=True, forceElement=self.name)
+
 
 
 NodeRegistry()[ObjectSet.nodeType()] = ObjectSet
