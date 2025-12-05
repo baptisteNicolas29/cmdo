@@ -40,8 +40,9 @@ class Plug(om.MPlug):
 
                 child = self.child(idx)
                 afn = om.MFnAttribute(child.attribute())
+                aliasName = child.partialName(includeNodeName=False, useAlias=True)
 
-                if value in [afn.name, afn.shortName]:
+                if value in [afn.name, afn.shortName, aliasName]:
                     return self.__class__(child)
 
         # implement int input can be array if attribute

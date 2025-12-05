@@ -156,6 +156,9 @@ class Node(om.MObject):
 
         :return: Plug, the wanted plug
         """
+        attr = self.dependencyNode.findAlias(plug)
+        if not attr.isNull():
+            return Plug(self, attr)
 
         return Plug(self.dependencyNode.findPlug(plug, True))
 
