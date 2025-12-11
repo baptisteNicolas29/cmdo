@@ -101,35 +101,6 @@ class Graph(om.MSelectionList):
         result = cmds.ls(*objects, long=True, **kwargs) or []
         return cls.__createList(result)
 
-    def createNode(self, typ: str, name: str = None, parent: CmdoObject = None, **kwargs) -> om.MObject:
-        """
-        This function allow node creation from Graph
-        created node will be added to graph
-
-        :param typ: str, type of the created node
-        :param name: str, name of the created node
-        :param parent: nodeLib.Node, parent of the created node
-
-        :return: subclass of nodeLib.Node created Node
-        """
-
-        try:
-            if parent:
-                obj = om.MFnDagNode().create(typ, name=name, parent=parent)
-                defaultObject = dagLib.DAGNode
-            else:
-                obj = om.MFnDependencyNode().create(typ, name)
-                defaultObject = dgLib.DGNode
-
-        except RuntimeError as re:
-            raise CmdoException(
-                f'Could not create node: Node(type={typ}, {name=}, {parent=})'
-            ) from re
-
-        self.add(obj)
-
-        return self.__initRegistered(obj, default=defaultObject, **kwargs)
-
     @classmethod
     def delete(cls, *args, **kwargs) -> None:
         """
@@ -330,17 +301,6 @@ class Graph(om.MSelectionList):
         return parents
 
     @classmethod
-    def select(cls, *args, **kwargs):
-        """
-        Reimplementation of the cmds.select command
-
-        """
-
-        objects = list(map(cls.__filterObjects, args))
-
-        cmds.select(*objects, **kwargs)
-
-    @classmethod
     def duplicate(cls, *args, **kwargs):
         """
         Reimplementation of the cmds.duplicate command
@@ -355,6 +315,43 @@ class Graph(om.MSelectionList):
         result = cmds.duplicate(*objects, fullPath=True, **kwargs)
 
         return cls.__createList(result)
+
+    def createNode(self, typ: str, name: str = None, parent: CmdoObject = None, **kwargs) -> om.MObject:
+        """
+        This function allow node creation from Graph
+        created node will be added to graph
+
+        :param typ: str, type of the created node
+        :param name: str, name of the created node
+        :param parent: nodeLib.Node, parent of the created node
+
+        :return: subclass of nodeLib.Node created Node
+        """
+
+        try:
+            if parent:
+                obj = om.MFnDagNode().create(typ, name=name, parent=parent)
+                defaultObject = dagLib.DAGNode
+            else:
+                obj = om.MFnDependencyNode().create(typ, name)
+                defaultObject = dgLib.DGNode
+
+        except RuntimeError as re:
+            raise CmdoException(
+                f'Could not create node: Node(type={typ}, {name=}, {parent=})'
+            ) from re
+
+        self.add(obj)
+
+        return self.__initRegistered(obj, default=defaultObject, **kwargs)
+
+    def select(self, **kwargs):
+        """
+        Select the nodes in the current graph
+
+        """
+
+        cmds.select(self, **kwargs)
 
     def setMembersAttributeValue(self, attr: Union[str, plugsLib.Plug], value: Any, raiseOnError: bool = False) -> None:
         """

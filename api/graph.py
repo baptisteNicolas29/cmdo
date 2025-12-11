@@ -17,7 +17,7 @@ __all__: List[str] = [
     'createNode',
     # 'delete',
     'emptyGraph',
-    'select',
+    # 'select',
     'duplicate',
     'duplicateWithInternalConnections',
 ]
@@ -108,14 +108,14 @@ def createNode(nodeType: str, name: str = None, parent: om.MObject = None, **kwa
 #     Graph.delete(*args, **kwargs)
 
 
-def select(*args, **kwargs) -> None:
-    """
-    Select nodes
-
-    Imitate the maya.cmds.select command
-    """
-
-    Graph.select(*args, **kwargs)
+# def select(*args, **kwargs) -> None:
+#     """
+#     Select nodes
+#
+#     Imitate the maya.cmds.select command
+#     """
+#
+#     Graph.select(*args, **kwargs)
 
 
 def duplicate(*args, **kwargs) -> Graph:

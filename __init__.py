@@ -60,8 +60,7 @@ def bigReload(moduleToReload: str = __PACKAGE_NAME) -> None:
     """
     Reload the given package from name and all its children modules
 
-    Args:
-        moduleToReload: str, the name of the package/module to reload
+    :param moduleToReload: str, the name of the package/module to reload
 
     """
 
@@ -123,8 +122,8 @@ def getCmdoNodeDict() -> Dict:
      always default to cmdo.core.abstract.nodelib.Node because the type
      is shared across all plugin shapes
 
-    Returns:
-         dict: {id: data} multiple pairs per node representing different ids
+    :return: dict: {id: data} multiple pairs per node representing different ids
+
     """
     from .core import nodeRegistry
 
@@ -135,8 +134,7 @@ def getDebugMode() -> bool:
     """
     Get the debug mode state
 
-    Returns:
-        bool: the current state of the debug mode
+    :return: bool: the current state of the debug mode
 
     """
 
@@ -157,10 +155,9 @@ def setDebugMode(state: bool = False, maxCharCount: int = __CMDS_DEBUG_MAX_PRINT
     !!!! WARNING !!!! - prints on every use of maya.cmds functions
      Should not be use outside of dev contexts
 
-    Args:
-        state: bool, the state of the debug mode to set
-        maxCharCount: int, the maximum number of string characters per print
-         if set to -1, will print all characters given
+    :param state: bool, the state of the debug mode to set
+    :param maxCharCount: int, the maximum number of string characters per print
+        if set to -1, will print all characters given
 
     """
 
@@ -187,9 +184,8 @@ def debugContext(state: bool = False, maxCharCount: int = __CMDS_DEBUG_MAX_PRINT
     !!!! WARNING !!!! - prints on every use of maya.cmds functions
      Should not be use outside of dev contexts
 
-    Args:
-        state: bool, the state of the debug mode to set
-        maxCharCount: int, the maximum number of string characters per print
+    :param state: bool, the state of the debug mode to set
+    :param maxCharCount: int, the maximum number of string characters per print
 
     """
 
@@ -221,8 +217,7 @@ def __debugPrint(message: str) -> None:
     This is mostly used to print wrapped functions from
      the maya.cmds & maya.mel modules
 
-    Args:
-        message: str, the message to print
+    :param message: str, the message to print
 
     """
 
@@ -230,7 +225,7 @@ def __debugPrint(message: str) -> None:
     if not __CMDS_DEBUG_PRINT:
         return
 
-    if __CMDS_DEBUG_MAX_PRINT == -1 and len(message) > __CMDS_DEBUG_MAX_PRINT:
+    if __CMDS_DEBUG_MAX_PRINT != -1 and len(message) > __CMDS_DEBUG_MAX_PRINT:
         message = f'{message[:__CMDS_DEBUG_MAX_PRINT]}....'
 
     print(message)
@@ -262,12 +257,12 @@ def __addMayaCmdsToCmdoNamespace() -> None:
         """
         Convert the given arguments to str for maya.cmds if possible
 
-        Args:
-            args: Any, arguments to convert to str for maya.cmds
+        :param args: Any, arguments to convert to str for maya.cmds
 
-        Returns:
-            List[str]: the converted arguments for maya.cmds
+        :return: List[str]: the converted arguments for maya.cmds
+
         """
+
         argsList = list(args)
 
         for i, arg in enumerate(argsList):
@@ -291,12 +286,12 @@ def __addMayaCmdsToCmdoNamespace() -> None:
         """
         Convert the maya.cmds function output to cmdo types if possible
 
-        Args:
-            result: Any, the result of maya.cmds function
+        :param result: Any, the result of maya.cmds function
 
-        Returns:
-            cmdoResultType: cmdo object or base result if conversion failed
+        :return: cmdoResultType: cmdo object or base result if conversion failed
+
         """
+
         if isinstance(result, str) and cmds.objExists(result):
             return ls(result)[0]
 
@@ -309,11 +304,10 @@ def __addMayaCmdsToCmdoNamespace() -> None:
         """
         A function wrapper to enable easier interaction with cmdo
 
-        Arguments:
-            func: callable, a function to wrap
+        :param func: callable, a function to wrap
 
-        Returns:
-             callable: a wrapped function
+        :return: callable, a wrapped function
+
         """
         def wrap(*args, **kwargs) -> Any:
             """
@@ -342,11 +336,10 @@ def __addMayaCmdsToCmdoNamespace() -> None:
         """
         Filter cmds functions by key
 
-        Args:
-            key: a pair containing function name and function object
+        :param key: a pair containing function name and function object
 
-        Returns:
-            bool: the filtered result
+        :return: bool: the filtered result
+
         """
 
         return (
