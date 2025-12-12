@@ -11,12 +11,15 @@ from maya.api import OpenMaya as om
 
 __all__: List[str] = [
     'CmdoObject',
+    'CmdoPlug',
     'CmdoList',
     'CmdoNumber'
 ]
 
 
 CmdoObject = Type[Union[str, om.MObject]]
+
+CmdoPlug = Type[Union[str | om.MPlug]]
 
 CmdoNumber = Type[Union[int, float]]
 
