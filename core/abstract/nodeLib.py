@@ -156,6 +156,18 @@ class Node(om.MObject):
 
         :return: Plug, the wanted plug
         """
+        attr = self.dependencyNode.findAlias(plug)
+        if not attr.isNull():
+            plg = Plug(self, attr)
+
+            if plug == plg.partialName(includeNodeName=False, useAlias=True):
+                return plg
+
+            elif plg.isArray:
+                for idx in range(plg.numElements()):
+                    child = plg.elementByLogicalIndex(idx)
+                    if child.partialName(includeNodeName=False, useAlias=True) == plug:
+                        return child
 
         return Plug(self.dependencyNode.findPlug(plug, True))
 
