@@ -6,6 +6,7 @@ from maya.api import OpenMaya as om
 from ..plugsLib import Plug
 from .dgLib import DGNode
 from ..nodeRegistry import NodeRegistry
+from ..exceptions import CmdoException
 
 
 class DAGNode(DGNode):
@@ -193,6 +194,9 @@ class DAGNode(DGNode):
 
         elif parent is None:
             parent = om.MObject.kNullObj
+
+        elif parent == self:
+            raise CmdoException(f'Cannot parent node to itself -> {self.name}')
 
         om.MDagModifier().reparentNode(self, parent).doIt()
 
