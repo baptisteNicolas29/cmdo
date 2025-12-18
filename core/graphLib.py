@@ -102,18 +102,6 @@ class Graph(om.MSelectionList):
         return cls.__createList(result)
 
     @classmethod
-    def delete(cls, *args, **kwargs) -> None:
-        """
-        Reimplementation of the delete command
-
-        """
-
-        objsToDelete = cls.ls(*args, **kwargs)
-        for obj in objsToDelete:
-
-            om.MGlobal.deleteNode(obj)
-
-    @classmethod
     def listHistory(cls, *args, **kwargs) -> 'Graph':
         """
         This function is a reimplementation of the cmds.listHistory function
@@ -352,6 +340,14 @@ class Graph(om.MSelectionList):
         """
 
         cmds.select(self, **kwargs)
+
+    def delete(self, **kwargs):
+        """
+        Delete the nodes in the current graph
+
+        """
+
+        cmds.delete(self, **kwargs)
 
     def setMembersAttributeValue(self, attr: Union[str, plugsLib.Plug], value: Any, raiseOnError: bool = False) -> None:
         """
