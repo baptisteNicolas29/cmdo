@@ -174,6 +174,27 @@ class Curve(dagLib.DAGNode):
 
         self['lineWidth'] = width
 
+    @property
+    def intermediateObject(self) -> bool:
+
+        """
+        Get the intermediateObject value
+
+        :return: bool, the intermediateObject value
+        """
+
+        return self['intermediateObject'].asBool()
+
+    @intermediateObject.setter
+    def intermediateObject(self, value: Union[bool, int]) -> None:
+        """
+        Set the intermediateObject value
+
+        :param value: Union[bool, int], the intermediateObject value
+        """
+
+        self['intermediateObject'] = value
+
     def update(self) -> None:
 
         """

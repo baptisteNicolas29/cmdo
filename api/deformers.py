@@ -4,6 +4,8 @@ from maya import cmds
 from maya.api import OpenMaya as om
 
 from . import history, hierarchy, graph
+from ..core.cmdoTyping import CmdoObject
+from ..core.exceptions import CmdoException
 
 
 __all__: List[str] = [
@@ -29,31 +31,31 @@ def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Uni
 
     # Check inputs
     if not cmds.objExists(source):
-        raise Exception(f'Source object "{source}" does not exist!')
+        raise CmdoException(f'Source object "{source}" does not exist!')
 
     if not cmds.objExists(destination):
-        raise Exception(f'Destination object "{destination}" does not exist!')
+        raise CmdoException(f'Destination object "{destination}" does not exist!')
 
     # Get source skinCluster
-    source_skin = history.getDeformers(source, types="skinCluster")
+    sourceSkin = history.getDeformers(source, types="skinCluster")
     if cmds.objectType(destination) == 'mesh':
         destination = cmds.listRelatives(destination, parent=True)[0]
 
-    if not source_skin:
+    if not sourceSkin:
         cmds.warning(f'Could not find skinCluster on {source = }')
         return None
 
-    source_skin = source_skin[0]
+    sourceSkin = sourceSkin[0]
 
     # Check destination skinCluster
-    destination_skin = history.getDeformers(destination, types="skinCluster")
-    if destination_skin:
-        destination_skin = destination_skin[0]
+    destinationSkin = history.getDeformers(destination, types="skinCluster")
+    if destinationSkin:
+        destinationSkin = destinationSkin[0]
 
     # Build destination skinCluster
-    if not destination_skin:
-        source_influences = cmds.skinCluster(source_skin.name, query=True, influence=True)
-        destination_prefix = destination.split(':')[-1].split('|')[-1]
+    if not destinationSkin:
+        sourceInfluences = cmds.skinCluster(sourceSkin.name, query=True, influence=True)
+        destinationPrefix = destination.split(':')[-1].split('|')[-1]
 
         # since we include hidden selection
         # we make sure we don't skin orig shapes
@@ -63,19 +65,19 @@ def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Uni
             if not cmds.getAttr(f'{dest}.intermediateObject')
         ][0]
 
-        destination_skin = cmds.skinCluster(
-            source_influences,
+        destinationSkin = cmds.skinCluster(
+            sourceInfluences,
             destination,
             toSelectedBones=True,
             removeUnusedInfluence=False,
             includeHiddenSelections=True,
-            name=f'{destination_prefix}_skinCluster'
+            name=f'{destinationPrefix}_skinCluster'
         )[0]
 
     # Copy skin weights
     cmds.copySkinWeights(
-        sourceSkin=str(source_skin),
-        destinationSkin=str(destination_skin),
+        sourceSkin=str(sourceSkin),
+        destinationSkin=str(destinationSkin),
         surfaceAssociation=kwargs.pop('surfaceAssociation', 'closestPoint'),
         influenceAssociation=kwargs.pop('influenceAssociation', 'name'),
         noMirror=True,
@@ -84,7 +86,7 @@ def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Uni
     )
 
     # Return result
-    return graph.ls(destination_skin)[0]
+    return graph.ls(destinationSkin)[0]
 
 
 def resetSkin(nodes: List[str]) -> None:

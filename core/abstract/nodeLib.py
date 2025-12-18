@@ -422,7 +422,12 @@ class Node(om.MObject):
         :param attribute: Union[str, Plug], the attribute to delete
 
         """
-        raise NotImplementedError('deleteAttr not implemented')
+
+        if not self.hasAttr(attribute):
+            return
+
+        mPlugObj = self[attribute].attribute()
+        self.dependencyNode.removeAttribute(mPlugObj)
 
     @property
     def connectedPlugs(self) -> PlugArray:
