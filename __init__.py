@@ -94,6 +94,7 @@ from . import nodes
 from . import api
 
 from .core.cmdoTyping import *
+from .core.openMayaTypes import *
 from .core.exceptions import *
 
 from .api import *

@@ -152,6 +152,15 @@ class Curve(dagLib.DAGNode):
         return any(weight != 1.0 for weight in self.knots)
 
     @property
+    def length(self) -> float:
+        """
+        Get the length of the curve
+
+        :return: float, the length of the curve
+        """
+        return self.mfnNurbsCurve.length(tolerance=0.001)
+
+    @property
     def lineWidth(self) -> float:
 
         """
