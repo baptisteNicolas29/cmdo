@@ -72,6 +72,10 @@ class Plug(om.MPlug):
 
         return selList.getSelectionStrings()[0]
 
+    def __repr__(self) -> str:
+
+        return f"Graph.ls('{str(self)}')[0]"
+
     def __iadd__(self, other: Any):
 
         if isinstance(other, self.__class__):
