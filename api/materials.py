@@ -1,7 +1,8 @@
-from typing import List, Dict, Union, Set, Tuple
+from typing import List, Dict, Union, Set, Tuple, Any
 
 import os
 import random
+from pathlib import Path
 
 from maya import cmds
 from ..core.graphLib import Graph
@@ -10,6 +11,8 @@ from ..core.cmdoTyping import *
 
 __all__: List[str] = [
     'MAYA_DEFAULT_MAT',
+    'MAYA_LEGACY_DEFAULT_MAT',
+    'getMaterialColorAttribute',
     'assignDefaultShader',
     'getRandomColor',
     'getSceneMaterials',
@@ -26,7 +29,31 @@ __all__: List[str] = [
 ]
 
 
-MAYA_DEFAULT_MAT = 'lambert1'
+MAYA_DEFAULT_MAT = 'standardSurface1'
+MAYA_LEGACY_DEFAULT_MAT = 'lambert1'
+
+materialColorAttributes = {
+    'standardSurface': 'baseColor',
+    'lambert': 'color',
+    'blinn': 'color',
+    'phong': 'color',
+    'phongE': 'color',
+    'usdPreviewSurface': 'diffuseColor',
+}
+
+
+def getMaterialColorAttribute(material: str) -> str:
+    """
+    Get the name of the color attribute for the given material.
+
+    :param material: str, the material to get the color attribute for
+
+    :return: str, the name of the color attribute
+    """
+
+    # baseColor is the attribute of standardSurface material and
+    # should be considered the default material type
+    return materialColorAttributes.get(cmds.nodeType(material), 'baseColor')
 
 
 def assignDefaultShader(nodes: CmdoList) -> None:
@@ -41,26 +68,26 @@ def assignDefaultShader(nodes: CmdoList) -> None:
     initSG.addMembers(nodes)
 
 
-def getRandomColor(min_value: CmdoNumber = 0, max_value: CmdoNumber = 100) -> List[float]:
+def getRandomColor(minValue: int = 0, maxValue: int = 100) -> List[float]:
     """
     Generate a random double3 color range for color purposes
 
-    :param min_value: CmdoNumber, the minimum value for the color range
-    :param max_value: CmdoNumber, the maximum value for the color range
+    :param minValue: CmdoNumber, the minimum value for the color range
+    :param maxValue: CmdoNumber, the maximum value for the color range
 
     :return: list[float], a list of double3 to be used for color ranged 0-1
     """
 
-    if not 0 <= min_value <= max_value <= 100:
+    if not 0 <= minValue <= maxValue <= 100:
         raise Exception(
             f'Min/Max values for color range need to be between 0 and 100 got,'
-            f'{min_value = } - {max_value = }'
+            f'{minValue = } - {maxValue = }'
         )
 
     return [
-        random.randrange(min_value, max_value, 1) / 100,
-        random.randrange(min_value, max_value, 1) / 100,
-        random.randrange(min_value, max_value, 1) / 100
+        random.randrange(minValue, maxValue, 1) / 100,
+        random.randrange(minValue, maxValue, 1) / 100,
+        random.randrange(minValue, maxValue, 1) / 100
     ]
 
 
@@ -70,6 +97,7 @@ def getSceneMaterials() -> List:
 
     :return: List, list of all the materials in the current scene
     """
+
     return cmds.ls(materials=True)
 
 
@@ -117,9 +145,7 @@ def getObjectsFromShaders(materials: List[str] = None) -> Dict[str, List[str]]:
 
     objects = {}
     for material in materials:
-        objs = getObjectsFromShader(material)
-        if objs:
-            objects[material] = objs
+        objects[material] = getObjectsFromShader(material) or []
 
     return objects
 
@@ -136,76 +162,86 @@ def getObjectsFromShader(material: str = None) -> List[str]:
     return cmds.hyperShade(material, listGeometries=True)
 
 
-def getBoundingBoxTiles(bb):
+def getBoundingBoxTiles(boundingBox2D:  Tuple[Tuple[float, float], Tuple[float, float]]) -> List[Tuple[int, int]]:
     """
     Get the bounding box of the UDIM tile
 
-    :param bb:
+    :param boundingBox2D: Tuple[Tuple[float, float], Tuple[float, float]], the UV coordinates of the 2D bounding box
 
-    :return: list[int], the bounding box of the UDIM tile
+    :return: List[Tuple[int, int]], the bounding box of the UDIM tile
     """
 
-    u_minmax, v_minmax = bb
+    uMinMax, vMinMax = boundingBox2D
 
-    if u_minmax[1] != int(u_minmax[1]):
-        u_minmax = (u_minmax[0], u_minmax[1] + 1)
+    if uMinMax[1] != int(uMinMax[1]):
+        uMinMax = (uMinMax[0], uMinMax[1] + 1)
 
-    if v_minmax[1] != int(v_minmax[1]):
-        v_minmax = (v_minmax[0], v_minmax[1] + 1)
+    if vMinMax[1] != int(vMinMax[1]):
+        vMinMax = (vMinMax[0], vMinMax[1] + 1)
 
     tiles = []
-    for v in range(*map(int, v_minmax)):
-        for u in range(*map(int, u_minmax)):
+    for v in range(*map(int, vMinMax)):
+        for u in range(*map(int, uMinMax)):
             tiles.append((u, v))
 
+    # tiles -> [(uTileIndex, vTileIndex)], List[Tuple[int, int]]
     return tiles
 
 
-def getUVUdimTiles(mesh, uv_set=None):
+def getUVUdimTiles(mesh: str, uvSet: str = None) -> Dict[Any, Any]:
     """
     Return the UVs and UV tiles used by the UVs of the input mesh.
 
-    :param mesh: str, Mesh node name
-    :param uv_set: str, the UV set to sample. When not provided the current UV map is used.
+    :param mesh: str, mesh node name
+    :param uvSet: str, the UV set to sample. When not provided the current UV map is used.
 
-    :return: dict[shell_id: dict[uvs: shell uv indices, tile: tile (u, v)]
+    :return: dict[shellID: dict[uvs: shell uv indices, tile: tile (u, v)]
     """
 
     kwargs = {}
-    if uv_set is not None:
-        kwargs["uvSetName"] = uv_set
+    if uvSet is not None:
+        kwargs["uvSetName"] = uvSet
 
     # bb = cmds.polyEvaluate(mesh, boundingBox2d=True, **kwargs)
     # tiles = getBoundingBoxTiles(bb)
 
     # Get the bounding box per UV shell
-    uv_shells = cmds.polyEvaluate(mesh, uvShell=True, **kwargs)
+    uvShells = cmds.polyEvaluate(mesh, uvShell=True, **kwargs)
 
-    uv_data = {}
-    for i in range(uv_shells):
+    uvData = {}
+    for i in range(uvShells):
         key = str(i)
-        uv_data[key] = {}
+        uvData[key] = {}
 
-        shell_uvs = cmds.polyEvaluate(mesh, uvsInShell=i, **kwargs)
-        shell_bb = cmds.polyEvaluate(
-            shell_uvs,
+        shellUVs = cmds.polyEvaluate(mesh, uvsInShell=i, **kwargs)
+        shellBBx = cmds.polyEvaluate(
+            shellUVs,
             boundingBoxComponent2d=True,
             **kwargs
         )
-        shell_tiles = getBoundingBoxTiles(shell_bb)
+        shellTiles = getBoundingBoxTiles(shellBBx)
 
-        uv_data[key]['uvs'] = shell_uvs
-        uv_data[key]['tile'] = shell_tiles[0] if shell_tiles else None
+        uvData[key]['uvs'] = shellUVs
+        uvData[key]['tile'] = shellTiles[0] if shellTiles else None
 
-    return uv_data
+    # uvData -> {shellIndex: {uvVertexIndices, tileCoordinates}}
+    #  Dict[str: Dict[str: List[str], str: Tuple[int, int]]]
+
+    return uvData
 
 
-def uvToUdim(tile):
+def uvToUdim(tile: Tuple[int, int]) -> int:
     """
-    UV tile to UDIM number.
+    UV tile to UDIM number
 
-    Note that an input integer of 2 means it's
-    the UV tile range using 2.0-3.0.
+    exemples:
+        uv tile (0, 0) -> 1001
+        uv tile (0, 1) -> 1011
+        uv tile (1, 1) -> 1012
+
+    Note that an input integer of 2 means it's the UV tile range using 2.0-3.0.
+
+    :param tile: Tuple[int, int], the UV tile origin coordinates
 
     :return: int: UDIM tile number
     """
@@ -214,32 +250,32 @@ def uvToUdim(tile):
     return 1001 + u + 10 * v
 
 
-def assignMaterial(faces, material_name, mat_type='lambert'):
+def assignMaterial(faces: Union[str, List[str]], materialName: str, materialType: str = 'standardSurface') -> Tuple[str, str]:
     """
     Assign a material, creates the material if it does not exist
 
-    :param faces:
-    :param material_name:
-    :param mat_type:
+    :param faces: Union[str, List[str]], the mesh or mesh components to assign the material to
+    :param materialName: str, the name of the material to assign or create
+    :param materialType: str, the type of the material to create if needed
 
-    :return:
-
+    :return: Tuple[str, str], the material name and the shading engine attached to it
     """
-    material = cmds.ls(material_name, type=mat_type)
-    shading_engine = None
+
+    material = cmds.ls(materialName, type=materialType)
+    shadingEngine = None
     if not material:
-        material_name = cmds.shadingNode(
-            mat_type, name=material_name, asShader=True
+        material = cmds.shadingNode(
+            materialType, name=materialName, asShader=True
         )
-        shading_engine = cmds.sets(
-            name=f'{material_name}SG',
+        shadingEngine = cmds.sets(
+            name=f'{material}SG',
             empty=True,
             renderable=True,
             noSurfaceShader=True
         )
         cmds.connectAttr(
-            f'{material_name}.outColor',
-            f'{shading_engine}.surfaceShader'
+            f'{material}.outColor',
+            f'{shadingEngine}.surfaceShader'
         )
 
     else:
@@ -250,64 +286,66 @@ def assignMaterial(faces, material_name, mat_type='lambert'):
         for connection in connected:
 
             if cmds.objectType(connection) == 'shadingEngine':
-                shading_engine = connection.split('.')[0]
+                shadingEngine = connection.split('.')[0]
                 break
 
-    if shading_engine is not None:
-        cmds.sets(faces, edit=True, forceElement=shading_engine)
+    if shadingEngine is not None:
+        cmds.sets(faces, edit=True, forceElement=shadingEngine)
+
+    return material, shadingEngine
 
 
-def assignMaterialPerUdim(geometry_objs, exceptions=None):
+def assignMaterialPerUdim(geometryObjects: List[str], exceptions: List[str] = None) -> List[str]:
     """
     Assignes a new material per UDIM associated with the object
 
-    :param geometry_objs:
-    :param exceptions:
+    :param geometryObjects: the object to assign materials per UDIM to
+    :param exceptions: list of meshes to skip
 
-    :return:
+    :return: List[str], the list of new materials
     """
 
     materials = []
 
-    if not isinstance(geometry_objs, CmdoList):
-        geometry_objs = [geometry_objs]
+    if not isinstance(geometryObjects, CmdoList):
+        geometryObjects = [geometryObjects]
 
-    for mesh in geometry_objs:
+    for mesh in geometryObjects:
 
-        if any(exception in mesh for exception in (exceptions or [])):
+        if any(exception in mesh for exception in list(exceptions or [])):
             continue
 
         cmds.hyperShade(assign='lambert1', geometries=f'{mesh}.f[*]')
 
-        uv_data = getUVUdimTiles(mesh)
-        if not uv_data:
+        uvData = getUVUdimTiles(mesh)
+        if not uvData:
             cmds.warning(f'{mesh = } has no UV data, skipping ...')
 
-        for shell_id, data in uv_data.items():
+        for shellID, data in uvData.items():
             if data['uvs'] is None or data["tile"] is None:
                 continue
 
             faces = cmds.polyListComponentConversion(data['uvs'], toFace=True)
 
-            udim_name = uvToUdim(data["tile"])
-            material_name = f'UDIM_{udim_name}'
-            assignMaterial(faces, material_name)
+            udimName = uvToUdim(data["tile"])
+            materialName = f'UDIM_{udimName}'
+            assignMaterial(faces, materialName)
 
-            materials.append(material_name)
+            materials.append(materialName)
 
     return materials
 
 
-def assign_diffuse_to_material(material_list, diffuse_path):
+def assignDiffuseToMaterial(material: str, diffusePath: Union[Path, str]) -> None:
     """
-    Assign the diffuse texture to a list of materials given a folder path
+    Assign the diffuse texture to a list of materials given a file path
 
-    :param material_list:
-    :param diffuse_path:
+    :param material: the material to assign a diffuse file to
+    :param diffusePath: the path to the diffuse file
 
-    :return:
     """
-    connect_dict = {
+
+    connectDict = {
         'coverage': 'coverage',
         'translateFrame': 'translateFrame',
         'rotateFrame': 'rotateFrame',
@@ -328,42 +366,39 @@ def assign_diffuse_to_material(material_list, diffuse_path):
         'outUvFilterSize': 'uvFilterSize'
     }
 
-    if not isinstance(material_list, CmdoList):
-        material_list = [material_list]
+    diffuseName = Path(diffusePath).name
 
-    diffuse_name = os.path.basename(diffuse_path).split('.')[0]
-    for material in material_list:
+    colorFile = cmds.shadingNode(
+        'file',
+        asTexture=True,
+        isColorManaged=True,
+        name=f'{diffuseName}_color'
+    )
 
-        color_file = cmds.shadingNode(
-            'file',
-            asTexture=True,
-            isColorManaged=True,
-            name=f'{diffuse_name}_color'
-        )
+    cmds.setAttr(
+        f'{colorFile}.fileTextureName',
+        str(diffusePath),
+        type='string'
+    )
 
-        cmds.setAttr(
-            f'{color_file}.fileTextureName',
-            str(diffuse_path),
-            type='string'
-        )
+    placeTextureNode = cmds.shadingNode(
+        'place2dTexture',
+        asUtility=True,
+        name=f'{diffuseName}_place2D'
+    )
 
-        place_tex = cmds.shadingNode(
-            'place2dTexture',
-            asUtility=True,
-            name=f'{diffuse_name}_place2D'
-        )
-
-        # Reconnect attribute between the place2dtexture and the color file
-        for source, destination in connect_dict.items():
-            cmds.connectAttr(
-                f'{place_tex}.{source}',
-                f'{color_file}.{destination}'
-            )
-
+    # Reconnect attribute between the place2dtexture and the color file
+    for source, destination in connectDict.items():
         cmds.connectAttr(
-            f'{color_file}.outColor',
-            f'{material}.color', force=True
+            f'{placeTextureNode}.{source}',
+            f'{colorFile}.{destination}'
         )
+
+    diffuseAttrName = getMaterialColorAttribute(material)
+    cmds.connectAttr(
+        f'{colorFile}.outColor',
+        f'{material}.{diffuseAttrName}', force=True
+    )
 
 
 def addMaterialWithColor(
@@ -391,31 +426,22 @@ def addMaterialWithColor(
     materials = getShadersFromObjects(objects)
 
     for obj in objects:
-        object_materials = materials.get(obj)
+        objectMaterials = materials.get(obj)
 
-        for mat in reversed(object_materials):
+        for mat in reversed(objectMaterials):
             if cmds.nodeType(mat) == 'GLSLShader':
-                object_materials.remove(mat)
+                objectMaterials.remove(mat)
 
-        if not object_materials or MAYA_DEFAULT_MAT in object_materials:
+        if not objectMaterials or MAYA_DEFAULT_MAT in objectMaterials:
             print(f'Assigning material and color to: {objects}')
             materials[obj] = assignMaterialPerUdim(obj)
 
-    material_set = []
+    materialSet = []
     for mat in materials.values():
-        material_set.extend(mat)
+        materialSet.extend(mat)
 
-    for mat in set(material_set):
+    for mat in set(materialSet):
+        colorAttr = getMaterialColorAttribute(mat)
 
-        match cmds.nodeType(mat):
-            case 'lambert':
-                color_attr = 'color'
-            case 'standardSurface':
-                color_attr = 'baseColor'
-            case 'usdPreviewSurface':
-                color_attr = 'diffuseColor'
-            case _:
-                color_attr = 'color'
-
-        if not cmds.connectionInfo(f'{mat}.{color_attr}', isDestination=True):
-            cmds.setAttr(f'{mat}.{color_attr}', *color, type='double3')
+        if not cmds.connectionInfo(f'{mat}.{colorAttr}', isDestination=True):
+            cmds.setAttr(f'{mat}.{colorAttr}', *color, type='double3')
