@@ -173,7 +173,12 @@ class Container(dgLib.DGNode):
 
         :return: dgLib.DGNode, an instance of a subclass of Node
         """
-        return Graph.ls(self.mfnContainer.getRootTransform())[0]
+        rootTransform = self.mfnContainer.getRootTransform()
+
+        if rootTransform.isNull():
+            return None
+        
+        return Graph.ls(rootTransform)[0]
 
     @rootTransform.setter
     def rootTransform(self, node: Union[str, dgLib.DGNode, None]) -> None:
