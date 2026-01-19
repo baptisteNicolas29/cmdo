@@ -1,4 +1,4 @@
-from typing import List, Optional, Union, Any, Tuple, Dict, Callable
+from typing import List, Optional, Union, Any, Tuple, Dict, Callable, Type
 
 from maya import cmds
 from maya.api import OpenMaya as om
@@ -568,3 +568,6 @@ class Node(om.MObject):
         refNode = om.MSelectionList().add(refNodeName).getDependNode(0)
 
         return NodeRegistry().get(refNodeName)(refNode)
+
+
+NodeType = Type[Union[str, Node]]
