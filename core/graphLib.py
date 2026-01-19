@@ -288,21 +288,21 @@ class Graph(om.MSelectionList):
 
         return parents
 
-    @classmethod
-    def duplicate(cls, *args, **kwargs):
-        """
-        Reimplementation of the cmds.duplicate command
-
-        """
-        objects = list(map(cls.__filterObjects, args))
-
-        # remove the fullPath flag if it is present in kwargs
-        if kwargs.get(key := 'fullPath') or kwargs.get(key := 'f'):
-            kwargs.pop(key)
-
-        result = cmds.duplicate(*objects, fullPath=True, **kwargs)
-
-        return cls.__createList(result)
+    # @classmethod
+    # def duplicate(cls, *args, **kwargs):
+    #     """
+    #     Reimplementation of the cmds.duplicate command
+    #
+    #     """
+    #     objects = list(map(cls.__filterObjects, args))
+    #
+    #     # remove the fullPath flag if it is present in kwargs
+    #     if kwargs.get(key := 'fullPath') or kwargs.get(key := 'f'):
+    #         kwargs.pop(key)
+    #
+    #     result = cmds.duplicate(*objects, fullPath=True, **kwargs)
+    #
+    #     return cls.__createList(result)
 
     def createNode(self, typ: str, name: str = None, parent: CmdoObject = None, **kwargs) -> om.MObject:
         """

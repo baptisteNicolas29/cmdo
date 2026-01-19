@@ -520,3 +520,5 @@ class DAGNode(DGNode):
 
         self['displayLocalAxis'] = value
 
+
+DAGType = Type[Union[str, DAGNode]]

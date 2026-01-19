@@ -16,6 +16,8 @@ __all__: List[str] = [
     'MQuaternion',
     'MEulerRotation',
     'MAngle',
+    'MSelectionList',
+    'MBoundingBox'
 ]
 
 MSpace = om.MSpace
@@ -42,3 +44,6 @@ MEulerRotation = om.MEulerRotation
 
 MAngle = om.MAngle
 
+MSelectionList = om.MSelectionList
+
+MBoundingBox = om.MBoundingBox
