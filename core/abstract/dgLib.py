@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional, Union, Type
 
 from maya.api import OpenMaya as om
 
@@ -36,3 +36,6 @@ class DGNode(nodeLib.Node):
         """
 
         self['isHistoricallyInteresting'] = value
+
+
+DGType = Type[Union[str, DGNode]]

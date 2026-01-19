@@ -18,7 +18,7 @@ __all__: List[str] = [
     # 'delete',
     'emptyGraph',
     # 'select',
-    'duplicate',
+    # 'duplicate',
     'duplicateWithInternalConnections',
 ]
 
@@ -118,17 +118,17 @@ def createNode(nodeType: str, name: str = None, parent: om.MObject = None, **kwa
 #     Graph.select(*args, **kwargs)
 
 
-def duplicate(*args, **kwargs) -> Graph:
-    """
-    Duplicate nodes
-
-    Imitate the maya.cmds.duplicate command
-
-    :return: Graph: a list of duplicated objects
-    """
-
-    return Graph.duplicate(*args, **kwargs)
-
+# def duplicate(*args, **kwargs) -> Graph:
+#     """
+#     Duplicate nodes
+#
+#     Imitate the maya.cmds.duplicate command
+#
+#     :return: Graph: a list of duplicated objects
+#     """
+#
+#     return Graph.duplicate(*args, **kwargs)
+#
 
 def duplicateWithInternalConnections(graph: CmdoList, inputConnections: bool = False) -> Union[Graph, None]:
     """

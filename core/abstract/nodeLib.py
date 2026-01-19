@@ -1,10 +1,10 @@
-from typing import List, Optional, Union, Any, Tuple, Dict, Callable
+from typing import List, Optional, Union, Any, Tuple, Dict, Callable, Type
 
 from maya import cmds
 from maya.api import OpenMaya as om
 
 from ..cmdoTyping import CmdoObject
-from ..exceptions import CmdoException
+from ..exceptions import CmdoException, CmdoPlugException
 from ..plugsLib import Plug, PlugArray
 
 
@@ -169,7 +169,13 @@ class Node(om.MObject):
                     if child.partialName(includeNodeName=False, useAlias=True) == plug:
                         return child
 
-        return Plug(self.dependencyNode.findPlug(plug, True))
+        try:
+            return Plug(self.dependencyNode.findPlug(plug, True))
+
+        except Exception:
+            raise CmdoPlugException(
+                f'{self}.__getitem__({plug}) -> {self}.{plug} not found'
+            )
 
     def __setitem__(self, plug, value) -> None:
         """
@@ -562,3 +568,6 @@ class Node(om.MObject):
         refNode = om.MSelectionList().add(refNodeName).getDependNode(0)
 
         return NodeRegistry().get(refNodeName)(refNode)
+
+
+NodeType = Type[Union[str, Node]]

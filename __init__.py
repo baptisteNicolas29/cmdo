@@ -97,6 +97,11 @@ from .core.cmdoTyping import *
 from .core.openMayaTypes import *
 from .core.exceptions import *
 
+# Basic cmdo node Typing
+from .core.abstract.nodeLib import NodeType
+from .core.abstract.dgLib import DGType
+from .core.abstract.dagLib import DAGType
+
 from .api import *
 from .api.hierarchy import *
 from .api.history import *
