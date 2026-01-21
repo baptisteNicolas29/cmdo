@@ -70,11 +70,6 @@ for namespace in unusedNamespaces:
 
 ```
 
-### mathLib :
-!Warning: This library will be remove once all maths use `maya.api.OpenMaya`    
-`cmdo.mathLib` is a library implementing some math operations and returning either python or `maya.api.OpenMaya` objects
-
-
 ---
 # Extensions :
 ### node extensions :

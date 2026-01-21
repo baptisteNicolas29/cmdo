@@ -3,13 +3,14 @@ from typing import Optional, Union, List, Dict, Set, Type
 from maya import cmds
 from maya.api import OpenMaya as om, OpenMayaAnim as oma
 
-from ...core.abstract import dgLib
+from ...core import NodeType, DAGType, DGType
+from ...core.abstract import geometryFilterLib
 from ...core.nodeRegistry import NodeRegistry
 from ...core.graphLib import Graph
 
 
 # TODO: Still some work to do here
-class SkinCluster(dgLib.DGNode):
+class SkinCluster(geometryFilterLib.GeometryFilter):
 
     _NODE_TYPE = "skinCluster"
     _API_TYPE = om.MFn.kSkinClusterFilter
@@ -24,7 +25,7 @@ class SkinCluster(dgLib.DGNode):
         return oma.MFnSkinCluster(self)
 
     @property
-    def bindPose(self) -> om.MObject:
+    def bindPose(self) -> DGType:
 
         """
         Get the DagPose node connected to bindPose attr
@@ -33,7 +34,7 @@ class SkinCluster(dgLib.DGNode):
         """
         
         dagPoseNode = self['bindPose'].source().node()
-        return NodeRegistry().get(dagPoseNode)(dagPoseNode)
+        return Graph(dagPoseNode)[0] if dagPoseNode else None
 
     @property
     def influenceObjects(self) -> Graph:
@@ -50,30 +51,22 @@ class SkinCluster(dgLib.DGNode):
         return graph
 
     @property
-    def deformedMesh(self) -> om.MObject:
-        """
-        Get the deformed mesh objects
-
-        :return: om.MObject, the deformed mesh object
-        """
-        # TODO: we assume one mesh per skinCluster for now
-        obj = self['outputGeometry'][0].destinations()[0].node()
-        return NodeRegistry().get(obj)(obj)
-
-    @property
-    def weights(self) -> om.MDoubleArray:
+    def weights(self) -> Dict[DAGType, om.MDoubleArray]:
 
         """
         Get the list of current weights
 
-        :return: om.MDoubleArray, the list of current weights
+        :return: Dict[DAGType, om.MDoubleArray],
+            the list of current weights for each output mesh
         """
+        weightDict = {}
+        for deformedMesh in self.outputGeometry:
+            vtxList = f'{deformedMesh.name}.vtx[*]'
+            compMObj = om.MGlobal.getSelectionListByName(vtxList).getComponent(0)[1]
+            meshDagPath = deformedMesh.dagPath
+            weightDict[deformedMesh] = self.mfnSkinCluster.getWeights(meshDagPath, compMObj)
 
-        vtxList = f'{self.deformedMesh.name}.vtx[*]'
-        compMObj = om.MGlobal.getSelectionListByName(vtxList).getComponent(0)[1]
-        meshDagPath = self.deformedMesh.dagPath
-
-        return self.mfnSkinCluster.getWeights(meshDagPath, compMObj)
+        return weightDict
 #
 #     @weights.setter
 #     def weights(
