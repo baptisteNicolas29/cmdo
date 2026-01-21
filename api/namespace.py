@@ -36,7 +36,7 @@ def namespaceExists(namespace: str) -> bool:
     return om.MNamespace.namespaceExists(namespace)
 
 
-def getAllNamespaces(recursive: bool = True) -> List[str]:
+def getAllNamespaces(recursive: bool = True, ) -> List[str]:
     """
     Gets all the namespaces in the scene and sorts the in ascending order
     (child -> parent). Remove non-deletable namespaces from the list

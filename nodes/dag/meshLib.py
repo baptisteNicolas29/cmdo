@@ -12,6 +12,9 @@ class Mesh(dagLib.DAGNode):
     _NODE_TYPE = "mesh"
     _API_TYPE = om.MFn.kMesh
 
+    vertexType = 'vtx'
+    edgeType = 'e'
+
     @property
     def mfnMesh(self) -> om.MFnMesh:
 

@@ -22,6 +22,8 @@ __all__: List[str] = [
 
 MSpace = om.MSpace
 
+MObject = om.MObject
+
 MObjectArray = om.MObjectArray
 
 MMatrix = om.MMatrix
@@ -47,3 +49,5 @@ MAngle = om.MAngle
 MSelectionList = om.MSelectionList
 
 MBoundingBox = om.MBoundingBox
+
+MFnDependencyNode = om.MFnDependencyNode

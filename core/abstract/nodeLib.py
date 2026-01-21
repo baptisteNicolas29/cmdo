@@ -1,4 +1,4 @@
-from typing import List, Optional, Union, Any, Tuple, Dict, Callable, Type
+from typing import List, Optional, Union, Any, Tuple, Dict, Type
 
 from maya import cmds
 from maya.api import OpenMaya as om

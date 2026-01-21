@@ -2,13 +2,13 @@ from typing import List, Union
 
 from maya.api import OpenMaya as om
 
-from ...core.abstract import dgLib
+from ...core.abstract import geometryFilterLib
 from ...core.nodeRegistry import NodeRegistry
 
 
 # TODO: I don t want to do it yet...
 #  it's such an annoying deformer in maya commands
-class BlendShape(dgLib.DGNode):
+class BlendShape(geometryFilterLib.GeometryFilter):
 
     _NODE_TYPE = 'blendShape'
     _API_TYPE = om.MFn.kBlendShape
