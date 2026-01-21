@@ -2,6 +2,7 @@ from typing import Dict, Tuple, Any, Callable, List, Generator, Union, Type
 from collections import OrderedDict
 
 import sys
+from types import ModuleType, FunctionType
 import inspect
 import importlib
 import contextlib
@@ -22,7 +23,6 @@ from maya.api import (
 
 
 __all__: List[str] = [
-    'mathLib',
     'core',
     'nodes',
     'api',
@@ -44,7 +44,8 @@ __all__: List[str] = [
 # current package name
 __PACKAGE_NAME: str = __name__
 
-# True/False, print maya.cmds function's name/input/output/result
+# __CMDS_DEBUG_PRINT: True/False,
+#   whether to print maya.cmds function's name/input/output/result
 # If __CMDS_DEBUG_MAX_PRINT is set to -1,
 #  the debug print will not trim the message
 #  this can become a problem when printing very large data sets (eg: meshes)
@@ -56,13 +57,20 @@ __CMDS_DEBUG_MAX_PRINT: int = 1000
 
 # bigReload is a debugging function and
 #  should not be used in production
-def bigReload(moduleToReload: str = __PACKAGE_NAME) -> None:
+def bigReload(moduleToReload: Union[str, FunctionType, ModuleType] = __PACKAGE_NAME, feedback: bool = False) -> None:
     """
     Reload the given package from name and all its children modules
 
     :param moduleToReload: str, the name of the package/module to reload
+    :param feedback: bool, whether to print which module is reloaded
 
     """
+
+    if isinstance(moduleToReload, FunctionType):
+        moduleToReload = moduleToReload.__module__.split('.')[0]
+
+    elif isinstance(moduleToReload, ModuleType):
+        moduleToReload = moduleToReload.__package__.split('.')[0]
 
     cmds.warning(
         'cmdo.bigReload is a debugging function and '
@@ -74,10 +82,12 @@ def bigReload(moduleToReload: str = __PACKAGE_NAME) -> None:
             toReload.append(module)
 
     for module in toReload:
+        print(f'Import/Reload : {module.__name__:-<40} - {str(module)}') if feedback else None
         importlib.import_module(module.__name__)
         importlib.reload(module)
 
     parentModule = sys.modules.get(moduleToReload)
+    print(f'Import/Reload : {parentModule.__name__:-<40} - {str(parentModule)}') if feedback else None
     importlib.import_module(parentModule.__name__)
     importlib.reload(parentModule)
 
@@ -88,7 +98,6 @@ def bigReload(moduleToReload: str = __PACKAGE_NAME) -> None:
 #     Order of import is important to avoid circular imports
 #     or partial import errors, until we get lazy imports
 
-from . import mathLib  # deprecate when all maths use maya.api.OpenMaya types
 from . import core
 from . import nodes
 from . import api
@@ -158,12 +167,12 @@ def setDebugMode(state: bool = False, maxCharCount: int = __CMDS_DEBUG_MAX_PRINT
     """
     Set the debug mode on/off
 
-    !!!! WARNING !!!! - prints on every use of maya.cmds functions
+    !!!! WARNING !!!! - state=True, prints on every use of maya.cmds functions
      Should not be use outside of dev contexts
 
     :param state: bool, the state of the debug mode to set
     :param maxCharCount: int, the maximum number of string characters per print
-        if set to -1, will print all characters given
+        if set to -1, will print all given characters
 
     """
 
