@@ -152,11 +152,13 @@ class Node(om.MObject):
 
     def get(self, plug, defaultValue: Any = None) -> Union[Plug, Any]:
         """
-        Safe __getitem__
+        Safe __getitem__, retrieve a plug from the current node
 
-        :param plug:
-        :param defaultValue:
-        :return:
+        :param plug: Plug, the plug to retrieve
+        :param defaultValue: Any, the default value to return if the plug is not found
+
+        :return:Union[Plug, Any], the plug or an empty Plug or the defaultValue
+
         """
         if self.hasAttr(plug):
             return self[plug]
