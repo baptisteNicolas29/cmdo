@@ -150,9 +150,24 @@ class Node(om.MObject):
     #     # Raise the native python error if nothing was found
     #     return super().__getattr__(attr)
 
-    def __getitem__(self, plug) -> Plug:
+    def get(self, plug, defaultValue: Any = None) -> Union[Plug, Any]:
+        """
+        Safe __getitem__
+
+        :param plug:
+        :param defaultValue:
+        :return:
+        """
+        if self.hasAttr(plug):
+            return self[plug]
+
+        return Plug() if defaultValue is None else defaultValue
+
+    def __getitem__(self, plug: Union[str, Plug]) -> Plug:
         """
         Convenient implementations to retrieve a plug from the current node
+
+        :param plug: Plug, the plug to retrieve
 
         :return: Plug, the wanted plug
         """
