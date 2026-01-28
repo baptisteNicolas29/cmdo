@@ -24,6 +24,21 @@ class Plug(om.MPlug):
         self._HASH = self.node().hash + hash(self.name())
         return self._HASH
 
+    def __iter__(self, *args, **kwargs) -> om.MPlug:
+
+        if self.multi:
+            for index in range(self.numElements()):
+                result = self.__class__(self.elementByPhysicalIndex(index))
+                yield result
+
+        elif self.isCompound:
+            for index in range(self.numChildren()):
+                result = self.__class__(self.child(index))
+                yield result
+
+        else:
+            raise TypeError(f"{self} is not an iterable plug")
+
     def __getitem__(self, value: Union[int, str]) -> 'Plug':
         """
         __getitem__ implementation
@@ -50,6 +65,8 @@ class Plug(om.MPlug):
         # is array else try to compute child plug
         elif isinstance(value, int):
             if self.multi:
+                result = self.__class__(self.elementByLogicalIndex(value))
+
                 return self.__class__(self.elementByLogicalIndex(value))
 
             elif self.isCompound:
@@ -153,7 +170,6 @@ class Plug(om.MPlug):
         :return: om.MPlug, found plug or null plug if not found
 
         """
-
         mfn = self.node().dependencyNode
 
         if self.node().dependencyNode.hasAttribute(keyname):
