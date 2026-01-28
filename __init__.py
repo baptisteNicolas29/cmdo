@@ -66,6 +66,12 @@ def bigReload(moduleToReload: Union[str, FunctionType, ModuleType] = __PACKAGE_N
 
     """
 
+    if isinstance(moduleToReload, FunctionType):
+        moduleToReload = moduleToReload.__module__.split('.')[0]
+
+    elif isinstance(moduleToReload, ModuleType):
+        moduleToReload = moduleToReload.__package__.split('.')[0]
+
     cmds.warning(
         'cmdo.bigReload is a debugging function and '
         'should not be used in production'
