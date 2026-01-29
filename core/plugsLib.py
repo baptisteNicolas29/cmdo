@@ -11,6 +11,8 @@ from .exceptions import CmdoPlugException
 
 class Plug(om.MPlug):
 
+    _DEFAULT = object()
+
     def __hash__(self) -> int:
         """
         Make hash using long name and uuid to try having a unique hash
@@ -65,14 +67,46 @@ class Plug(om.MPlug):
         # is array else try to compute child plug
         elif isinstance(value, int):
             if self.multi:
-                result = self.__class__(self.elementByLogicalIndex(value))
-
                 return self.__class__(self.elementByLogicalIndex(value))
 
             elif self.isCompound:
                 return self.__class__(self.child(value))
 
-        return self.__class__()
+        elif isinstance(value, slice):
+            plugs = []
+
+            if self.multi:
+
+                byLogical = False
+                if self.numElements() == 0 and (value.stop is None):
+                    raise CmdoPlugException(f"{self} is a zero size array, stop slice needed")
+
+                start, stop, step = value.indices(self.numElements())
+                if not self.numElements():
+                    byLogical = True
+                    stop = value.stop
+
+                for index in range(start, stop, step):
+                    plug = None
+                    if byLogical:
+
+                        plug = self.__class__(self.elementByLogicalIndex(index))
+                        plugs.append(plug)
+
+                    else:
+                        plugs.append(self.__class__(self.elementByPhysicalIndex(index)))
+
+            elif self.isCompound:
+                start, stop, step = value.indices(self.numChildren())
+                for index in range(self.numChildren()):
+                    plugs.append(self.__class__(self.child(index)))
+
+            return plugs
+
+        else:
+            raise KeyError(f"plug getItem need str or int got {type(value)}")
+
+        raise AttributeError(f'{self} does not have attribute {value}')
 
     def __setitem__(self, key: str, value: Any) -> None:
 
@@ -84,12 +118,19 @@ class Plug(om.MPlug):
             self[key].set(value)
 
     def __str__(self) -> str:
+
+        if self.isNull:
+            return str()
+
         selList = om.MSelectionList()
         selList.add(self)
 
         return selList.getSelectionStrings()[0]
 
     def __repr__(self) -> str:
+
+        if self.isNull:
+            return f'{self.__class__.__name__}()'
 
         return f"Graph.ls('{str(self)}')[0]"
 
@@ -161,7 +202,8 @@ class Plug(om.MPlug):
         elif self.source() == other:
             other.disconnect(self)
 
-    def get(self, keyname: Union[int, str]) -> 'Plug':
+    def get(self, key: Union[int, str], default=_DEFAULT) -> 'Plug':
+        # TODO: implement key on this method like python will do it
         """
         Get the wanted plug from its name plug.get("childPlug")
 
@@ -170,12 +212,19 @@ class Plug(om.MPlug):
         :return: om.MPlug, found plug or null plug if not found
 
         """
-        mfn = self.node().dependencyNode
 
-        if self.node().dependencyNode.hasAttribute(keyname):
-            return self[keyname]
+        # handle case where source is a null Node
+        if self.isNull:
+            return self.__class__() if default is self._DEFAULT else default
 
-        raise AttributeError(f'{mfn.name()} does not have attribute {keyname}')
+        try:
+            return self[key]
+
+        except:
+            if default is self._DEFAULT:
+                return self.__class__()
+
+            return default
 
     def set(self, *value: Any) -> None:
 
