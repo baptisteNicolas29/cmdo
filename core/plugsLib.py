@@ -84,6 +84,9 @@ class Plug(om.MPlug):
                 start, stop, step = value.indices(self.numElements())
                 if not self.numElements():
                     byLogical = True
+
+                    if value.stop <= 0:
+                        raise CmdoPlugException(f"{self} has zero lenght no negative stop")
                     stop = value.stop
 
                 for index in range(start, stop, step):
@@ -97,8 +100,13 @@ class Plug(om.MPlug):
                         plugs.append(self.__class__(self.elementByPhysicalIndex(index)))
 
             elif self.isCompound:
+                if value.stop:
+                    if not -self.numChildren() - 1 < value.stop < self.numChildren():
+                        raise IndexError(f"stop value: {value.stop} out of range {self} size")
+
                 start, stop, step = value.indices(self.numChildren())
-                for index in range(self.numChildren()):
+
+                for index in range(start, stop, step):
                     plugs.append(self.__class__(self.child(index)))
 
             return plugs
