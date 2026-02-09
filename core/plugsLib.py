@@ -28,6 +28,9 @@ class Plug(om.MPlug):
 
     def __iter__(self, *args, **kwargs) -> om.MPlug:
 
+        if self.isNull:
+            return
+
         if self.multi:
             for index in range(self.numElements()):
                 result = self.__class__(self.elementByPhysicalIndex(index))
