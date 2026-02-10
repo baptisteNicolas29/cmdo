@@ -3,8 +3,7 @@ from typing import Optional, List, Union
 from maya import cmds
 from maya.api import OpenMaya as om
 
-from ...core.exceptions import CmdoPlugException
-from ...core.cmdoTyping import CmdoObject
+from ...core.exceptions import CmdoPlugException, CmdoException
 from ...core.plugsLib import Plug
 from ...core.abstract import dagLib
 from ...core.nodeRegistry import NodeRegistry
@@ -14,6 +13,16 @@ class Transform(dagLib.DAGNode):
 
     _NODE_TYPE = "transform"
     _API_TYPE = om.MFn.kTransform
+
+    @property
+    def spaceList(self) -> List[str]:
+        """
+        Get the list of available Spaces
+
+        :return: List,[str]: the list of available Spaces
+        """
+
+        return ['local', 'relative', 'world', 'custom']
 
     @property
     def mfnTransform(self) -> om.MFnTransform:
@@ -376,15 +385,18 @@ class Transform(dagLib.DAGNode):
         self.rotate = [0, 0, 0]
         self.scale = [1, 1, 1]
 
-    def resetMatrixToOffsetParentMatrix(self, world: bool = False, raiseOnError: bool = False) -> None:
+    def resetMatrixToOffsetParentMatrix(self, space: Union[str, int] = 'local', customSpace: om.MMatrix = '',  raiseOnError: bool = False) -> None:
         """
         Set the offset parent matrix with the current worldMatrix and
         reset the current matrix
 
-        :param world: bool, if resetting in world space or relative space
-        :param raiseOnError: bool, raise if the offsetParentMatrix is connected
+        :param space: Union[str, int], in which space to reset transform and store in offsetParentMatrix.
+            Potential choices are: ['local', 'relative', 'world', 'custom']
+        :param customSpace: om.MMatrix, the custom matrix to reset relative to
+        :param raiseOnError: bool, raise if the offsetParentMatrix is connected or locked
 
         """
+
         isdDest = self['offsetParentMatrix'].isDestination
         isLocked = self['offsetParentMatrix'].isLocked
 
@@ -394,11 +406,43 @@ class Transform(dagLib.DAGNode):
                 'the offsetParentMatrix plug is already connected'
             )
 
-        self['offsetParentMatrix'] = (
-            self['worldMatrix'].value
-            if world
-            else self['worldMatrix'].value * self.parentMatrix.inverse()
-        )
+        if isinstance(space, int):
+            space = self.spaceList[space]
+
+        match space:
+            case 'local':
+                self['offsetParentMatrix'] = self['matrix'].value
+
+            case 'relative':
+                self['offsetParentMatrix'] = (
+                        self.worldMatrix * self.parentMatrix.inverse()
+                )
+
+            case 'world':
+                self['offsetParentMatrix'] = self.worldMatrix
+
+            case 'custom':
+                if not isinstance(customSpace, (om.MMatrix, list)):
+                    raise CmdoException(
+                        f'Custom space needs to be of type '
+                        f'maya.api.OpenMaya.MMatrix. '
+                        f'Got: {repr(customSpace)}'
+                    )
+
+                if isinstance(customSpace, list):
+
+                    if len(customSpace) != 16:
+                        raise CmdoException(
+                            f'Custom space list needs to be of length 16. '
+                            f'Got: {len(customSpace)}'
+                        )
+
+                    customSpace = om.MMatrix(customSpace)
+
+                self['offsetParentMatrix'] = (
+                        self.worldMatrix * customSpace.inverse()
+                )
+
         self.resetTransforms()
 
 
