@@ -5,6 +5,8 @@ from . import singletonMetaclass
 from . import fileInfoLib
 from . import plugsLib
 
+from .plugsLib import PlugType, PlugArrayType
+
 # import classes to access like: cmdo.core.Node
 # note: most of the time we don't want to init these classes directly
 from .abstract.nodeLib import Node, NodeType
@@ -12,4 +14,4 @@ from .abstract.dgLib import DGNode, DGType
 from .abstract.dagLib import DAGNode, DAGType
 
 # import classes to access like: cmdo.core.Graph
-from .graphLib import Graph
+from .graphLib import Graph, GraphType

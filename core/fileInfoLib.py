@@ -15,6 +15,7 @@ class MayaFileInfo(dict, metaclass=SingletonMeta):
     """
     The class is a singleton and only one should exist in cmdo
 
+    This class manages mayaFileInfo in an easier way
     """
 
     @property

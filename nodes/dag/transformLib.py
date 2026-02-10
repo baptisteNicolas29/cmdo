@@ -381,17 +381,24 @@ class Transform(dagLib.DAGNode):
         Set the offset parent matrix with the current worldMatrix and
         reset the current matrix
 
-        :param world: bool, if resetting should happen in world space or local matrix space
-        :param raiseOnError: bool, raise exception if the offsetParentMatrix is connected
+        :param world: bool, if resetting in world space or relative space
+        :param raiseOnError: bool, raise if the offsetParentMatrix is connected
 
         """
-        if raiseOnError and (self['offsetParentMatrix'].isDestination or self['offsetParentMatrix'].isLocked):
+        isdDest = self['offsetParentMatrix'].isDestination
+        isLocked = self['offsetParentMatrix'].isLocked
+
+        if raiseOnError and (isdDest or isLocked):
             raise CmdoPlugException(
                 f'Cannot reset matrix to offsetParentMatrix for {self}, '
                 'the offsetParentMatrix plug is already connected'
             )
 
-        self['offsetParentMatrix'] = self['worldMatrix'].value if world else self['matrix'].value
+        self['offsetParentMatrix'] = (
+            self['worldMatrix'].value
+            if world
+            else self['worldMatrix'].value * self.parentMatrix.inverse()
+        )
         self.resetTransforms()
 
 

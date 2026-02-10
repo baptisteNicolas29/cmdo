@@ -166,11 +166,12 @@ class ObjectSet(DGNode):
         :param value: Union[List, str, om.MObject], the name of the node(s)
         :param force: bool, force the addition of the members to this set
         """
+        value = value if isinstance(value, (Graph, list)) else [value]
         if not force:
-            cmds.sets(*Graph.ls(value).getSelectionStrings(), addElement=self.name)
+            cmds.sets(*Graph.ls(*value).getSelectionStrings(), addElement=self.name)
 
         else:
-            cmds.sets(*Graph.ls(value).getSelectionStrings(), forceElement=self.name)
+            cmds.sets(*Graph.ls(*value).getSelectionStrings(), forceElement=self.name)
 
     def removeMembers(self, value: Union[List, str, om.MObject]):
         """
@@ -189,7 +190,6 @@ class ShadingEngine(ObjectSet):
 
     def assignToMesh(self, value):
         cmds.sets(value, edit=True, forceElement=self.name)
-
 
 
 NodeRegistry()[ObjectSet.nodeType()] = ObjectSet

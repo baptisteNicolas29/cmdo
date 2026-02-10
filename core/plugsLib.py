@@ -1,5 +1,4 @@
-import re
-from typing import Union, Any
+from typing import Union, Any, Type, Tuple
 
 import math
 
@@ -10,8 +9,22 @@ from .exceptions import CmdoPlugException
 
 
 class Plug(om.MPlug):
-
     _DEFAULT = object()
+
+    def __init__(self, *args: Union[str, Tuple[om.MObject, om.MObject], 'Plug']) -> None:
+        """
+        Initialize an instance of Plug
+
+        :param args: Union[str, Tuple[om.MObject, om.MObject], 'Plug'],
+            Plug can be initialised with a str (nodeName.plugName),
+            two MObjects (node, attribute) or a Plug (Plug/MPlug object)
+        """
+
+        if isinstance(args[0], str):
+            selList = om.MSelectionList()
+            args = [selList.add(args).getPlug(0)]
+
+        super().__init__(*args)
 
     def __hash__(self) -> int:
         """
@@ -52,7 +65,7 @@ class Plug(om.MPlug):
 
         :param value: Union[int, str], name or index of the child or multi attribute
 
-        :return: om.MPlug, retrieve the asked plug
+        :return: om.MPlug, retrieve the plug
         """
 
         # implement str input (for child version)
@@ -121,7 +134,9 @@ class Plug(om.MPlug):
 
     def __setitem__(self, key: str, value: Any) -> None:
 
-        # TODO: need to fix this part with the * operator
+        # TODO: need to fix this part with the * operator, some types of
+        #  attributes don t play well with this implementation
+
         if isinstance(value, (tuple, list)):
             self[key].set(*value)
 
@@ -131,7 +146,7 @@ class Plug(om.MPlug):
     def __str__(self) -> str:
 
         if self.isNull:
-            return str()
+            return ''
 
         selList = om.MSelectionList()
         selList.add(self)
@@ -143,7 +158,7 @@ class Plug(om.MPlug):
         if self.isNull:
             return f'{self.__class__.__name__}()'
 
-        return f"Graph.ls('{str(self)}')[0]"
+        return f"{self.__class__.__name__}({repr(self.name())})"
 
     def __iadd__(self, other: Any):
 
@@ -474,3 +489,7 @@ class PlugArray(om.MPlugArray):
 
     def setLength(): ...
     """
+
+
+PlugType = Type[Union[str, Plug]]
+PlugArrayType = Type[Union[str, PlugArray]]

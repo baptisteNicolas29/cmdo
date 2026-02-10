@@ -35,7 +35,7 @@ class NodeRegistry(dict, metaclass=SingletonMeta):
     ```
     """
 
-    # TODO: debate on graph
+    # TODO: debate on adding graph to NodeRegistry even though it is not a node
     # _graph = Graph
 
     # TODO: add base classe to NodeRegistry
