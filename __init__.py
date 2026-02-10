@@ -118,9 +118,11 @@ from .core.openMayaTypes import *
 from .core.exceptions import *
 
 # Basic cmdo node Typing
+from .core.plugsLib import PlugType, PlugArrayType
 from .core.abstract.nodeLib import NodeType
 from .core.abstract.dgLib import DGType
 from .core.abstract.dagLib import DAGType
+from .core.graphLib import GraphType
 
 from .api import *
 from .api.hierarchy import *

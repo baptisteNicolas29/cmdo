@@ -175,14 +175,15 @@ class Node(om.MObject):
         """
         attr = self.dependencyNode.findAlias(plug)
         if not attr.isNull():
-            plg = Plug(self, attr)
+            plugObj = Plug(self, attr)
 
-            if plug == plg.partialName(includeNodeName=False, useAlias=True):
-                return plg
+            if plug == plugObj.partialName(includeNodeName=False, useAlias=True):
+                return plugObj
 
-            elif plg.isArray:
-                for idx in range(plg.numElements()):
-                    child = plg.elementByLogicalIndex(idx)
+            elif plugObj.isArray:
+                for idx in range(plugObj.numElements()):
+                    child = plugObj.elementByLogicalIndex(idx)
+
                     if child.partialName(includeNodeName=False, useAlias=True) == plug:
                         return child
 
@@ -420,8 +421,6 @@ class Node(om.MObject):
     def addAttr(self, *args, **kwargs) -> Plug:
         """
         Re-implementation of cmds.addAttr
-
-        :param kwargs: Dict[str, Any], a dict of {attrName: attrValue} pairs
 
         :return: Plug, the newly created attribute plug
         """

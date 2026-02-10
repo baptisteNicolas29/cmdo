@@ -106,20 +106,24 @@ class DAGNode(DGNode):
 
         return self.dagPath.childCount()
 
-    # TODO: CONVERT OUTOUT TO Graph!!!
+    # TODO: CONVERT OUTPUT TO Graph!!!
     @property
-    def children(self) -> list:
+    def children(self) -> 'graphLib.Graph':
 
         """
         Get hierarchical children of the current node
 
-        :return: list[DAGNode], the list of children objects
+        :return: graphLib.Graph[DAGNode], the list of children objects
         """
-        items = []
+        # import here to imitate "lazy imports" and avoir cyclic/partial imports
+        from .. import graphLib
+
+        items = graphLib.Graph()
+
         for idx in range(self.mfnDagNode.childCount()):
             child_obj = self.mfnDagNode.child(idx)
 
-            items.append(NodeRegistry().get(child_obj, DAGNode)(child_obj))
+            items.add(NodeRegistry().get(child_obj, DAGNode)(child_obj))
 
         return items
 
@@ -147,33 +151,45 @@ class DAGNode(DGNode):
         return self.dagPath.numberOfShapesDirectlyBelow()
 
     @property
-    def shapes(self) -> List[str]:
+    def shapes(self) -> 'graphLib.Graph':
 
         """
         The shapes held by the current node
 
-        :return: List[str], the shape names of None
+        :return: graphLib.Graph[str], the shape names of None
         """
+        # import here to imitate "lazy imports" and avoir cyclic/partial imports
+        from .. import graphLib
 
-        return [child for child in self.children if child.isShape]
+        items = graphLib.Graph()
+        for child in self.children:
+            if not child.isShape:
+                continue
+
+            items.add(child)
+
+        return items
 
     @property
-    def parents(self) -> List:
+    def parents(self) -> 'graphLib.Graph':
         """
         Get the parent nodes of the current node
 
         :return: list[DAGNode], The parents of the current node
         """
-        
-        items = []
+
+        # import here to imitate "lazy imports" and avoir cyclic/partial imports
+        from .. import graphLib
+
+        items = graphLib.Graph()
         for idx in range(self.mfnDagNode.parentCount()):
             parentObj = self.mfnDagNode.parent(idx)
             parentName = om.MFnDagNode(parentObj).partialPathName()
 
             if parentObj.apiType() == om.MFn.kWorld:
-                return []
+                return items
 
-            items.append(NodeRegistry().get(parentName, DAGNode)(parentObj))
+            items.add(NodeRegistry().get(parentName, DAGNode)(parentObj))
 
         return items
 
@@ -189,16 +205,23 @@ class DAGNode(DGNode):
         :param parent: str, the name of the new parent, if None, parents to root
         """
 
-        if isinstance(parent, str):
-            parent = DAGNode(parent)
+        if parent is None:
+            if self.parents:
+                cmds.parent(self.name, world=True)
 
-        elif parent is None:
-            parent = om.MObject.kNullObj
+            return
+
+        if isinstance(parent, str):
+            parent = DAGNode(parent).name
+
+        elif issubclass(type(parent), DAGNode):
+            parent = parent.name
 
         elif parent == self:
             raise CmdoException(f'Cannot parent node to itself -> {self.name}')
 
-        om.MDagModifier().reparentNode(self, parent).doIt()
+        cmds.parent(self.name, parent)
+        # om.MDagModifier().reparentNode(self, parent).doIt()
 
     @property
     def dagRoot(self) -> 'DAGNode':

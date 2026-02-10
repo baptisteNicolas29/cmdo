@@ -668,3 +668,4 @@ class Graph(om.MSelectionList):
 
 
 # NodeRegistry._graph = Graph
+GraphType = Type[Union[str, Graph]]
