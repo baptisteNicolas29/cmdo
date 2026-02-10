@@ -297,16 +297,16 @@ class Plug(om.MPlug):
                     value = value[0]
 
                 matrixData = om.MFnMatrixData()
-                matobj = matrixData.create(value)
-                self.setMObject(matobj)
+                matObj = matrixData.create(value)
+                self.setMObject(matObj)
 
             except Exception:
                 raise AttributeError(
-                    f'{self.name()}, Wrong input type to set matrix attribute'
+                    f'{self.name()}, Wrong input type to set matrix attribute. '
                     f'Got:'
-                    f'\t- type: {type(value)} '
-                    f'\t- len: {len(value)} '
-                    f'\t- value: {value}'
+                    f'\n\t- type: {repr(value)} '
+                    f'\n\t- len: {len(value)} '
+                    f'\n\t- value: {value}'
                 )
 
     def parent(self, *args, **kwargs):

@@ -380,6 +380,16 @@ class DAGNode(DGNode):
         return self.mfnDagNode.boundingBox
 
     @property
+    def matrix(self):
+        """
+        Get the local matrix of the current node
+
+        :return: om.MMatrix, the local matrix
+        """
+
+        return self['matrix'].value
+
+    @property
     def transformationMatrix(self) -> om.MMatrix:
 
         """
