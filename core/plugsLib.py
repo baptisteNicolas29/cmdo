@@ -19,8 +19,9 @@ class Plug(om.MPlug):
             Plug can be initialised with a str (nodeName.plugName),
             two MObjects (node, attribute) or a Plug (Plug/MPlug object)
         """
+        print(f'{args = }')
 
-        if isinstance(args[0], str):
+        if args and isinstance(args[0], str):
             selList = om.MSelectionList()
             args = [selList.add(args).getPlug(0)]
 
