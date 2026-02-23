@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Any
 
 from maya import cmds
 from maya.api import OpenMaya as om
@@ -146,3 +146,17 @@ def getObjectsFromNamespace(namespace: str) -> List[om.MObject]:
         return []
 
     return om.MNamespace.getNamespaceObjects(namespace, recurse=True)
+
+
+def moveNamespace(source: str, destination: str, force=False, ensureExists=True) -> None:
+    """
+    Move the contents of the namespace 'source' into the namespace 'destination'.
+    """
+    # ensure namespaces exist
+    if not om.MNamespace.namespaceExists(source) and ensureExists:
+        om.MNamespace.addNamespace(source)
+
+    if not om.MNamespace.namespaceExists(destination) and ensureExists:
+        om.MNamespace.addNamespace(destination)
+
+    om.MNamespace.moveNamespace(source, destination, force=force)
