@@ -77,6 +77,10 @@ class NodeRegistry(dict, metaclass=SingletonMeta):
         match value.openMayaType():
             case om.MFn.kPluginShape:
                 super().__setitem__(value.openMayaType(), nodeLib.Node)
+            case om.MFn.kPluginDependNode:
+                super().__setitem__(value.openMayaType(), nodeLib.Node)
+            case om.MFn.kPluginDeformerNode:
+                super().__setitem__(value.openMayaType(), nodeLib.Node)
             case _:
                 super().__setitem__(value.openMayaType(), value)
 

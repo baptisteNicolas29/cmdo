@@ -270,9 +270,14 @@ class Curve(dagLib.DAGNode):
         if isinstance(vector, (float, int)):
             vector = [vector, vector, vector]
 
+        pointArray = om.MPointArray()
         for index in range(self.cvCount):
-            point = om.MPoint(*[self.cvs[index][i]*vector[i] for i in range(3)])
-            self.mfnNurbsCurve.setCVPosition(index, point, om.MSpace.kObject)
+            point = self.cvs[index]
+            pointArray.append(
+                om.MPoint(*[point[i]*vector[i] for i in range(3)])
+            )
+
+        self.mfnNurbsCurve.setCVPositions(pointArray, space=om.MSpace.kObject)
 
         self.update()
 
@@ -287,7 +292,7 @@ class Curve(dagLib.DAGNode):
         """
 
         mPointArray = om.MPointArray(pointList)
-        self.mfnNurbsCurve.setCVPositions(mPointArray, space)
+        self.mfnNurbsCurve.setCVPositions(mPointArray, space=space)
         self.update()
 
     def getClosestPoint(self, point, **kwargs):
