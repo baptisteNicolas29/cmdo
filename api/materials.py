@@ -5,6 +5,7 @@ import random
 from pathlib import Path
 
 from maya import cmds
+
 from ..core.graphLib import Graph
 from ..core.cmdoTyping import *
 
@@ -53,7 +54,7 @@ def getMaterialColorAttribute(material: str) -> str:
 
     # baseColor is the attribute of standardSurface material and
     # should be considered the default material type
-    return materialColorAttributes.get(cmds.nodeType(material), 'baseColor')
+    return materialColorAttributes.get(cmds.nodeType(f'{material}'), 'baseColor')
 
 
 def assignDefaultShader(nodes: CmdoList) -> None:
@@ -91,27 +92,27 @@ def getRandomColor(minValue: int = 0, maxValue: int = 100) -> List[float]:
     ]
 
 
-def getSceneMaterials() -> List:
+def getSceneMaterials() -> Graph:
     """
     Get all materials in the current scene
 
     :return: List, list of all the materials in the current scene
     """
 
-    return cmds.ls(materials=True)
+    return Graph.ls(materials=True)
 
 
-def getShadersFromObjects(nodes: List[str] = None, **kwargs) -> Dict[str, List[str]]:
+def getShadersFromObjects(nodes: CmdoList, **kwargs) -> Dict[str, Graph]:
     """
     Returns the shaders of the given or selected objects
 
-    :param nodes: the node to get shaders from
+    :param nodes: CmdoList, the node to get shaders from
 
     :return: dict[str: list[str]], dictionary holding {node: materials} pairs
     """
 
     materials = {}
-    for node in nodes:
+    for node in Graph.ls(nodes):
         mats = getShadersFromObject(node, **kwargs)
         if mats:
             materials[node] = mats
@@ -119,7 +120,7 @@ def getShadersFromObjects(nodes: List[str] = None, **kwargs) -> Dict[str, List[s
     return materials
 
 
-def getShadersFromObject(node: str = None, **kwargs) -> List[str]:
+def getShadersFromObject(node: str = None, **kwargs) -> Graph:
     """
     Returns the shaders of the given or selected objects
 
@@ -128,13 +129,16 @@ def getShadersFromObject(node: str = None, **kwargs) -> List[str]:
     :return: List[str], list of all the materials assigned to given object
     """
 
-    return cmds.ls(
-        cmds.hyperShade(geometries=node, listMaterialNodes=True),
+    if not isinstance(node, str):
+        node = Graph.ls(node)[0].name
+
+    return Graph.ls(
+        *cmds.hyperShade(geometries=node, listMaterialNodes=True),
         **kwargs
     )
 
 
-def getObjectsFromShaders(materials: List[str] = None) -> Dict[str, List[str]]:
+def getObjectsFromShaders(materials: List[str] = None) -> Dict[str, Graph]:
     """
     Returns the objects to which the given materials are assigned
 
@@ -145,12 +149,12 @@ def getObjectsFromShaders(materials: List[str] = None) -> Dict[str, List[str]]:
 
     objects = {}
     for material in materials:
-        objects[material] = getObjectsFromShader(material) or []
+        objects[material] = getObjectsFromShader(material) or Graph()
 
     return objects
 
 
-def getObjectsFromShader(material: str = None) -> List[str]:
+def getObjectsFromShader(material: str = None) -> Graph:
     """
     Returns the objects to which the given material is assigned
 
@@ -159,7 +163,7 @@ def getObjectsFromShader(material: str = None) -> List[str]:
     :return: list[str], list of all object the given material is assigned
     """
 
-    return cmds.hyperShade(material, listGeometries=True)
+    return Graph.ls(*cmds.hyperShade(listGeometries=material))
 
 
 def getBoundingBoxTiles(boundingBox2D:  Tuple[Tuple[float, float], Tuple[float, float]]) -> List[Tuple[int, int]]:
@@ -206,14 +210,14 @@ def getUVUdimTiles(mesh: str, uvSet: str = None) -> Dict[Any, Any]:
     # tiles = getBoundingBoxTiles(bb)
 
     # Get the bounding box per UV shell
-    uvShells = cmds.polyEvaluate(mesh, uvShell=True, **kwargs)
+    uvShells = cmds.polyEvaluate(f'{mesh}', uvShell=True, **kwargs)
 
     uvData = {}
     for i in range(uvShells):
         key = str(i)
         uvData[key] = {}
 
-        shellUVs = cmds.polyEvaluate(mesh, uvsInShell=i, **kwargs)
+        shellUVs = cmds.polyEvaluate(f'{mesh}', uvsInShell=i, **kwargs)
         shellBBx = cmds.polyEvaluate(
             shellUVs,
             boundingBoxComponent2d=True,
@@ -250,7 +254,7 @@ def uvToUdim(tile: Tuple[int, int]) -> int:
     return 1001 + u + 10 * v
 
 
-def assignMaterial(faces: Union[str, List[str]], materialName: str, materialType: str = 'standardSurface') -> Tuple[str, str]:
+def assignMaterial(faces: Union[str, List[str]], materialName: str, materialType: str = 'standardSurface') -> Graph:
     """
     Assign a material, creates the material if it does not exist
 
@@ -267,6 +271,7 @@ def assignMaterial(faces: Union[str, List[str]], materialName: str, materialType
         material = cmds.shadingNode(
             materialType, name=materialName, asShader=True
         )
+        print(f'From shadingNode - {material}')
         shadingEngine = cmds.sets(
             name=f'{material}SG',
             empty=True,
@@ -277,10 +282,10 @@ def assignMaterial(faces: Union[str, List[str]], materialName: str, materialType
             f'{material}.outColor',
             f'{shadingEngine}.surfaceShader'
         )
-
     else:
+        material = material[0]
         connected = cmds.connectionInfo(
-            f'{material[0]}.outColor',
+            f'{material}.outColor',
             destinationFromSource=True
         )
         for connection in connected:
@@ -292,30 +297,33 @@ def assignMaterial(faces: Union[str, List[str]], materialName: str, materialType
     if shadingEngine is not None:
         cmds.sets(faces, edit=True, forceElement=shadingEngine)
 
-    return material, shadingEngine
+    print(f'{material = }, {shadingEngine = }')
+    return Graph.ls(*[material, shadingEngine])
 
 
-def assignMaterialPerUdim(geometryObjects: List[str], exceptions: List[str] = None) -> List[str]:
+def assignMaterialPerUdim(geometryObjects: Union[Graph, List[str]], exceptions: List[str] = None) -> Graph:
     """
     Assignes a new material per UDIM associated with the object
 
     :param geometryObjects: the object to assign materials per UDIM to
     :param exceptions: list of meshes to skip
 
-    :return: List[str], the list of new materials
+    :return: Graph, the list of new materials
     """
 
-    materials = []
-
-    if not isinstance(geometryObjects, CmdoList):
-        geometryObjects = [geometryObjects]
+    materials = Graph()
+    if not isinstance(geometryObjects, (list, tuple, Graph)):
+        geometryObjects = Graph.ls(geometryObjects)
 
     for mesh in geometryObjects:
 
-        if any(exception in mesh for exception in list(exceptions or [])):
+        if any(exception in mesh.name for exception in list(exceptions or [])):
             continue
 
-        cmds.hyperShade(assign='lambert1', geometries=f'{mesh}.f[*]')
+        cmds.hyperShade(
+            assign=MAYA_LEGACY_DEFAULT_MAT,
+            geometries=f'{mesh}.f[*]'
+        )
 
         uvData = getUVUdimTiles(mesh)
         if not uvData:
@@ -329,9 +337,10 @@ def assignMaterialPerUdim(geometryObjects: List[str], exceptions: List[str] = No
 
             udimName = uvToUdim(data["tile"])
             materialName = f'UDIM_{udimName}'
-            assignMaterial(faces, materialName)
+            material = assignMaterial(faces, materialName)  # shadingEngine
+            print(f'\n{material = }')
 
-            materials.append(materialName)
+            materials.extend(material)
 
     return materials
 
@@ -406,9 +415,10 @@ def addMaterialWithColor(
         random_color: bool = True,
         color: Union[Tuple[float], List[float]] = (0.249, 0.123667, 0.047808),
         color_range: Tuple = (30, 60)
-):
+ ) -> None:
     """
     For each geometry in the current scene, assign new material
+
     and either a random color or given color, default color is brown
 
     :param objects: list[str], a list of objects to assigne color to, default None
@@ -423,18 +433,18 @@ def addMaterialWithColor(
         else color
     )
 
-    materials = getShadersFromObjects(objects)
+    materials = getShadersFromObjects(objects or None)
 
     for obj in objects:
         objectMaterials = materials.get(obj)
 
-        for mat in reversed(objectMaterials):
-            if cmds.nodeType(mat) == 'GLSLShader':
-                objectMaterials.remove(mat)
+        for i, mat in reversed(list(enumerate(objectMaterials))):
+            if cmds.nodeType(f'{mat}') == 'GLSLShader':
+                objectMaterials.pop(i)
 
-        if not objectMaterials or MAYA_DEFAULT_MAT in objectMaterials:
+        if not objectMaterials or MAYA_DEFAULT_MAT in objectMaterials.getSelectionStrings():
             print(f'Assigning material and color to: {objects}')
-            materials[obj] = assignMaterialPerUdim(obj)
+            materials[obj] = Graph.ls(assignMaterialPerUdim(obj))
 
     materialSet = []
     for mat in materials.values():

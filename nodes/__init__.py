@@ -18,6 +18,7 @@ from .dg.divideLib import *
 from .dg.eulerToQuatLib import *
 from .dg.holdMatrixLib import *
 from .dg.inverseMatrixLib import *
+from .dg.materialLib import *
 from .dg.multDoubleLinearLib import *
 from .dg.multiplyDivideLib import *
 from .dg.multMatrixLib import *

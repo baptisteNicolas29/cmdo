@@ -19,6 +19,7 @@ from .divideLib import *
 from .eulerToQuatLib import *
 from .holdMatrixLib import *
 from .inverseMatrixLib import *
+from .materialLib import *
 from .multDoubleLinearLib import *
 from .multiplyDivideLib import *
 from .multMatrixLib import *

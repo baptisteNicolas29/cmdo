@@ -111,6 +111,11 @@ class ObjectSet(DGNode):
 
         return Graph(self.mfnSet.getMembers(True))
 
+    @property
+    def isEmpty(self) -> bool:
+
+        return self.size == 0
+
     def copy(self) -> om.MObject:
         """
         Create a new set that is the copy of this set

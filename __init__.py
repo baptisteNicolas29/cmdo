@@ -1,8 +1,8 @@
 from typing import Dict, Tuple, Any, Callable, List, Generator, Union, Type
+from types import ModuleType, FunctionType
 from collections import OrderedDict
 
 import sys
-from types import ModuleType, FunctionType
 import inspect
 import importlib
 import contextlib
@@ -66,12 +66,6 @@ def bigReload(moduleToReload: Union[str, FunctionType, ModuleType] = __PACKAGE_N
 
     """
 
-    if isinstance(moduleToReload, FunctionType):
-        moduleToReload = moduleToReload.__module__.split('.')[0]
-
-    elif isinstance(moduleToReload, ModuleType):
-        moduleToReload = moduleToReload.__package__.split('.')[0]
-
     cmds.warning(
         'cmdo.bigReload is a debugging function and '
         'should not be used in production'
@@ -99,6 +93,7 @@ def bigReload(moduleToReload: Union[str, FunctionType, ModuleType] = __PACKAGE_N
     print(
         f'Import/Reload : {parentModule.__name__:-<40} - {str(parentModule)}'
     ) if feedback else None
+
     importlib.import_module(parentModule.__name__)
     importlib.reload(parentModule)
 
