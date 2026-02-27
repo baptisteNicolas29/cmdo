@@ -20,7 +20,8 @@ __all__: List[str] = [
 # TODO: wierd things are going on when trying to use skinAs
 def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Union[om.MObject, None]:
     """
-    Bind a destination mesh based on the influence list and weights of the skinCluster of a source mesh.
+    Bind a destination mesh based on the influence list and weights
+        of the skinCluster of a source mesh.
 
     :param source: Source mesh that will be used to determine influence list 
         and weights of destination mesh.
@@ -102,15 +103,15 @@ def resetSkin(nodes: List[str]) -> None:
         nodes = [nodes]
 
     for node in nodes:
-        skin_clusters = history.getDeformers(node, 'skinCluster')
+        skinClusters = history.getDeformers(node, 'skinCluster')
 
-        if not skin_clusters:
+        if not skinClusters:
             print(f'No skinCluster found for : {node}')
             continue
 
-        for skin_cluster in skin_clusters:
+        for skinCluster in skinClusters:
             connections = cmds.listConnections(
-                f"{skin_cluster}.matrix",
+                f"{skinCluster}.matrix",
                 source=True, destination=False,
                 plugs=True, connections=True
             )
@@ -125,17 +126,37 @@ def resetSkin(nodes: List[str]) -> None:
                 )
 
 
-def getJointsNotInSkinHierarchy(obj_list: List[str] = None, joint_wildcard: str = '*_skn'):
+# fonction to reset from skincluster directly and not from nodes
+# def resetSkin(skinClusters: List[str]) -> None:
+#
+#     for skinCluster in skinClusters:
+#         connections = cmds.listConnections(
+#             f"{skinCluster}.matrix",
+#             source=True, destination=False,
+#             plugs=True, connections=True
+#         )
+#         destinations = connections[0::2]
+#         sources = connections[1::2]
+#
+#         for src, dest in zip(sources, destinations):
+#             # print(src, dest)
+#             mat = cmds.getAttr(f"{src.split('.')[0]}.worldInverseMatrix")
+#             cmds.setAttr(dest.replace('matrix', 'bindPreMatrix'), *mat, type='matrix')
+#
+#         print(f'Finished resetting {skinCluster = }')
+
+
+def getJointsNotInSkinHierarchy(objList: List[str] = None, jointWildcard: str = '*_skn') -> graph.Graph:
     """
     Get a list of joints not in any skin of given meshes
 
-    :param obj_list: meshes to check whether they are in the skin hierarchy
-    :param joint_wildcard: wildcard string for searching joints
+    :param objList: meshes to check whether they are in the skin hierarchy
+    :param jointWildcard: wildcard string for searching joints
 
-    Returns: list of joints not in the skin hierarchy
+    :return: Graph, joints not in the skin hierarchy
 
     """
-    skin_hierarchy = set()
+    skinHierarchy = set()
 
     def filter_func(joint):
         """
@@ -144,30 +165,30 @@ def getJointsNotInSkinHierarchy(obj_list: List[str] = None, joint_wildcard: str 
         connection = cmds.listConnections(
             joint, source=False, destination=True, type='skinCluster'
         )
-        return joint not in skin_hierarchy and connection is None
+        return joint not in skinHierarchy and connection is None
 
-    if obj_list is None:
-        obj_list = cmds.ls(selection=True)
+    if objList is None:
+        objList = cmds.ls(selection=True)
 
-    elif not isinstance(obj_list, list):
-        obj_list = [obj_list]
+    elif not isinstance(objList, list):
+        objList = [objList]
 
-    for obj in obj_list:
+    for obj in objList:
         influences = cmds.skinCluster(obj, query=True, influence=True)
 
         # build skin hierarchy list
         for influence in influences:
-            if influence in skin_hierarchy:
+            if influence in skinHierarchy:
                 continue
 
-            skin_hierarchy.update(
+            skinHierarchy.update(
                 set(hierarchy.getHierarchyRoot(influence))
             )
 
-    skeleton = cmds.ls(joint_wildcard, type='joint')
+    skeleton = cmds.ls(jointWildcard, type='joint')
 
-    joints_not_in_skin = list(
+    jointsNotInSkin = list(
         filter(filter_func, skeleton)
     )
 
-    return graph.ls(joints_not_in_skin)
+    return graph.ls(jointsNotInSkin)

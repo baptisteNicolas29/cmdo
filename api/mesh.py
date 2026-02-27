@@ -8,7 +8,7 @@ from ..core.abstract import nodeLib, dagLib
 
 
 __all__: List[str] = [
-    'createCube'
+    'checkRemoveMeshInstances'
 ]
 
 
@@ -20,7 +20,7 @@ def createCube(positions, **kwargs):
     :param kwargs:
     :return:
     """
-    return NotImplementedError('Line function not implemented yet')
+    return NotImplementedError('createCube function not implemented yet')
 
 
 def checkRemoveMeshInstances(obj: str) -> Union[str, None]:
@@ -38,17 +38,17 @@ def checkRemoveMeshInstances(obj: str) -> Union[str, None]:
 
     cmds.bakePartialHistory(obj, prePostDeformers=True)
 
-    shapes = cmds.listRelatives(obj, c=True, s=True, f=True)
+    shapes = cmds.listRelatives(obj, children=True, shapes=True, fullPath=True)
     if not shapes:
         cmds.warning(f'Given obj has no shapes : {obj}. Aborting....')
         return None
 
-    if len(cmds.listRelatives(shapes, ap=True)) > 1:
+    if len(cmds.listRelatives(shapes, allParents=True)) > 1:
         cmds.select(obj)
         mel.eval('ConvertInstanceToObject()')
 
     newShapeName = cmds.rename(
-        cmds.listRelatives(obj, c=True, s=True, f=True)[0],
+        cmds.listRelatives(obj, children=True, shapes=True, fullPath=True)[0],
         f'{obj}Shape'
     )
 

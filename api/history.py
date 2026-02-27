@@ -32,7 +32,7 @@ def getDeformers(node: CmdoObject, types: Union[str, List[str]]) -> graph.Graph:
         history
     ))
 
-    return graph.ls(*deformers) if deformers else graph.emptyGraph()
+    return graph.ls(*deformers) if deformers else graph.Graph()
 
 
 def getNodeHistoryByType(node: str, **kwargs) -> List[str]:
@@ -45,13 +45,13 @@ def getNodeHistoryByType(node: str, **kwargs) -> List[str]:
     :return: List[str], a list of nodes corresponding to the demand
     """
 
-    past_history = set(cmds.listHistory(
+    pastHistory = set(cmds.listHistory(
         node, allConnections=True, fastIteration=True
     ))
-    future_history = set(cmds.listHistory(
+    futureHistory = set(cmds.listHistory(
         node, future=True, allConnections=True, fastIteration=True
     ))
 
-    past_history.update(future_history)
+    pastHistory.update(futureHistory)
 
-    return cmds.ls(*list(past_history), **kwargs)
+    return cmds.ls(*list(pastHistory), **kwargs)

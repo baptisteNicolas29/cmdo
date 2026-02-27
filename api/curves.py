@@ -28,9 +28,9 @@ def createCircle(name: str = 'nurbsCircle', radius: CmdoNumber = 1.0, **kwargs):
         Curve: the created object
     """
 
-    transform, make_nurbs = cmds.circle(name=name, radius=radius, **kwargs)
+    transform, makeNurbs = cmds.circle(name=name, radius=radius, **kwargs)
 
-    Graph.delete(make_nurbs)
+    Graph.delete(makeNurbs)
 
     return Graph.ls(transform)[0]
 
@@ -57,7 +57,7 @@ def createBox(name='nurbsBox', size: Union[CmdoNumber, List[CmdoNumber]] = 1.0, 
             f' got: {len(size)} - {size}'
         )
 
-    curve_data = {
+    curveData = {
         "degree": 1,
         "form": 1,
         "is2D": False,
@@ -95,12 +95,12 @@ def createBox(name='nurbsBox', size: Union[CmdoNumber, List[CmdoNumber]] = 1.0, 
 
     mfnCurve = om.MFnNurbsCurve()
     mfnCurve.create(
-        curve_data.get('cvs'),
-        curve_data.get('knots'),
-        curve_data.get('degree'),
-        curve_data.get('form'),
-        curve_data.get('is2D'),
-        curve_data.get('rational'),
+        curveData.get('cvs'),
+        curveData.get('knots'),
+        curveData.get('degree'),
+        curveData.get('form'),
+        curveData.get('is2D'),
+        curveData.get('rational'),
         parent=parent
     )
     # mfnCurve.setName(name)
@@ -122,7 +122,7 @@ def createCross(name='nurbsCross', size: CmdoNumber = 1.0, **kwargs):
         Curve: the created object
     """
 
-    curve_data = {
+    curveData = {
         "degree": 1,
         "form": 1,
         "is2D": False,
@@ -142,12 +142,12 @@ def createCross(name='nurbsCross', size: CmdoNumber = 1.0, **kwargs):
 
     mfnCurve = om.MFnNurbsCurve()
     mfnCurve.create(
-        curve_data.get('cvs'),
-        curve_data.get('knots'),
-        curve_data.get('degree'),
-        curve_data.get('form'),
-        curve_data.get('is2D'),
-        curve_data.get('rational'),
+        curveData.get('cvs'),
+        curveData.get('knots'),
+        curveData.get('degree'),
+        curveData.get('form'),
+        curveData.get('is2D'),
+        curveData.get('rational'),
         parent=parent
     )
 

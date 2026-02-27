@@ -10,58 +10,58 @@ __all__: List[str] = [
 ]
 
 
-def duplicateUVSet(source_obj: str, source_uv_set: str, new_uv_set: str) -> None:
+def duplicateUVSet(sourceObj: str, sourceUVSet: str, newUVSet: str) -> None:
     """
     Duplicate an uv_set on an object and give it a new name
 
-    :param source_obj: str, the object to duplicate uv set on
-    :param source_uv_set: str, the name of the uv set to duplicate
-    :param new_uv_set: str, the name of the duplicated uv set
+    :param sourceObj: str, the object to duplicate uv set on
+    :param sourceUVSet: str, the name of the uv set to duplicate
+    :param newUVSet: str, the name of the duplicated uv set
     """
 
-    cmds.polyUVSet(source_obj, uvSet=source_uv_set, copy=True, newUVSet=new_uv_set)
-    cmds.polyUVSet(source_obj, currentUVSet=True, uvSet=new_uv_set)
+    cmds.polyUVSet(sourceObj, uvSet=sourceUVSet, copy=True, newUVSet=newUVSet)
+    cmds.polyUVSet(sourceObj, currentUVSet=True, uvSet=newUVSet)
 
 
-def transferUVSets(source_obj: str, target_obj: str, keep_history: bool = False) -> Union[str, None]:
+def transferUVSets(sourceObj: str, targetObj: str, keepHistory: bool = False) -> Union[str, None]:
     """
     Transfer uv sets from one object to another
 
-    :param source_obj: str, the object with the uv set to transfer
-    :param target_obj: str, the object to receive the uv set
-    :param keep_history: bool, whether to delete history or not
+    :param sourceObj: str, the object with the uv set to transfer
+    :param targetObj: str, the object to receive the uv set
+    :param keepHistory: bool, whether to delete history or not
 
     :return: Union[str, None], the transfer node or None
     """
 
-    source_vtx_count = len(cmds.ls(f'{source_obj}.vtx[*]', flatten=True))
-    target_vtx_count = len(cmds.ls(f'{target_obj}.vtx[*]', flatten=True))
-    if source_vtx_count != target_vtx_count:
+    sourceVtxCount = len(cmds.ls(f'{sourceObj}.vtx[*]', flatten=True))
+    targetVtxCount = len(cmds.ls(f'{targetObj}.vtx[*]', flatten=True))
+    if sourceVtxCount != targetVtxCount:
         cmds.error(
             f'Trying to transfer UVs between different topologies'
-            f'\n\t{source_obj} vertex count : {source_vtx_count}'
-            f'\n\t{target_obj} vertex count : {target_vtx_count}'
+            f'\n\t{sourceObj} vertex count : {sourceVtxCount}'
+            f'\n\t{targetObj} vertex count : {targetVtxCount}'
         )
 
-    polyTransferNode = cmds.polyTransfer(target_obj, uvSets=True, alternateObject=source_obj)
+    polyTransferNode = cmds.polyTransfer(targetObj, uvSets=True, alternateObject=sourceObj)
 
-    if not keep_history:
-        cmds.bakePartialHistory(target_obj, prePostDeformers=True)
+    if not keepHistory:
+        cmds.bakePartialHistory(targetObj, prePostDeformers=True)
         return None
 
     return polyTransferNode
 
 
-def checkOverlappingUVs(source_obj: str) -> List[int]:
+def checkOverlappingUVs(sourceObj: str) -> List[int]:
     """
     Check overlapping uv sets on given object
 
-    :param source_obj: str, the object with the uv set to check
+    :param sourceObj: str, the object with the uv set to check
 
     :return: list of uv point indices
 
     """
-    all_faces = f'{source_obj}.f[*]'
+    allFaces = f'{sourceObj}.f[*]'
 
-    return cmds.polyUVOverlap(all_faces, overlappingComponents=True) or []
+    return cmds.polyUVOverlap(allFaces, overlappingComponents=True) or []
 
