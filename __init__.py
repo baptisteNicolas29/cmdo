@@ -112,17 +112,17 @@ from . import core
 from . import nodes
 from . import api
 
+# Basic cmdo node Typing
 from .core.cmdoTyping import *
 from .core.openMayaTypes import *
 from .core.exceptions import *
-
-# Basic cmdo node Typing
-from .core.plugsLib import Plug, PlugArray, PlugType, PlugArrayType
+from .core.plugsLib import PlugType, PlugArrayType
 from .core.abstract.nodeLib import NodeType
 from .core.abstract.dgLib import DGType
 from .core.abstract.dagLib import DAGType
 from .core.graphLib import GraphType
 
+# api imports
 from .api import *
 from .api.hierarchy import *
 from .api.history import *
@@ -130,8 +130,8 @@ from .api.materials import *
 from .api.namespace import *
 from .api.uv import *
 from .api.deformers import *
-from .api.graph import *
-from .api.plugs import *
+from .api.graph import *  # add Graph() to main namespace
+from .api.plugs import *  # add Plug() and PlugArray to main namespace
 from .api.curves import *
 from .api.mesh import *
 from .api.bifrost import *
@@ -145,9 +145,9 @@ def getCmdoNodeDict() -> Dict:
         - int(mayaApiType): CmdoClass
         - CmdoClass: {"NODE_TYPE": str(mayaType), "API_TYPE": int(mayaApiType)}
 
-    One exception is mayaApiType : om.MFn.KPluginShape->712, which will
-     always default to cmdo.core.abstract.nodelib.Node because the type
-     is shared across all plugin shapes
+    Exception for any kPlugin types which will
+     always default to cmdo.core.abstract.nodelib.Node because the types
+     are shared across all plugins
 
     :return: dict: {id: data} multiple pairs per node representing different ids
 

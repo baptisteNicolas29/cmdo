@@ -14,6 +14,12 @@ class ObjectSet(DGNode):
     _NODE_TYPE = "objectSet"
     _API_TYPE = om.MFn.kSet
 
+    @classmethod
+    def newSet(cls, *args, **kwargs):
+        return Graph.ls(
+            cmds.sets(*args, **kwargs)
+        )[0]
+
     @property
     def mfnSet(self) -> om.MFnSet:
         """
@@ -146,23 +152,27 @@ class ObjectSet(DGNode):
             cmds.sets(*Graph.ls(value).getSelectionStrings(), split=self.name)
         )
 
-    def isMember(self, value: Union[List, str, om.MObject]):
+    def isMember(self, value: Union[List, str, om.MObject]) -> bool:
         """
         Check if the given node(s) are all part of this set
 
         :param value: Union[List, str, om.MObject], the name of the node(s)
+
+        :return: bool, True if the given node(s) are all part of this set
         """
+        objects = Graph.ls(value).getSelectionStrings()
+        return cmds.sets(*objects, isMember=self.name)
 
-        cmds.sets(*Graph.ls(value).getSelectionStrings(), isMember=self.name)
-
-    def anyMember(self, value: Union[List, str, om.MObject]):
+    def anyMember(self, value: Union[List, str, om.MObject]) -> bool:
         """
         Check if any of the given node(s) are part of this set
 
         :param value: Union[List, str, om.MObject], the name of the node(s)
-        """
 
-        cmds.sets(*Graph.ls(value).getSelectionStrings(), anyMember=self.name)
+        :return: bool, True if any of the given node(s) are part of this set
+        """
+        objects = Graph.ls(value).getSelectionStrings()
+        return cmds.sets(*objects, anyMember=self.name)
 
     def addMembers(self, value: Union[List, str, om.MObject, Graph], force=False) -> None:
         """
@@ -178,7 +188,7 @@ class ObjectSet(DGNode):
         else:
             cmds.sets(*Graph.ls(*value).getSelectionStrings(), forceElement=self.name)
 
-    def removeMembers(self, value: Union[List, str, om.MObject]):
+    def removeMembers(self, value: Union[List, str, om.MObject]) -> None:
         """
         Remove members from set
 
@@ -193,8 +203,15 @@ class ShadingEngine(ObjectSet):
     _NODE_TYPE = "shadingEngine"
     _API_TYPE = om.MFn.kShadingEngine
 
-    def assignToMesh(self, value):
-        cmds.sets(value, edit=True, forceElement=self.name)
+    def assignToMesh(self, value: CmdoObject) -> None:
+        """
+        Assign mesh to shading engine
+
+        :param value: CmdoObject, the object to assign to the shading engine
+
+        """
+        meshName = Graph.ls(value)[0].name
+        cmds.sets(meshName, edit=True, forceElement=self.name)
 
 
 NodeRegistry()[ObjectSet.nodeType()] = ObjectSet
