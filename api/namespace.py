@@ -36,13 +36,16 @@ def namespaceExists(namespace: str) -> bool:
     return om.MNamespace.namespaceExists(namespace)
 
 
-def getAllNamespaces(recursive: bool = True, ) -> List[str]:
+def getAllNamespaces(recursive: bool = True) -> List[str]:
     """
     Gets all the namespaces in the scene and sorts the in ascending order
     (child -> parent). Remove non-deletable namespaces from the list
 
+    :param recursive: bool, whether to check children namespaces recursively
+
     :return: List[str], list of all namespaces in the scene
     """
+    
     allNamespaces = [
         namespace
         for namespace in om.MNamespace.getNamespaces(recurse=recursive)
@@ -55,29 +58,26 @@ def getAllNamespaces(recursive: bool = True, ) -> List[str]:
 
 def getAllUnusedNamespaces(recursive: bool = True) -> List[str]:
     """
-    Gets all the namespaces in the scene and sorts them in ascending order
-    (child -> parent). Remove namespaces without content
+    Get all namespace without content aka "unused"
 
-    :return: List[str], a list of namespaces -> ie: ['a:b:c', 'a:b', 'a']
+    :param recursive: bool, whether to check children namespaces recursively
+
+    :return: List[str], a list of unused namespaces
     """
 
     # get all namespaces that don t have content
-    unused_namespaces = [
+    unusedNamespace = [
         namespace for namespace in om.MNamespace.getNamespaces(recurse=recursive)
         if namespace not in BASE_NAMESPACES
         and not om.MNamespace.getNamespaceObjects(namespace, recurse=True)
     ]
 
-    return unused_namespaces
+    return unusedNamespace
 
 
-def addNamespace(
-    namespace: str,
-    parentNamespace: str = None,
-    setCurrent: bool = False
-) -> None:
+def addNamespace(namespace: str, parentNamespace: str = None, setCurrent: bool = False) -> None:
     """
-    Create the given namespace to the scene
+    Create the given namespace
 
     :param namespace: str, the name of the new namespace to create
     :param parentNamespace: str, the name of the parent namespace if any
@@ -95,7 +95,7 @@ def addNamespace(
 
 def removeNamespace(namespace: str, deleteContent: bool = False) -> None:
     """
-    Delete the given namespace and move content to root
+    Delete the given namespace and move content to root or delete content
 
     :param namespace: str, the namespace to remove
     :param deleteContent: bool, delete namespace content with namespace
@@ -109,15 +109,20 @@ def removeNamespace(namespace: str, deleteContent: bool = False) -> None:
         return
 
     if deleteContent:
-        m_objects = getObjectsFromNamespace(namespace)
+        mObjects = getObjectsFromNamespace(namespace)
 
-        for m_object in m_objects:
-            if m_object.isNull() or m_object.apiType() != om.MFn.kTransform:
+        objectsToDelete = []
+        for mObject in mObjects:
+            if mObject.isNull():
                 continue
 
-            obj_name = om.MFnDagNode(m_object).fullPathName()
-            if cmds.objExists(obj_name):
-                cmds.delete(obj_name)
+            objectName = om.MFnDependencyNode(mObject).uniqueName()
+            if objectName.startswith(':'):
+                objectName = objectName[1:]
+
+            objectsToDelete.append(objectName)
+
+        cmds.delete(*cmds.ls(*objectsToDelete))
 
     om.MNamespace.moveNamespace(namespace, ROOT_NAMESPACE(), force=True)
     om.MNamespace.removeNamespace(namespace, removeContents=False)
@@ -140,6 +145,7 @@ def getObjectsFromNamespace(namespace: str) -> List[om.MObject]:
     :param namespace: str, the namespace to get objects from
 
     :return: list[str], a list of objects in the given namespace
+
     """
 
     if not namespaceExists(namespace):
@@ -148,11 +154,17 @@ def getObjectsFromNamespace(namespace: str) -> List[om.MObject]:
     return om.MNamespace.getNamespaceObjects(namespace, recurse=True)
 
 
-def moveNamespace(source: str, destination: str, force=False, ensureExists=True) -> None:
+def moveNamespace(source: str, destination: str, force: bool = False, ensureExists: bool = True) -> None:
     """
-    Move the contents of the namespace 'source' into the namespace 'destination'.
+    Move the contents of the namespace 'source' into the namespace 'destination'
+
+    :param source: str, the source namespace
+    :param destination: str, the destination namespace
+    :param force: bool, force move the namespace
+    :param ensureExists: bool, if True, create the namespaces if any do not exist
+
     """
-    # ensure namespaces exist
+
     if not om.MNamespace.namespaceExists(source) and ensureExists:
         om.MNamespace.addNamespace(source)
 

@@ -1,10 +1,12 @@
 from typing import List
 
+from ..core.plugsLib import Plug, PlugArray
 from ..core.graphLib import Graph
-
 
 # * import list
 __all__: List[str] = [
+    'Plug',
+    'PlugArray',
     'lockTransforms',
     'hideTransforms',
     'lockAndHideTransforms'
@@ -21,8 +23,8 @@ def lockTransforms(nodes, attrs=None, value: bool = True) -> None:
     :return:
 
     """
-    graph_node = Graph.ls(nodes)
-    for node in graph_node:
+    graph = Graph.ls(nodes)
+    for node in graph:
         attributes = (
             [node[attr] for attr in attrs]
             if attrs
@@ -43,8 +45,8 @@ def hideTransforms(nodes, attrs=None, value: bool = True) -> None:
     :return:
     """
 
-    graph_node = Graph.ls(nodes)
-    for node in graph_node:
+    graph = Graph.ls(nodes)
+    for node in graph:
         attributes = (
             [node[attr] for attr in attrs]
             if attrs
@@ -66,8 +68,8 @@ def lockAndHideTransforms(nodes, attrs=None, value: bool = True) -> None:
     :return:
     """
 
-    graph_node = Graph.ls(*nodes)
-    for node in graph_node:
+    graph = Graph.ls(*nodes)
+    for node in graph:
         attributes = (
             [node[attr] for attr in attrs]
             if attrs

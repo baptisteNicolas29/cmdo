@@ -16,20 +16,20 @@ __all__: List[str] = [
     'listConnections',
     'createNode',
     # 'delete',
-    'emptyGraph',
+    # 'emptyGraph',
     # 'select',
     # 'duplicate',
     'duplicateWithInternalConnections',
 ]
 
 
-def emptyGraph() -> Graph:
-    """
-    Get an empty Graph (maya.api.OpenMaya.MSelectionList subclass)
-
-    :return: Graph: and empty graph (list)
-    """
-    return Graph()
+# def emptyGraph() -> Graph:
+#     """
+#     Get an empty Graph (maya.api.OpenMaya.MSelectionList subclass)
+#
+#     :return: Graph: and empty graph (list)
+#     """
+#     return Graph()
 
 
 def ls(*args, **kwargs) -> Graph:

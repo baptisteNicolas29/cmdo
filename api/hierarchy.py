@@ -81,11 +81,11 @@ def getRootParent(node: str) -> Union[str, None]:
         cmds.warning(f'Given obj does not exist : {node}. Aborting....')
         return None
 
-    top_parent = node
-    while (parent := cmds.listRelatives(top_parent, parent=True)) is not None:
-        top_parent = parent[0]
+    topParent = node
+    while (parent := cmds.listRelatives(topParent, parent=True)) is not None:
+        topParent = parent[0]
 
-    return top_parent
+    return topParent
 
 
 def getHierarchyRoot(node: str, **kwargs) -> List[str]:
@@ -102,14 +102,14 @@ def getHierarchyRoot(node: str, **kwargs) -> List[str]:
         cmds.warning(f'Given obj does not exist : {node}. Aborting....')
         return []
 
-    joint_hierarchy = [node]
+    jointHierarchy = [node]
     parent = node
 
     while (prt := cmds.listRelatives(parent, parent=True, **kwargs)) is not None:
         parent = prt[0]
-        joint_hierarchy.append(parent)
+        jointHierarchy.append(parent)
 
-    return joint_hierarchy
+    return jointHierarchy
 
 
 def getShortestParent(node: CmdoObject, graphList: CmdoList, asStr: bool = True) -> Union[nodeLib.Node, str, None]:
@@ -157,25 +157,25 @@ def getDagRoots(nodes: CmdoList, safe: bool = True) -> graph.Graph:
     if isinstance(nodes, list) or isinstance(nodes, om.MSelectionList):
         nodes = graph.ls(nodes)
 
-    previous = graph.emptyGraph()
-    roots = graph.emptyGraph()
+    previous = graph.Graph()
+    roots = graph.Graph()
 
     for item in nodes:
-        item_obj = item if isinstance(item, nodeLib.Node) else item
-        previous.add(item_obj)
+        itemObj = item if isinstance(item, nodeLib.Node) else item
+        previous.add(itemObj)
 
-        if (not safe) and item_obj.isDagNode:
-            raise TypeError(f'{item_obj} is not a dagNode')
+        if (not safe) and itemObj.isDagNode:
+            raise TypeError(f'{itemObj} is not a dagNode')
 
-        if safe and item_obj.isDagNode:
+        if safe and itemObj.isDagNode:
             continue
 
-        is_child = False
-        mfnDagNode = item_obj.mfnDagNode
+        isChild = False
+        mfnDagNode = itemObj.mfnDagNode
         for other in nodes - previous:
-            is_child |= mfnDagNode.isChildOf(other)
+            isChild |= mfnDagNode.isChildOf(other)
 
-        if not is_child:
-            roots.add(item_obj)
+        if not isChild:
+            roots.add(itemObj)
 
     return roots

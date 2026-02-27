@@ -4,9 +4,12 @@ import os
 import random
 from pathlib import Path
 
-from maya import cmds
+# from maya import cmds
+from .. import cmds
 
-from ..core.graphLib import Graph
+from ..nodes.dg.materialLib import *
+from ..nodes.dg.objectSetLib import *
+from ..core.graphLib import Graph, GraphType
 from ..core.cmdoTyping import *
 
 
@@ -27,6 +30,7 @@ __all__: List[str] = [
     'assignMaterial',
     'assignMaterialPerUdim',
     'addMaterialWithColor',
+    'duplicateShadingNetwork',
 ]
 
 
@@ -65,7 +69,6 @@ def assignDefaultShader(nodes: CmdoList) -> None:
     """
 
     initSG = Graph.ls('initialShadingGroup')[0]
-
     initSG.addMembers(nodes)
 
 
@@ -415,7 +418,7 @@ def addMaterialWithColor(
         random_color: bool = True,
         color: Union[Tuple[float], List[float]] = (0.249, 0.123667, 0.047808),
         color_range: Tuple = (30, 60)
- ) -> None:
+) -> None:
     """
     For each geometry in the current scene, assign new material
 
@@ -455,3 +458,77 @@ def addMaterialWithColor(
 
         if not cmds.connectionInfo(f'{mat}.{colorAttr}', isDestination=True):
             cmds.setAttr(f'{mat}.{colorAttr}', *color, type='double3')
+
+
+def duplicateShadingNetwork(mesh: CmdoObject) -> Graph:
+    mesh = Graph.ls(mesh)[0]
+    if not mesh.isShapeNode:
+        cmds.warning(
+            '[duplicateShadingNetwork] '
+            '- Inputs need to be a mesh shape to access shading enginee'
+        )
+        return Graph()
+
+    shadingEngine = Graph.listConnections(mesh.name, type="shadingEngine")
+    if not shadingEngine:
+        cmds.warning(
+            '[duplicateShadingNetwork] '
+            '- Could not get connected shading engine from mesh'
+        )
+        return Graph()
+
+    shader = shadingEngine[0]['surfaceShader'].source().node()
+    if not shader:
+        cmds.warning(
+            '[duplicateShadingNetwork] '
+            '- Could not get connected shader from shading engine'
+        )
+        raise RuntimeError(f'{shadingEngine} has no surfaceShader')
+
+    upstream = Graph.listHistory(shader, pruneDagObjects=True) or []
+
+    duplicatedDict = {}
+    nodeConnectionsDict = {}
+    for node in reversed(upstream):
+        dupNode = Graph.ls(
+            cmds.duplicate(node.name, name=f"{node.strippedName}_copy")[0]
+        )[0]
+        duplicatedDict[dupNode] = node
+        nodeConnectionsDict[node] = [node.incomingConnections, node.outgoingConnections]
+
+    for dupNode, origNode in duplicatedDict.items():
+        inCons, outCons = nodeConnectionsDict.get(origNode, [{}, {}])
+        for destinationPlug, sourcePlug in inCons.items():
+
+            dupName = f'{sourcePlug.node().strippedName}_copy'
+            if not cmds.objExists(dupName):
+                continue
+
+            sourceDupNode = Graph.ls(dupName)[0]
+            sourcePlugName = sourcePlug.name().replace(f'{sourcePlug.node().name}.', '')
+            destinationPlugName = destinationPlug.name().replace(f'{destinationPlug.node().name}.', '')
+
+            Graph.ls(f'{sourceDupNode}.{sourcePlugName}')[0] >> Graph.ls(f'{dupNode}.{destinationPlugName}')[0]
+
+        for sourcePlug, destinationPlugs in outCons.items():
+            sourceDupName = f'{sourcePlug.node().strippedName}_copy'
+            if not cmds.objExists(sourceDupName):
+                continue
+
+            sourcePlugName = sourcePlug.name().replace(f'{sourcePlug.node().name}.', '')
+            for destinationPlug in destinationPlugs:
+                destinationDupName = f'{destinationPlug.node().strippedName}_copy'
+
+                if not cmds.objExists(destinationDupName):
+                    continue
+
+                destinationDupNode = Graph.ls(destinationDupName)[0]
+                destinationPlugName = destinationPlug.name().replace(f'{destinationPlug.node().name}.', '')
+                Graph.ls(f'{dupNode}.{sourcePlugName}')[0] >> Graph.ls(f'{destinationDupNode}.{destinationPlugName}')[0]
+
+    newShader = Graph.ls(f'{shader.strippedName}_copy')[0]
+    newShadingEngine = ObjectSet.newSet(renderable=True, noSurfaceShader=True, empty=True, name=f'{newShader.name}_SG')
+
+    newShader['outColor'] >> newShadingEngine['surfaceShader']
+
+    return Graph.ls(*[newShader, newShadingEngine])
