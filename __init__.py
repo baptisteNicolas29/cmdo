@@ -61,16 +61,24 @@ def bigReload(moduleToReload: Union[str, FunctionType, ModuleType] = __PACKAGE_N
     """
     Reload the given package from name and all its children modules
 
-    :param moduleToReload: str, the name of the package/module to reload
+    :param moduleToReload: Union[str, FunctionType, ModuleType], the name of the package/module to reload
     :param feedback: bool, whether to print which module is reloaded
 
     """
+
+    def reloadDebugPrint(currentModule):
+        print(
+            f'Import/Reload : {currentModule.__name__:-<40} '
+            f'- {str(currentModule)}'
+        ) if feedback else None
 
     cmds.warning(
         'cmdo.bigReload is a debugging function and '
         'should not be used in production'
     )
 
+    # Get the name of the package to reload even if
+    #  we input a function or a subModule
     if isinstance(moduleToReload, FunctionType):
         moduleToReload = moduleToReload.__module__.split('.')[0]
 
@@ -83,16 +91,12 @@ def bigReload(moduleToReload: Union[str, FunctionType, ModuleType] = __PACKAGE_N
             toReload.append(module)
 
     for module in toReload:
-        print(
-            f'Import/Reload : {module.__name__:-<40} - {str(module)}'
-        ) if feedback else None
+        reloadDebugPrint(module)
         importlib.import_module(module.__name__)
         importlib.reload(module)
 
     parentModule = sys.modules.get(moduleToReload)
-    print(
-        f'Import/Reload : {parentModule.__name__:-<40} - {str(parentModule)}'
-    ) if feedback else None
+    reloadDebugPrint(parentModule)
 
     importlib.import_module(parentModule.__name__)
     importlib.reload(parentModule)
