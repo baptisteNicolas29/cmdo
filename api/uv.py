@@ -1,12 +1,14 @@
-from typing import List, Union
+from typing import List, Union, Dict, Tuple
 
 from maya import cmds
+from maya.api import OpenMaya as om
 
 
 __all__: List[str] = [
     'duplicateUVSet',
     'transferUVSets',
     'checkOverlappingUVs',
+    'getUVShellList'
 ]
 
 
@@ -65,3 +67,62 @@ def checkOverlappingUVs(sourceObj: str) -> List[int]:
 
     return cmds.polyUVOverlap(allFaces, overlappingComponents=True) or []
 
+
+def getUVShellList(sourceObj: str, uvSets: Union[str, List, None] = None) -> Dict[str, Dict[str, Union[int, List[Tuple]]]]:
+    """
+    Get a list of UV shells and there corresponding UV point positions
+
+    This is given, per UV set
+
+    :param sourceObj: str, the name of the object to retrieve UV shells from
+    :param uvSets: the name of a specific UV set, if none, all UV sets  are used
+
+    :return: Dict[str, Dict[str, Union[int, List[Tuple]]]],
+        {uvSet: {"shellCount": int, "shells": [(uvId, [u, v]), ...]}}
+    """
+
+    selList = om.MSelectionList()
+    selList.add(sourceObj)
+
+    pathToShape = selList.getDagPath(0)
+
+    meshNode = pathToShape.fullPathName()
+
+    if uvSets is None:
+        uvSets = cmds.polyUVSet(meshNode, query=True, allUVSets=True)
+    else:
+        uvSets = [uvSets] if isinstance(uvSets, str) else uvSets
+
+    allSets = {}
+    for currentUVSet in uvSets:
+        shapeFn = om.MFnMesh(pathToShape)
+        if not shapeFn.numUVs(currentUVSet):  # check is the mesh has UVs
+            continue
+
+        Us, Vs = shapeFn.getUVs(currentUVSet)
+        shellCount, shellId = shapeFn.getUvShellsIds(currentUVSet)
+
+        shells = {}
+        for i, n in enumerate(shellId):
+            shells.setdefault(n, []).append((i, [Us[i], Vs[i]]))
+
+        allSets[currentUVSet] = {'shellCount': shellCount, 'shells': shells}
+
+    return allSets
+
+
+def selectUVShellUVs(sourceObj: str, uvSet: str, shellIndex: int) -> None:
+    """
+    Select the UVs of the given objet from the given UV set and the shell number
+
+    :param sourceObj: str, the object to select UVs on
+    :param uvSet: str, the name of the UV set
+    :param shellIndex: int, the index of the UV shell
+
+    """
+    uvShells = getUVShellList(sourceObj, uvSet)
+
+    cmds.select(*list(map(
+        lambda t: f'{sourceObj}.map[{t[0]}]',
+        uvShells[uvSet]['shells'][shellIndex]
+    )))
