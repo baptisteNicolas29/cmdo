@@ -8,7 +8,8 @@ __all__: List[str] = [
     'duplicateUVSet',
     'transferUVSets',
     'checkOverlappingUVs',
-    'getUVShellList'
+    'getUVShellList',
+    'selectUVShellUVs'
 ]
 
 
