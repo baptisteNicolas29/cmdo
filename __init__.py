@@ -1,3 +1,23 @@
+__doc__ = """
+cmdo is an oop maya python wrapper. It is mainly composed of a library of nodes 
+(maya node wrapper classes) and an api to enable high level operations on nodes 
+(ie: lockAndHideTransforms ect). At its core cmdo is built to operate on any 
+kind of maya data, its nodes can be initialised with object names, MObjects, 
+MSelectionLists, MPlugs or cmdo custom node classes
+
+cmdo integrates all maya.cmds functions in its main namespace through a wrapper 
+to convert data between the two. The conversion is done at function call time.
+
+Its purpose is to facilitate the interaction between maya and programmers and 
+to be able to interact with any node types found in maya in an oop manner while 
+maintaining acceptable performance. To do this cmdo uses maya.api.OpenMaya 
+for the base of its objects most of the time.
+
+Furthermore, all cmdo nodes get data on demand, so we avoid heavy loading of 
+the library and this enables cmdo nodes to always be up to date with their 
+maya counterpart.
+"""
+
 from typing import Dict, Tuple, Any, Callable, List, Generator, Union, Type
 from types import ModuleType, FunctionType
 from collections import OrderedDict
