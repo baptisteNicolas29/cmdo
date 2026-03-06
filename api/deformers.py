@@ -9,6 +9,7 @@ from ..core.exceptions import CmdoException
 
 
 __all__: List[str] = [
+    'isSkinned',
     'skinAs',
     'resetSkin',
     'getJointsNotInSkinHierarchy',
@@ -16,6 +17,17 @@ __all__: List[str] = [
 
 
 # ------------------------------------------------------------- SKINCLUSTER
+def isSkinned(mesh: CmdoObject) -> bool:
+    """
+    Determine if the given mesh is skinned.
+
+    :param mesh: CmdoObject, mesh to check
+
+    :return: bool, True if mesh is skinned
+    """
+
+    return bool(history.getDeformers(mesh, ['skinCluster']))
+
 
 # TODO: wierd things are going on when trying to use skinAs
 def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Union[om.MObject, None]:
