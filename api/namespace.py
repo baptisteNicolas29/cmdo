@@ -14,6 +14,7 @@ __all__: List[str] = [
     'removeNamespace',
     'removeAllNamespaces',
     'getObjectsFromNamespace',
+    'moveNamespace',
 ]
 
 
