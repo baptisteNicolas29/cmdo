@@ -1,6 +1,6 @@
 from typing import List, Union
 
-from maya import cmds
+from maya import cmds, mel
 from maya.api import OpenMaya as om
 
 from ..core.graphLib import Graph

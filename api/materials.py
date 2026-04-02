@@ -30,6 +30,7 @@ __all__: List[str] = [
     'assignMaterial',
     'assignMaterialPerUdim',
     'addMaterialWithColor',
+    'getShadingNetworkFromMesh',
     'duplicateShadingNetwork',
 ]
 
@@ -460,12 +461,40 @@ def addMaterialWithColor(
             cmds.setAttr(f'{mat}.{colorAttr}', *color, type='double3')
 
 
+def getShadingNetworkFromMesh(mesh: CmdoObject) -> Graph:
+    mesh = Graph.ls(mesh)[0]
+    if not mesh.isShapeNode:
+        cmds.warning(
+            '[duplicateShadingNetwork] '
+            '- Inputs need to be a mesh shape to access shading engine'
+        )
+        return Graph()
+
+    shadingEngine = Graph.listConnections(mesh.name, type="shadingEngine")
+    if not shadingEngine:
+        cmds.warning(
+            '[duplicateShadingNetwork] '
+            '- Could not get connected shading engine from mesh'
+        )
+        return Graph()
+
+    shader = shadingEngine[0]['surfaceShader'].source().node()
+    if not shader:
+        cmds.warning(
+            '[duplicateShadingNetwork] '
+            '- Could not get connected shader from shading engine'
+        )
+        raise RuntimeError(f'{shadingEngine} has no surfaceShader')
+
+    return shadingEngine + Graph.listHistory(shader, pruneDagObjects=True) or shadingEngine
+
+
 def duplicateShadingNetwork(mesh: CmdoObject) -> Graph:
     mesh = Graph.ls(mesh)[0]
     if not mesh.isShapeNode:
         cmds.warning(
             '[duplicateShadingNetwork] '
-            '- Inputs need to be a mesh shape to access shading enginee'
+            '- Inputs need to be a mesh shape to access shading engine'
         )
         return Graph()
 
