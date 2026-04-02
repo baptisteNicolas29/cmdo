@@ -102,14 +102,14 @@ def getHierarchyRoot(node: str, **kwargs) -> List[str]:
         cmds.warning(f'Given obj does not exist : {node}. Aborting....')
         return []
 
-    jointHierarchy = [node]
+    hierarchy = [node]
     parent = node
 
     while (prt := cmds.listRelatives(parent, parent=True, **kwargs)) is not None:
         parent = prt[0]
-        jointHierarchy.append(parent)
+        hierarchy.append(parent)
 
-    return jointHierarchy
+    return hierarchy
 
 
 def getShortestParent(node: CmdoObject, graphList: CmdoList, asStr: bool = True) -> Union[nodeLib.Node, str, None]:
