@@ -546,6 +546,21 @@ class Node(om.MObject):
         return self.hasFn(om.MFn.kShape)
 
     @property
+    def isMesh(self) -> bool:
+
+        return self.hasFn(om.MFn.kMesh)
+
+    @property
+    def isNurbsCurve(self) -> bool:
+
+        return self.hasFn(om.MFn.kNurbsCurve)
+
+    @property
+    def isNurbsSurface(self) -> bool:
+
+        return self.hasFn(om.MFn.kNurbsSurface)
+
+    @property
     def exists(self) -> bool:
 
         """
@@ -583,6 +598,10 @@ class Node(om.MObject):
         refNode = om.MSelectionList().add(refNodeName).getDependNode(0)
 
         return NodeRegistry().get(refNodeName)(refNode)
+
+    def isType(self, nodeType: Union[str, int]) -> bool:
+
+        return self.type == nodeType or self.nodeType == nodeType
 
 
 NodeType = Type[Union[str, Node]]

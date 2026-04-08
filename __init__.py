@@ -38,7 +38,9 @@ from maya import cmds, mel
 from maya.api import (
     OpenMaya as om,
     OpenMayaAnim as oma,
-    OpenMayaUI as omui
+    OpenMayaUI as omui,
+    OpenMayaRender as omr
+
 )
 
 

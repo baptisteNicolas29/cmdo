@@ -1,7 +1,6 @@
 from typing import List, Any, Union
 
-from ... import cmds
-from maya.api import OpenMaya as om
+from ... import cmds, om
 
 from ...core.cmdoTyping import CmdoObject
 from ...core.abstract.dgLib import DGNode
@@ -16,9 +15,7 @@ class ObjectSet(DGNode):
 
     @classmethod
     def newSet(cls, *args, **kwargs):
-        return Graph.ls(
-            cmds.sets(*args, **kwargs)
-        )[0]
+        return Graph.ls(cmds.sets(*args, **kwargs))[0]
 
     @property
     def mfnSet(self) -> om.MFnSet:
