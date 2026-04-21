@@ -31,9 +31,10 @@ import contextlib
 #    to handle cmdo objects in & out conversion
 # - mel is imported to be accessible through the cmdo namespace
 #    like: cmdo.mel
-# - OpenMaya, OpenMayaAnim and OpenMayaUI are imported to be accessible
-#    through the cmdo namespace as om, oma and omui
-#    like: cmdo.om, cmdo.oma, cmdo.omui
+# - OpenMaya, OpenMayaAnim, OpenMayaUI and OpenMayaRender
+#    are imported to be accessible through the cmdo namespace
+#    as om, oma, omui and omr
+#    like: cmdo.om, cmdo.oma, cmdo.omui, cmdo.omr
 from maya import cmds, mel
 from maya.api import (
     OpenMaya as om,

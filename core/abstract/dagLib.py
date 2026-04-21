@@ -390,7 +390,7 @@ class DAGNode(DGNode):
         return self['matrix'].value
 
     @property
-    def transformationMatrix(self) -> om.MMatrix:
+    def localTransformationMatrix(self) -> om.MMatrix:
 
         """
         Get the local transformation matrix of the current node
@@ -400,8 +400,8 @@ class DAGNode(DGNode):
 
         return self.mfnDagNode.transformationMatrix()
 
-    @transformationMatrix.setter
-    def transformationMatrix(self, matrix: om.MMatrix) -> None:
+    @localTransformationMatrix.setter
+    def localTransformationMatrix(self, matrix: om.MMatrix) -> None:
 
         """
         Set the local transformation matrix of the current node

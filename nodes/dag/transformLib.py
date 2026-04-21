@@ -376,11 +376,43 @@ class Transform(dagLib.DAGNode):
         """
         return om.MTransformationMatrix(self.worldMatrix)
 
+    def getTranslation(self, space: int = om.MSpace.kWorld) -> om.MVector:
+        """
+        Get the translation from the transformationMatrix in any space
+
+        :param space: int, a space as defined in maya.OpenMaya.api.MSpace
+
+        :return: MVector, the translation vector
+        """
+        return self.transformationMatrix.translation(space)
+
+    def getRotation(self, asQuaternion: bool = False) -> Union[om.MEulerRotation, om.MQuaternion]:
+        """
+        Get the rotation from the transformationMatrix as euler or quaternion
+
+        :param asQuaternion: bool, whether to return as quaternion or as euler
+
+        :return: Union[om.MEulerRotation, om.MQuaternion], the rotation
+
+        """
+        return self.transformationMatrix.rotation(asQuaternion)
+
+    def getScale(self, space: int = om.MSpace.kWorld) -> List[float]:
+        """
+        Get the scale from the transformationMatrix in any space
+
+        :param space: int, a space as defined in maya.OpenMaya.api.MSpace
+
+        :return: List[float], the transformation's scale components
+        """
+        return self.transformationMatrix.scale(space)
+
     def resetTransforms(self):
         """
+        Reset translate, rotate and scale attributes to their default values
 
-        :return:
         """
+
         self.translate = [0, 0, 0]
         self.rotate = [0, 0, 0]
         self.scale = [1, 1, 1]

@@ -1,3 +1,4 @@
+# inherits from dgLib.DGNode
 from .dg.absoluteLib import *
 from .dg.addDoubleLinearLib import *
 from .dg.aimMatrixLib import *
@@ -35,6 +36,7 @@ from .dg.sinLib import *
 from .dg.subtractLib import *
 from .dg.wtAddMatrixLib import *
 
+# inherits from dagLib.DAGNode
 from .dag.transformLib import *  # dagLib
 from .dag.curveLib import *  # dagLib
 from .dag.jointLib import *  # transformLib

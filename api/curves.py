@@ -3,7 +3,7 @@ from typing import List, Union, Type
 from maya import cmds
 from maya.api import OpenMaya as om
 
-from ..core import Graph
+from ..core import Graph, GraphType
 from ..nodes.dag.curveLib import Curve
 from ..core.abstract import nodeLib, dagLib
 from ..core.exceptions import CmdoException
@@ -13,11 +13,11 @@ from ..core.cmdoTyping import CmdoNumber
 __all__: List[str] = [
     'createCircle',
     'createBox',
-    'createCross'
+    'createCross',
+    'makeCurveFromPoints',
 ]
 
 
-# TODO: Move to more task oriented library (aka: rigging)
 def createCircle(name: str = 'nurbsCircle', radius: CmdoNumber = 1.0, **kwargs):
     """
     Create a basic circle nurbsCurve
@@ -28,14 +28,14 @@ def createCircle(name: str = 'nurbsCircle', radius: CmdoNumber = 1.0, **kwargs):
         Curve: the created object
     """
 
-    transform, makeNurbs = cmds.circle(name=name, radius=radius, **kwargs)
+    transform, makeNurbs = cmds.circle(name=name, radius=float(radius), **kwargs)
 
     Graph.delete(makeNurbs)
 
     return Graph.ls(transform)[0]
 
 
-def createBox(name='nurbsBox', size: Union[CmdoNumber, List[CmdoNumber]] = 1.0, **kwargs):
+def createBox(name: str = 'nurbsBox', size: Union[CmdoNumber, List[CmdoNumber]] = 1.0, **kwargs):
     """
     Create a basic Box
 
@@ -103,7 +103,6 @@ def createBox(name='nurbsBox', size: Union[CmdoNumber, List[CmdoNumber]] = 1.0, 
         curveData.get('rational'),
         parent=parent
     )
-    # mfnCurve.setName(name)
 
     curveParent = Graph.ls(mfnCurve.parent(0))[0]
     curveParent.name = name
@@ -155,3 +154,47 @@ def createCross(name='nurbsCross', size: CmdoNumber = 1.0, **kwargs):
     curveParent.name = name
 
     return curveParent
+
+
+def makeCurveFromPoints(points: Graph, degree: int = 3, form: int = 1, uniform: bool = True) -> Curve:
+    """
+    Make a curve from a list of points (objects or vector3)
+
+    :param points: Graph[CmdoObject], a list of points
+    :param degree: int, the degree of the curve
+    :param form: int, the form of the curve
+    :param uniform: bool, if True then parameter values of the knots will be
+        uniformly spaced
+
+    :return:
+    """
+
+    curveData = {
+        'degree': degree,
+        'form': form,
+        'is2D': False,
+        'rational': True,
+        'uniform': uniform,
+        'knots': list(range(len(points) + (2 * 3) - 1)),
+        'cvs': [
+            om.MPoint(
+                *point.getTranslation,
+                1.0
+            ) for point in points
+        ],
+    }
+
+    len(curveData.get('cvs'))
+
+    mfnCurve = om.MFnNurbsCurve()
+    mfnCurve.createWithEditPoints(
+        curveData.get('cvs'),
+        # curveData.get('knots'),
+        curveData.get('degree'),
+        curveData.get('form'),
+        curveData.get('is2D'),
+        curveData.get('rational'),
+        curveData.get('uniform'),
+    )
+
+    return Graph.ls(mfnCurve)[0]
