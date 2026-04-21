@@ -11,6 +11,7 @@ from . import mesh
 from . import graph
 from . import namespace
 from . import plugs
+from . import viewport
 
 
 __all__: List[str] = [
@@ -24,5 +25,6 @@ __all__: List[str] = [
     'mesh',
     'graph',
     'namespace',
-    'plugs'
+    'plugs',
+    'viewport',
 ]

@@ -67,7 +67,34 @@ class SkinCluster(geometryFilterLib.GeometryFilter):
             weightDict[deformedMesh] = self.mfnSkinCluster.getWeights(meshDagPath, compMObj)
 
         return weightDict
-#
+
+    def getInfluencesFromVertex(self, vertexIdx: int) -> Dict[str, List[str]]:
+        """
+        Get influences affecting given vertex
+
+        :param vertexIdx: int, the vertex index
+
+        :return: Dict[str, List[str]], dict{'mesh.vtx[vtxIdx]': ['joint1', 'joint2']}
+        """
+
+        vertInfluenceDict = {}
+        vertexName = f'{self.outputGeometry[0].name}.vtx[{vertexIdx}]'
+
+        for influence in cmds.skinCluster(self.name, query=True, weightedInfluence=True):
+
+            # maya is stupid and the only way to get vertices from an influence
+            # is to select them
+            cmds.skinCluster(self.name, edit=True, selectInfluenceVerts=influence)
+            influencedVertices = cmds.ls(selection=True, flatten=True)
+
+            if vertexName not in influencedVertices:
+                continue
+
+            vertInfluenceDict.setdefault(vertexName, []).append(influence)
+
+        return vertInfluenceDict
+
+
 #     @weights.setter
 #     def weights(
 #         self,
