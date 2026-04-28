@@ -8,15 +8,6 @@ from ...core import graphLib
 
 class GeometryFilter(dgLib.DGNode):
 
-    def __init__(self, name: Union[str, om.MObject] = None) -> None:
-        """
-        Initialize an instance of GeometryFilter
-
-        :param name: Optional[str], the name of the node
-        """
-
-        super().__init__(name=name)
-
     @property
     def mfnGeometryFilter(self) -> oma.MFnGeometryFilter:
         """
@@ -46,6 +37,16 @@ class GeometryFilter(dgLib.DGNode):
         """
 
         self.mfnGeometryFilter.envelope = float(value)
+
+    @property
+    def deformerSet(self):
+        """
+        Get the envelope value of the current deformer
+
+        :return: float, the value of the envelope
+        """
+
+        return self.mfnGeometryFilter.deformerSet
 
     @property
     def inputGeometry(self) -> graphLib.Graph:

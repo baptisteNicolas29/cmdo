@@ -174,6 +174,7 @@ class Node(om.MObject):
         :return: Plug, the wanted plug
         """
         attr = self.dependencyNode.findAlias(plug)
+
         if not attr.isNull():
             plugObj = Plug(self, attr)
 
@@ -601,7 +602,7 @@ class Node(om.MObject):
 
     def isType(self, nodeType: Union[str, int]) -> bool:
 
-        return self.type == nodeType or self.nodeType == nodeType
+        return cmds.objectType(self.name, isAType=nodeType) or self.openMayaType == nodeType
 
 
 NodeType = Type[Union[str, Node]]
