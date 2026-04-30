@@ -1,4 +1,5 @@
 from typing import Dict, List
+import itertools
 
 from maya import cmds
 
@@ -18,6 +19,15 @@ class MayaFileInfo(dict, metaclass=SingletonMeta):
     This class manages mayaFileInfo in an easier way
     """
 
+    def __init__(self):
+        super().__init__()
+
+        # makes key value pairs with every two element of the list
+        # eg: ['application', 'maya', 'product', 'Maya 2024', ...]
+        # -> zip(('application', 'maya'), ('product', 'Maya 2024'), ...)
+        for (key, value) in zip(*[iter(cmds.fileInfo(query=True))] * 2):
+            self[key] = value
+
     @property
     def raw_data(self) -> List:
 
@@ -36,6 +46,20 @@ class MayaFileInfo(dict, metaclass=SingletonMeta):
         super().update({key: value})
 
         cmds.fileInfo(str(key), str(value))
+
+    def remove(self) -> None: ...
+
+    def pop(self, key: str, default=None):
+        value = self.pop(key, default=default)
+        cmds.fileInfo(remove=key)
+
+        return value
+
+    def popitem(self):
+        key, value = self.popitem()
+        cmds.fileInfo(remove=key)
+
+        return {key: value}
 
     def update(self, other: Dict, **kwargs):
 

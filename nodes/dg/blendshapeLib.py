@@ -1,13 +1,39 @@
 from typing import List, Union, Dict
+import dataclasses
 
 from ... import cmds, om
 
+from ...core.cmdoTyping import CmdoObject
 from ...core.abstract import geometryFilterLib
 from ...core.nodeRegistry import NodeRegistry
+from ...core.exceptions import CmdoException
+
+
+@dataclasses.dataclass(kw_only=True)
+class DefaultTarget:
+    name: str
+    weight: float
+    weightIndex: int
+    index: int
+    value: float
+    attr: str
+    inputTarget: str
+    targetGeometry: str
+    inbetweens: List = dataclasses.field(default_factory=list)
+    isEditing: bool = False
+    isComboShape: bool = False
+
+
+@dataclasses.dataclass(kw_only=True)
+class InbetweenTarget:
+    index: int
+    value: float
+    attr: str
+    inputTarget: int
+    targetGeometry: str
 
 
 class BlendShape(geometryFilterLib.GeometryFilter):
-
     _NODE_TYPE = 'blendShape'
     _API_TYPE = om.MFn.kBlendShape
 
@@ -18,13 +44,79 @@ class BlendShape(geometryFilterLib.GeometryFilter):
     @property
     def attrStringTemplate(self):
         return (
-            self.name+".inputTarget[{inputTarget}]."
-            "inputTargetGroup[{targetIndex}].inputTargetItem"
+                self.name + ".inputTarget[{inputTarget}]."
+                            "inputTargetGroup[{targetIndex}].inputTargetItem"
         )
+
+    def getTargets(self) -> List[DefaultTarget]:
+        targetList: List[DefaultTarget] = []
+
+        aliases = cmds.aliasAttr(self.name, query=True) or []
+        inputTargets = cmds.getAttr(
+            f"{self}.inputTarget",
+            multiIndices=True
+        ) or [0]
+
+        for i in range(0, len(aliases), 2):
+
+            name = aliases[i]
+            wAttr = aliases[i + 1]
+
+            tgtIndex = int(wAttr[wAttr.find('[') + 1: wAttr.find(']')])
+
+            # current weight value
+            current = cmds.getAttr(f"{self}.{name}")
+
+            weightInfo = {
+                "name": name,
+                "weight": current,
+                'weightIndex': tgtIndex
+            }
+
+            # Iterate over all targets (only index 0 is used usually)
+            currentTarget = None
+            inbetweens = []
+            for it in inputTargets:
+                base = self.attrStringTemplate.format(
+                    inputTarget=it,
+                    targetIndex=tgtIndex
+                )
+
+                items = cmds.getAttr(base, multiIndices=True) or []
+                for idx in items:
+                    plug = f"{base}[{idx}].inputGeomTarget"
+                    inputGeom = cmds.connectionInfo(plug,
+                                                    sourceFromDestination=True)
+                    if cmds.objExists(plug):
+
+                        if int((idx - 5000) / 1000.0) == 1:
+                            currentTarget = DefaultTarget(
+                                name=name,
+                                weight=current,
+                                weightIndex=tgtIndex,
+                                index=idx,
+                                value=(idx - 5000) / 1000.0,
+                                attr=plug,
+                                inputTarget=it,
+                                targetGeometry=inputGeom
+                            )
+                        else:
+                            inbetweens.append(InbetweenTarget(
+                                index=idx,
+                                value=(idx - 5000) / 1000.0,
+                                attr=plug,
+                                inputTarget=it,
+                                targetGeometry=inputGeom
+                            ))
+
+            currentTarget.inbetweens = sorted(inbetweens, key=lambda x: x.index)
+            targetList.append(currentTarget)
+
+        return targetList
 
     def getInfo(self) -> List[Dict]:
         """
-        Get blendShape target and weight info
+        Get blendShape target and weight info as a dictionary
 
         :return: List[Dict]
         """
@@ -37,6 +129,7 @@ class BlendShape(geometryFilterLib.GeometryFilter):
         ) or [0]
 
         for i in range(0, len(aliases), 2):
+
             name = aliases[i]
             wAttr = aliases[i + 1]
 
@@ -45,9 +138,14 @@ class BlendShape(geometryFilterLib.GeometryFilter):
             # current weight value
             current = cmds.getAttr(f"{self}.{name}")
 
-            weightInfo = {"name": name, "weight": current, 'weightIndex': tgtIndex}
+            weightInfo = {
+                'name': name,
+                'weight': current,
+                'weightIndex': tgtIndex
+            }
 
             # Iterate over all targets (only index 0 is used usually)
+            currentTarget = None
             inbetweens = []
             for it in inputTargets:
                 base = self.attrStringTemplate.format(
@@ -57,7 +155,6 @@ class BlendShape(geometryFilterLib.GeometryFilter):
 
                 items = cmds.getAttr(base, multiIndices=True) or []
                 for idx in items:
-
                     plug = f"{base}[{idx}].inputGeomTarget"
                     inputGeom = cmds.connectionInfo(plug, sourceFromDestination=True)
                     if cmds.objExists(plug):
@@ -70,6 +167,7 @@ class BlendShape(geometryFilterLib.GeometryFilter):
                                 "inputTarget": it,
                                 "targetGeometry": inputGeom
                             }
+
                         else:
                             inbetweens.append({
                                 "index": idx,
@@ -79,16 +177,38 @@ class BlendShape(geometryFilterLib.GeometryFilter):
                                 "targetGeometry": inputGeom
                             })
 
-            weightInfo["inbetweens"] = sorted(inbetweens, key=lambda x: x["index"])
+            weightInfo["inbetweens"] = sorted(
+                inbetweens,
+                key=lambda x: x["index"]
+            )
             info.append(weightInfo)
 
         return info
 
     def getTargetInfo(self, index: Union[int, str]) -> Dict:
         return targetInfo[0] if (targetInfo := list(filter(
-            lambda info: info["weightIndex"] == index if isinstance(index, int) else info["name"] == index,
+            lambda info: info["weightIndex"] == index
+                if isinstance(index, int)
+                else info["name"] == index,
             self.getInfo()
         ))) else {}
+
+    def getTarget(self, value: Union[int, str]) -> Union[DefaultTarget, None]:
+        match value:
+            case int():
+                return targetInfo[0] if (targetInfo := list(filter(
+                    lambda target: target.weightIndex == value,
+                    self.getTargets()
+                ))) else None
+
+            case str():
+                return targetInfo[0] if (targetInfo := list(filter(
+                    lambda target: target.name == value,
+                    self.getTargets()
+                ))) else None
+
+            case _:
+                raise CmdoException(f'Value needs to be of type in or str, got : {type(value)}')
 
     def getTargetInbetweenInfo(self, index: Union[int, str]) -> Dict:
         return self.getTargetInfo(index).get("inbetweens")
@@ -110,7 +230,7 @@ class BlendShape(geometryFilterLib.GeometryFilter):
     def targetHasInbetweens(self, index: int) -> bool:
         return bool(self.getTargetInbetweenInfo(index))
 
-    def getEditingShape(self):
+    def getEditingShape(self) -> bool:
         return cmds.blendShape(self.name, editTarget=True, query=True) or []
 
     def addTarget(self, sourceMesh: str) -> Dict:
@@ -137,7 +257,9 @@ class BlendShape(geometryFilterLib.GeometryFilter):
 
         return self.getTargetInfo(self.targetCount)
 
-    def addInbetweenTarget(self, sourceMesh: str, targetIndex: Union[int, str], inbetweenWeight: float, inbetweenType: str = 'absolute') -> Dict:
+    def addInbetweenTarget(self, sourceMesh: str, targetIndex: Union[int, str],
+                           inbetweenWeight: float,
+                           inbetweenType: str = 'absolute') -> Dict:
         """
         Adds an inbetween shape to a target
 
@@ -165,6 +287,9 @@ class BlendShape(geometryFilterLib.GeometryFilter):
         )
 
         return self.getTargetInfo(targetIndex)
+
+    def addComboShape(self):
+        ...
 
     def removeTarget(self, targetIndex: Union[int, str]):
         targetInfo = self.getTargetInfo(targetIndex)
@@ -198,4 +323,3 @@ class BlendShape(geometryFilterLib.GeometryFilter):
 
 
 NodeRegistry()[BlendShape.nodeType()] = BlendShape
-
