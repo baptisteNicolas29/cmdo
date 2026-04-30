@@ -135,7 +135,7 @@ from . import core
 from . import nodes
 from . import api
 
-# Basic cmdo node Typing
+# Basic cmdo node Typing and core classes
 from .core.cmdoTyping import *
 from .core.openMayaTypes import *
 from .core.exceptions import *
@@ -146,7 +146,7 @@ from .core.abstract.dgLib import DGType
 from .core.abstract.dagLib import DAGType
 from .core.graphLib import GraphType
 
-# api imports
+# api imports, dump all api functions in the main namespace
 from .api import *
 from .api.hierarchy import *
 from .api.history import *
@@ -304,7 +304,7 @@ def __addMayaCmdsToCmdoNamespace() -> None:
         """Check if item is a subclass of graphLib.Graph"""
         return issubclass(type(item), core.graphLib.Graph)
 
-    def _convertInputArguments(args: Any) -> List:
+    def _convertInputArguments(args: Any) -> List[str]:
         """
         Convert the given arguments to str for maya.cmds if possible
 
@@ -331,9 +331,37 @@ def __addMayaCmdsToCmdoNamespace() -> None:
 
         return argsList
 
-    cmdoResultType = Type[Union[core.Node, om.MObject, core.Graph, Any]]
+    def _convertInputKeywordArguments(kwargs: Dict) -> Dict[str, str]:
+        """
+        Convert the given keyword arguments to str for maya.cmds if possible
 
-    def _convertOutputArguments(result: Any) -> cmdoResultType:
+        :param kwargs: Dict, keyword arguments to convert to str for maya.cmds
+
+        :return: Dict[str, str]: the converted arguments for maya.cmds
+
+        """
+
+        kwargsDict = dict(kwargs)
+        for key, value in kwargsDict.items():
+            if _isNodeSubclass(value):
+                value = value.name
+
+            elif _isPlugSubclass(value):
+                value = value.name()
+
+            elif _isGraphSubclass(value):
+                value = value.getSelectionStrings()
+
+            elif isinstance(value, (list, tuple, set)):
+                value = _convertInputArguments(value)
+
+            kwargsDict[key] = value
+
+        return kwargsDict
+
+    cmdoResultType = Type[Union[core.Node, om.MObject, Graph, Plug, Any]]
+
+    def _convertOutputResult(result: Any) -> cmdoResultType:
         """
         Convert the maya.cmds function output to cmdo types if possible
 
@@ -366,24 +394,25 @@ def __addMayaCmdsToCmdoNamespace() -> None:
 
             """
             argsList = _convertInputArguments(args)
-
-            result = func(*argsList, **kwargs)
+            kwargsDict = _convertInputKeywordArguments(kwargs)
+            
+            result = func(*argsList, **kwargsDict)
 
             __debugPrint(
                 f'{func.__name__} - '
                 f'\n\t{argsList = }'
-                f'\n\t{kwargs = }'
+                f'\n\t{kwargsDict = }'
                 f'\n\t{result = }'
             )
 
-            return _convertOutputArguments(result)
+            return _convertOutputResult(result)
 
         return wrap
 
     # Filtering of cmds functions
     # islower() serves to filter out mel macros, we only want python compatible
     # functions in the form of function(*args, **kwargs) and not Function()
-    def _filterCmds(key: Tuple) -> bool:
+    def _cmdsFilter(key: Tuple) -> bool:
         """
         Filter cmds functions by key
 
@@ -404,7 +433,7 @@ def __addMayaCmdsToCmdoNamespace() -> None:
     cmdoFunctionKeys = list(cmdoModule.__dict__.keys())
 
     cmdsDict = OrderedDict(sorted(filter(
-        _filterCmds,
+        _cmdsFilter,
         dict(inspect.getmembers(cmds)).items()
     )))
 
