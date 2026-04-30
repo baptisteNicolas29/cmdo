@@ -5,6 +5,7 @@ from . import singletonMetaclass
 from . import fileInfoLib
 from . import plugsLib
 
+# import classes to access like: cmdo.core.Plug
 from .plugsLib import Plug, PlugArray, PlugType, PlugArrayType
 
 # import classes to access like: cmdo.core.Node
