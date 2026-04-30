@@ -1,9 +1,6 @@
-from typing import Dict, List
-import itertools
+from typing import Dict, List, Tuple
 
 from maya import cmds
-
-from .singletonMetaclass import SingletonMeta
 
 
 __all__: List[str] = [
@@ -11,27 +8,39 @@ __all__: List[str] = [
 ]
 
 
-class MayaFileInfo(dict, metaclass=SingletonMeta):
-
+class MayaFileInfo(dict):
     """
-    The class is a singleton and only one should exist in cmdo
-
     This class manages mayaFileInfo in an easier way
     """
 
     def __init__(self):
         super().__init__()
 
-        # makes key value pairs with every two element of the list
-        # eg: ['application', 'maya', 'product', 'Maya 2024', ...]
-        # -> zip(('application', 'maya'), ('product', 'Maya 2024'), ...)
-        for (key, value) in zip(*[iter(cmds.fileInfo(query=True))] * 2):
+        for (key, value) in self.formattedData:
             self[key] = value
 
     @property
-    def raw_data(self) -> List:
+    def rawData(self) -> List:
+        """
+        Return the data formatted like maya would
+
+        :return: list[str]
+        """
 
         return cmds.fileInfo(query=True)
+
+    @property
+    def formattedData(self) -> List[Tuple]:
+        """
+        Makes key value pairs with every two element of the list
+
+        eg: ['application', 'maya', 'product', 'Maya 2024', ...]
+        -> zip(('application', 'maya'), ('product', 'Maya 2024'), ...)
+
+        :return: List[Tuple], key-value pairs for maya fileInfo
+        """
+
+        return list(zip(*[iter(self.rawData)] * 2))
 
     def get(self, key: str, default=None):
 
@@ -47,8 +56,6 @@ class MayaFileInfo(dict, metaclass=SingletonMeta):
 
         cmds.fileInfo(str(key), str(value))
 
-    def remove(self) -> None: ...
-
     def pop(self, key: str, default=None):
         value = self.pop(key, default=default)
         cmds.fileInfo(remove=key)
@@ -63,7 +70,7 @@ class MayaFileInfo(dict, metaclass=SingletonMeta):
 
     def update(self, other: Dict, **kwargs):
 
-        if not isinstance(other, dict):
+        if not issubclass(other.__class__, dict):
             raise TypeError(f'Need dict instance, got {type(other)}')
 
         for key, value in other.items():
@@ -71,7 +78,6 @@ class MayaFileInfo(dict, metaclass=SingletonMeta):
 
         self.clear()
 
-        raw_data = cmds.fileInfo(query=True)
-        for key, value in zip(raw_data[0::2], raw_data[1::2]):
+        for (key, value) in self.formattedData:
             self[key] = value
             super().__setitem__(key, value)

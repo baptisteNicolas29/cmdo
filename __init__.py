@@ -139,6 +139,7 @@ from . import api
 from .core.cmdoTyping import *
 from .core.openMayaTypes import *
 from .core.exceptions import *
+from .core.fileInfoLib import *
 from .core.plugsLib import PlugType, PlugArrayType
 from .core.abstract.nodeLib import NodeType
 from .core.abstract.dgLib import DGType
