@@ -1,5 +1,6 @@
 from typing import List
 
+from . import cmdoFilterKeys
 from . import hierarchy
 from . import history
 from . import materials
@@ -15,6 +16,7 @@ from . import viewport
 
 
 __all__: List[str] = [
+    'cmdoFilterKeys',
     'hierarchy',
     'history',
     'materials',

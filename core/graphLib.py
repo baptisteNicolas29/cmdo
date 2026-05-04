@@ -1,21 +1,17 @@
-from typing import Any, Union, List, Type
+from typing import Any, Union, List, Type, Callable
 
-from maya import cmds
-from maya.api import OpenMaya as om
+from .. import cmds, om
 
 from . import plugsLib
 from .cmdoTyping import CmdoObject, CmdoList
 
-from .abstract import nodeLib
-from .abstract import dgLib
-from .abstract import dagLib
+from .abstract import nodeLib, dgLib, dagLib
 
 from .nodeRegistry import NodeRegistry
 from .exceptions import CmdoException, CmdoPlugException
 
 
 # TODO: find a way to handle f***ing components (ie: vertices, edges, etc)
-
 class Graph(om.MSelectionList):
 
     __nodeRegistry = NodeRegistry()
@@ -491,6 +487,17 @@ class Graph(om.MSelectionList):
             self.add(item)
 
         return self
+
+    def filterFromKey(self, filterKey: Callable) -> 'Graph':
+        """
+        Given a filter key, return a filtered graph
+
+        :param filterKey: Callable, a function to filter the current graph
+
+        :return: Graph, a new filtered graph
+        """
+
+        return self.__class__.ls(*fil) if bool(fil := list(filter(filterKey, self))) else self.__class__()
 
     def __str__(self) -> str:
         args = ', '.join([f'"{x}"' for x in self])
