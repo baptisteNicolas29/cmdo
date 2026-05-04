@@ -601,8 +601,18 @@ class Node(om.MObject):
         return NodeRegistry().get(refNodeName)(refNode)
 
     def isType(self, nodeType: Union[str, int]) -> bool:
+        """
+        Check if the current node is of type nodeType or inherits from nodeType
 
-        return cmds.objectType(self.name, isAType=nodeType) or self.openMayaType == nodeType
+        :param nodeType: Union[str, int], maya type (str) or openMaya type (int)
+
+        :return: bool, if the current node is type nodeType or inherits from nodeType
+        """
+
+        return (
+            cmds.objectType(self.name, isAType=nodeType)
+            or self.openMayaType() == nodeType
+        )
 
 
 NodeType = Type[Union[str, Node]]
