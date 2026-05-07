@@ -44,9 +44,9 @@ class Plug(om.MPlug):
         if self.isNull:
             return
 
-        if self.multi:
+        if self.isArray:
             for index in range(self.numElements()):
-                result = self.__class__(self.elementByPhysicalIndex(index))
+                result = self.__class__(self.elementByLogicalIndex(index))
                 yield result
 
         elif self.isCompound:
