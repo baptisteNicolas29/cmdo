@@ -4,8 +4,7 @@ import os
 import random
 from pathlib import Path
 
-# from maya import cmds
-from .. import cmds
+from maya import cmds
 
 from ..nodes.dg.materialLib import *
 from ..nodes.dg.objectSetLib import *
