@@ -1,8 +1,10 @@
 from typing import List
 
+from maya import cmds
+from maya.api import OpenMaya as om
+
 from ..core.abstract import nodeLib, dagLib, dgLib
 from ..core import plugsLib
-from .. import cmds, om
 
 
 __all__: List[str] = [
@@ -21,7 +23,13 @@ __all__: List[str] = [
 def isTypeFilter(obj: nodeLib.Node, nodeType: str) -> bool: return obj.isType(nodeType)
 def isDagFilter(obj: nodeLib.Node) -> bool: return issubclass(obj.__class__, dagLib.DAGNode)
 def isPlugFilter(obj: om.MObject) -> bool: return issubclass(obj.__class__, plugsLib.Plug)
-def isReferencedFilter(obj: nodeLib.Node) -> bool: return obj.isReferenced
+def isReferencedFilter(obj: nodeLib.Node) -> bool: return issubclass(obj.__class__, nodeLib.Node) and obj.isReferenced
+
+
+# Naming Filters
+def hasPrefixFilter(obj: nodeLib.Node, prefix: str) -> bool: return obj.name.startswith(prefix)
+def hasSuffixFilter(obj: nodeLib.Node, suffix: str) -> bool: return obj.name.endswith(suffix)
+def hasTokenFilter(obj: nodeLib.Node, token: str) -> bool: return token in obj.name
 
 
 # DAG Filters

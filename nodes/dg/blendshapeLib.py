@@ -7,6 +7,7 @@ from ...core.cmdoTyping import CmdoObject
 from ...core.abstract import geometryFilterLib
 from ...core.nodeRegistry import NodeRegistry
 from ...core.exceptions import CmdoException
+from ...core.cmdoTyping import CmdoObject
 
 
 @dataclasses.dataclass(kw_only=True)
@@ -66,12 +67,6 @@ class BlendShape(geometryFilterLib.GeometryFilter):
 
             # current weight value
             current = cmds.getAttr(f"{self}.{name}")
-
-            weightInfo = {
-                "name": name,
-                "weight": current,
-                'weightIndex': tgtIndex
-            }
 
             # Iterate over all targets (only index 0 is used usually)
             currentTarget = None
@@ -187,9 +182,11 @@ class BlendShape(geometryFilterLib.GeometryFilter):
 
     def getTargetInfo(self, index: Union[int, str]) -> Dict:
         return targetInfo[0] if (targetInfo := list(filter(
-            lambda info: info["weightIndex"] == index
+            lambda info: (
+                info["weightIndex"] == index
                 if isinstance(index, int)
-                else info["name"] == index,
+                else info["name"] == index
+            ),
             self.getInfo()
         ))) else {}
 
@@ -231,14 +228,14 @@ class BlendShape(geometryFilterLib.GeometryFilter):
         return bool(self.getTargetInbetweenInfo(index))
 
     def getEditingShape(self) -> bool:
-        return cmds.blendShape(self.name, editTarget=True, query=True) or []
+        return cmds.blendShape(self.name, query=True, editTarget=True) or []
 
-    def addTarget(self, sourceMesh: str) -> Dict:
+    def addTarget(self, sourceMesh: CmdoObject, weight: float = 0.0) -> Dict:
         """
         Add a target mesh to the blendShape deformer.
 
         :param sourceMesh: mesh use to sculpt the target, defaults to None
-        :param destinationMesh: mesh affected by the target, defaults to None
+        :param weight: mesh use to sculpt the target, defaults to None
 
         :return: Dict, the target info
         """
@@ -247,19 +244,22 @@ class BlendShape(geometryFilterLib.GeometryFilter):
             self.name,
             edit=True,
             target=(
-                self.outputGeometry[0],
+                self.outputGeometry[0].name,
                 self.targetCount,
-                sourceMesh,
+                str(sourceMesh),
                 1.0
             ),
-            weight=(self.targetCount, 0.0)
+            weight=(self.targetCount, weight)
         )
 
         return self.getTargetInfo(self.targetCount)
 
-    def addInbetweenTarget(self, sourceMesh: str, targetIndex: Union[int, str],
-                           inbetweenWeight: float,
-                           inbetweenType: str = 'absolute') -> Dict:
+    def addInbetweenTarget(
+            self, sourceMesh: str,
+            targetIndex: Union[int, str],
+            inbetweenWeight: float,
+            inbetweenType: str = 'absolute'
+    ) -> Dict:
         """
         Adds an inbetween shape to a target
 
@@ -279,9 +279,9 @@ class BlendShape(geometryFilterLib.GeometryFilter):
             inBetween=True,
             inBetweenType=inbetweenType,
             target=(
-                self.outputGeometry[0],
+                self.outputGeometry[0].name,
                 targetIndex,
-                sourceMesh,
+                str(sourceMesh),
                 inbetweenWeight
             ),
         )

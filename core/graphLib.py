@@ -1,6 +1,7 @@
 from typing import Any, Union, List, Type, Callable
 
-from .. import cmds, om
+from maya import cmds
+from maya.api import OpenMaya as om
 
 from . import plugsLib
 from .cmdoTyping import CmdoObject, CmdoList

@@ -69,3 +69,32 @@ class GeometryFilter(dgLib.DGNode):
             graph.add(mObject)
 
         return graph
+
+    @property
+    def weightList(self) -> List[List[float]]:
+        weightLists = []
+        for weightList in self['weightList']:
+            plug = weightList['weights']
+
+            ids = plug.getExistingArrayAttributeIndices()
+            count = len(ids)
+
+            weights = [0.0] * count
+
+            for i in range(count):
+                weights[i] = plug.elementByPhysicalIndex(i).asFloat()
+
+            weightLists.append(weights)
+
+        return weightLists
+
+    @weightList.setter
+    def weightList(self, weights: List[List[float]]) -> None:
+        for weightList in self['weightList']:
+            plug = weightList['weights']
+
+            ids = plug.getExistingArrayAttributeIndices()
+            count = len(ids)
+
+            for i in range(count):
+                plug.elementByLogicalIndex(ids[i]).setFloat(weights[i])
