@@ -16,11 +16,13 @@ __all__: List[str] = [
     'isMeshFilter',
     'isTransformFilter',
     'isLocatorFilter',
+    'isDeformerFilter',
 ]
 
 
 # Generic Filters
 def isTypeFilter(obj: nodeLib.Node, nodeType: str) -> bool: return obj.isType(nodeType)
+def isDgFilter(obj: nodeLib.Node) -> bool: return issubclass(obj.__class__, dgLib.DGNode)
 def isDagFilter(obj: nodeLib.Node) -> bool: return issubclass(obj.__class__, dagLib.DAGNode)
 def isPlugFilter(obj: om.MObject) -> bool: return issubclass(obj.__class__, plugsLib.Plug)
 def isReferencedFilter(obj: nodeLib.Node) -> bool: return issubclass(obj.__class__, nodeLib.Node) and obj.isReferenced
@@ -40,6 +42,7 @@ def isLocatorFilter(obj: nodeLib.Node) -> bool: return isDagFilter(obj) and isTy
 
 
 # DG Filters
+def isDeformerFilter(obj: nodeLib.Node) -> bool: return isDgFilter(obj) and isTypeFilter(obj, 'geometryFilter')
 
 
 # Plug Filters
