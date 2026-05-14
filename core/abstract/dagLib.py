@@ -431,7 +431,7 @@ class DAGNode(DGNode):
         :return: om.MMatrix, the node s world matrix
         """
 
-        return self['worldMatrix'].value
+        return self['worldMatrix'][0].value
 
     @worldMatrix.setter
     def worldMatrix(self, value: Union[List[float], om.MMatrix]) -> None:

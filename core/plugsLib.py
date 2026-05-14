@@ -143,6 +143,10 @@ class Plug(om.MPlug):
         else:
             self[key].set(value)
 
+    def __bool__(self):
+
+        return not self.isNull
+
     def __str__(self) -> str:
 
         if self.isNull:
@@ -196,6 +200,7 @@ class Plug(om.MPlug):
 
         if isinstance(other, self.__class__):
             other = other.value
+
         return self.value - other
 
     def __mul__(self, other):
@@ -210,6 +215,23 @@ class Plug(om.MPlug):
 
     def __lshift__(self, other: 'Plug') -> None:
         other.connect(self)
+
+    def __floordiv__(self, other: om.MPlug) -> None:
+        """
+        Implement "//" symbol for disconnecting plugs
+        Works in either direction: plug1 // plug2 OR plug2 // plug1
+
+        :param other: om.MPlug, a plug to disconnect
+        """
+
+        if not isinstance(other, self.__class__):
+            other = Plug(other)
+
+        if other.source() == self:
+            self.disconnect(other)
+
+        elif self.source() == other:
+            other.disconnect(self)
 
     def __truediv__(self, other: om.MPlug) -> None:
         """
@@ -381,6 +403,9 @@ class Plug(om.MPlug):
         dg_modifier.disconnect(self, other)
         dg_modifier.doIt()
 
+    def fullName(self):
+        return f'{self.node().name}.{self.partialName(includeNodeName=False, useLongNames=True, includeInstancedIndices=True)}'
+
     @property
     def hash(self) -> int:
         """
@@ -412,17 +437,17 @@ class Plug(om.MPlug):
         if apiType == om.MFn.kTypedAttribute:
             fn_typed = om.MFnTypedAttribute(self.attribute()).attrType()
             if fn_typed == om.MFnData.kMatrix:
-                matrix = cmds.getAttr(self.name())
+                matrix = cmds.getAttr(self.fullName())
                 return om.MMatrix(matrix)
 
         elif apiType == om.MFn.kMatrixAttribute:
-            return om.MMatrix(cmds.getAttr(self.name()))
+            return om.MMatrix(cmds.getAttr(self.fullName()))
 
         # search for vectors
         elif apiType in [om.MFn.kAttribute3Float, om.MFn.kAttribute3Double]:
-            return om.MVector(*cmds.getAttr(self.name()))
+            return om.MVector(*cmds.getAttr(self.fullName()))
 
-        return cmds.getAttr(self.name())
+        return cmds.getAttr(self.fullName())
 
     @value.setter
     def value(self, value: Any) -> None:
