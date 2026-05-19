@@ -210,6 +210,15 @@ class ShadingEngine(ObjectSet):
         meshName = Graph.ls(value)[0].name
         cmds.sets(meshName, edit=True, forceElement=self.name)
 
+    @property
+    def members(self):
+        """
+        Get the set members as cmdo objects
+
+        Return a list of strings because Graph does not support components
+        """
+        return self.mfnSet.getMembers(False).getSelectionStrings()
+
 
 NodeRegistry()[ObjectSet.nodeType()] = ObjectSet
 NodeRegistry()[ShadingEngine.nodeType()] = ShadingEngine

@@ -460,103 +460,111 @@ def addMaterialWithColor(
             cmds.setAttr(f'{mat}.{colorAttr}', *color, type='double3')
 
 
-def getShadingNetworkFromMesh(mesh: CmdoObject) -> Graph:
+def getShadingNetworkFromMesh(mesh: CmdoObject) -> Dict[ShadingEngine, Graph]:
+    shadingEngine_data = {}
+
     mesh = Graph.ls(mesh)[0]
     if not mesh.isShapeNode:
         cmds.warning(
             '[duplicateShadingNetwork] '
             '- Inputs need to be a mesh shape to access shading engine'
         )
-        return Graph()
+        return shadingEngine_data
 
-    shadingEngine = Graph.listConnections(mesh.name, type="shadingEngine")
-    if not shadingEngine:
+    shadingEngines = Graph.listConnections(mesh.name, type="shadingEngine")
+    if not shadingEngines:
         cmds.warning(
             '[duplicateShadingNetwork] '
             '- Could not get connected shading engine from mesh'
         )
-        return Graph()
+        return shadingEngine_data
 
-    shader = shadingEngine[0]['surfaceShader'].source().node()
-    if not shader:
-        cmds.warning(
-            '[duplicateShadingNetwork] '
-            '- Could not get connected shader from shading engine'
-        )
-        raise RuntimeError(f'{shadingEngine} has no surfaceShader')
+    for shadingEngine in shadingEngines:
+        shader = shadingEngine['surfaceShader'].source().node()
+        if not shader:
+            cmds.warning(
+                '[duplicateShadingNetwork] '
+                '- Could not get connected shader from shading engine'
+            )
+            raise RuntimeError(f'{shadingEngine} has no surfaceShader')
 
-    return shadingEngine + Graph.listHistory(shader, pruneDagObjects=True) or shadingEngine
+        shadingEngine_data[shadingEngine] = Graph.listHistory(shader, pruneDagObjects=True)
+
+    return shadingEngine_data
 
 
-def duplicateShadingNetwork(mesh: CmdoObject) -> Graph:
+def duplicateShadingNetwork(mesh: CmdoObject) -> List[Tuple]:
     mesh = Graph.ls(mesh)[0]
     if not mesh.isShapeNode:
         cmds.warning(
             '[duplicateShadingNetwork] '
             '- Inputs need to be a mesh shape to access shading engine'
         )
-        return Graph()
+        return []
 
-    shadingEngine = Graph.listConnections(mesh.name, type="shadingEngine")
-    if not shadingEngine:
+    newNetwork = []
+    shadingEngines = Graph.listConnections(mesh.name, type="shadingEngine")
+    if not shadingEngines:
         cmds.warning(
             '[duplicateShadingNetwork] '
             '- Could not get connected shading engine from mesh'
         )
-        return Graph()
+        return []
+    for shadingEngine in shadingEngines:
 
-    shader = shadingEngine[0]['surfaceShader'].source().node()
-    if not shader:
-        cmds.warning(
-            '[duplicateShadingNetwork] '
-            '- Could not get connected shader from shading engine'
-        )
-        raise RuntimeError(f'{shadingEngine} has no surfaceShader')
+        shader = shadingEngine[0]['surfaceShader'].source().node()
+        if not shader:
+            cmds.warning(
+                '[duplicateShadingNetwork] '
+                '- Could not get connected shader from shading engine'
+            )
+            continue
 
-    upstream = Graph.listHistory(shader, pruneDagObjects=True) or []
+        upstream = Graph.listHistory(shader, pruneDagObjects=True) or []
 
-    duplicatedDict = {}
-    nodeConnectionsDict = {}
-    for node in reversed(upstream):
-        dupNode = Graph.ls(
-            cmds.duplicate(node.name, name=f"{node.strippedName}_copy")[0]
-        )[0]
-        duplicatedDict[dupNode] = node
-        nodeConnectionsDict[node] = [node.incomingConnections, node.outgoingConnections]
+        duplicatedDict = {}
+        nodeConnectionsDict = {}
+        for node in reversed(upstream):
+            dupNode = Graph.ls(
+                cmds.duplicate(node.name, name=f"{node.strippedName}_copy")[0]
+            )[0]
+            duplicatedDict[dupNode] = node
+            nodeConnectionsDict[node] = [node.incomingConnections, node.outgoingConnections]
 
-    for dupNode, origNode in duplicatedDict.items():
-        inCons, outCons = nodeConnectionsDict.get(origNode, [{}, {}])
-        for destinationPlug, sourcePlug in inCons.items():
+        for dupNode, origNode in duplicatedDict.items():
+            inCons, outCons = nodeConnectionsDict.get(origNode, [{}, {}])
+            for destinationPlug, sourcePlug in inCons.items():
 
-            dupName = f'{sourcePlug.node().strippedName}_copy'
-            if not cmds.objExists(dupName):
-                continue
-
-            sourceDupNode = Graph.ls(dupName)[0]
-            sourcePlugName = sourcePlug.name().replace(f'{sourcePlug.node().name}.', '')
-            destinationPlugName = destinationPlug.name().replace(f'{destinationPlug.node().name}.', '')
-
-            Graph.ls(f'{sourceDupNode}.{sourcePlugName}')[0] >> Graph.ls(f'{dupNode}.{destinationPlugName}')[0]
-
-        for sourcePlug, destinationPlugs in outCons.items():
-            sourceDupName = f'{sourcePlug.node().strippedName}_copy'
-            if not cmds.objExists(sourceDupName):
-                continue
-
-            sourcePlugName = sourcePlug.name().replace(f'{sourcePlug.node().name}.', '')
-            for destinationPlug in destinationPlugs:
-                destinationDupName = f'{destinationPlug.node().strippedName}_copy'
-
-                if not cmds.objExists(destinationDupName):
+                dupName = f'{sourcePlug.node().strippedName}_copy'
+                if not cmds.objExists(dupName):
                     continue
 
-                destinationDupNode = Graph.ls(destinationDupName)[0]
+                sourceDupNode = Graph.ls(dupName)[0]
+                sourcePlugName = sourcePlug.name().replace(f'{sourcePlug.node().name}.', '')
                 destinationPlugName = destinationPlug.name().replace(f'{destinationPlug.node().name}.', '')
-                Graph.ls(f'{dupNode}.{sourcePlugName}')[0] >> Graph.ls(f'{destinationDupNode}.{destinationPlugName}')[0]
 
-    newShader = Graph.ls(f'{shader.strippedName}_copy')[0]
-    newShadingEngine = ObjectSet.newSet(renderable=True, noSurfaceShader=True, empty=True, name=f'{newShader.name}_SG')
+                Graph.ls(f'{sourceDupNode}.{sourcePlugName}')[0] >> Graph.ls(f'{dupNode}.{destinationPlugName}')[0]
 
-    newShader['outColor'] >> newShadingEngine['surfaceShader']
+            for sourcePlug, destinationPlugs in outCons.items():
+                sourceDupName = f'{sourcePlug.node().strippedName}_copy'
+                if not cmds.objExists(sourceDupName):
+                    continue
 
-    return Graph.ls(*[newShader, newShadingEngine])
+                sourcePlugName = sourcePlug.name().replace(f'{sourcePlug.node().name}.', '')
+                for destinationPlug in destinationPlugs:
+                    destinationDupName = f'{destinationPlug.node().strippedName}_copy'
+
+                    if not cmds.objExists(destinationDupName):
+                        continue
+
+                    destinationDupNode = Graph.ls(destinationDupName)[0]
+                    destinationPlugName = destinationPlug.name().replace(f'{destinationPlug.node().name}.', '')
+                    Graph.ls(f'{dupNode}.{sourcePlugName}')[0] >> Graph.ls(f'{destinationDupNode}.{destinationPlugName}')[0]
+
+        newShader = Graph.ls(f'{shader.strippedName}_copy')[0]
+        newShadingEngine = ObjectSet.newSet(renderable=True, noSurfaceShader=True, empty=True, name=f'{newShader.name}_SG')
+
+        newShader['outColor'] >> newShadingEngine['surfaceShader']
+        newNetwork.append((newShader, newShadingEngine))
+
+    return newNetwork
