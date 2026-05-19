@@ -2,6 +2,7 @@ from typing import List, Any
 
 from maya import cmds
 from maya.api import OpenMaya as om
+from .graph import Graph
 
 # * import list
 __all__: List[str] = [
@@ -139,7 +140,7 @@ def removeAllNamespaces() -> None:
         removeNamespace(namespace)
 
 
-def getObjectsFromNamespace(namespace: str) -> List[om.MObject]:
+def getObjectsFromNamespace(namespace: str) -> Graph:
     """
     Get objects from the given namespace
 
@@ -150,9 +151,9 @@ def getObjectsFromNamespace(namespace: str) -> List[om.MObject]:
     """
 
     if not namespaceExists(namespace):
-        return []
+        return Graph()
 
-    return om.MNamespace.getNamespaceObjects(namespace, recurse=True)
+    return Graph.ls(*om.MNamespace.getNamespaceObjects(namespace, recurse=True))
 
 
 def moveNamespace(source: str, destination: str, force: bool = False, ensureExists: bool = True) -> None:

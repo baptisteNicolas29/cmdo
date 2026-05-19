@@ -367,7 +367,7 @@ class Node(om.MObject):
         :param namespace: Union[str, None], the namespace of the node
         """
 
-        stripped_name = om.MNamespace.stripNamespaceFromName(self.name)
+        stripped_name = self.strippedName
 
         if namespace is not None and not om.MNamespace.namespaceExists(namespace):
             om.MNamespace.addNamespace(namespace)

@@ -81,6 +81,7 @@ def skinAs(source: str, destination: str, smooth: bool = False, **kwargs) -> Uni
         destinationSkin = cmds.skinCluster(
             sourceInfluences,
             destination,
+            bindMethod=0,
             toSelectedBones=True,
             removeUnusedInfluence=False,
             includeHiddenSelections=True,
