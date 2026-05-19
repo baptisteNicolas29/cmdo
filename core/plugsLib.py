@@ -255,7 +255,8 @@ class Plug(om.MPlug):
         """
         Get the wanted plug from its name plug.get("childPlug")
 
-        :param keyname: Union[int, str], index or name of the asked plug
+        :param key: Union[int, str], index or name of the asked plug
+        :param default: Any, the value to return if the key is not found
 
         :return: om.MPlug, found plug or null plug if not found
 
