@@ -8,25 +8,35 @@ from ..core import plugsLib
 
 
 __all__: List[str] = [
-    'isTypeFilter',
+    # Generic filters
+    'isCmdoNodeFilter',
     'isDgFilter',
     'isDagFilter',
     'isPlugFilter',
+    'isTypeFilter',
     'isReferencedFilter',
+    'objExistsFilter',
+    # Naming Filters
+    'hasPrefixFilter',
+    'hasSuffixFilter',
+    'hasTokenFilter',
+    # DAG Filters
     'isJointFilter',
     'isMeshFilter',
     'isTransformFilter',
     'isLocatorFilter',
-    'hasPrefixFilter',
-    'hasSuffixFilter',
-    'hasTokenFilter',
+    'isNurbsCurveFilter',
+    'isNurbsSurfaceFilter',
+    # DG Filters
     'isDeformerFilter',
+    # Plug Filters
+    'plugNotNullFilter',
 ]
 
 
 # -------------------------------------------------------------- Generic Filters
-def isTypeFilter(obj: nodeLib.Node, nodeType: str) -> bool:
-    return obj.isType(nodeType)
+def isCmdoNodeFilter(obj: nodeLib.Node) -> bool:
+    return issubclass(obj.__class__, nodeLib.Node)
 
 
 def isDgFilter(obj: nodeLib.Node) -> bool:
@@ -41,8 +51,16 @@ def isPlugFilter(obj: om.MObject) -> bool:
     return issubclass(obj.__class__, plugsLib.Plug)
 
 
+def isTypeFilter(obj: nodeLib.Node, nodeType: str) -> bool:
+    return isCmdoNodeFilter(obj) and obj.isType(nodeType)
+
+
 def isReferencedFilter(obj: nodeLib.Node) -> bool:
-    return issubclass(obj.__class__, nodeLib.Node) and obj.isReferenced
+    return isCmdoNodeFilter(obj) and obj.isReferenced
+
+
+def objExistsFilter(obj: nodeLib.Node) -> bool:
+    return isCmdoNodeFilter(obj) and obj.exists
 
 
 # --------------------------------------------------------------- Naming Filters
@@ -75,10 +93,20 @@ def isLocatorFilter(obj: nodeLib.Node) -> bool:
     return isDagFilter(obj) and isTypeFilter(obj, 'locator')
 
 
+def isNurbsCurveFilter(obj: nodeLib.Node) -> bool:
+    return isDagFilter(obj) and isTypeFilter(obj, 'nurbsCurve')
+
+
+def isNurbsSurfaceFilter(obj: nodeLib.Node) -> bool:
+    return isDagFilter(obj) and isTypeFilter(obj, 'nurbsSurface')
+
+
 # ------------------------------------------------------------------- DG Filters
 def isDeformerFilter(obj: nodeLib.Node) -> bool:
     return isDgFilter(obj) and isTypeFilter(obj, 'geometryFilter')
 
 
-# Plug Filters
+# ----------------------------------------------------------------- Plug Filters
+def plugNotNullFilter(plug: om.MObject) -> bool:
+    return isPlugFilter(plug) and not plug.isNull
 

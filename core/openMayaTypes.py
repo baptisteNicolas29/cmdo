@@ -5,6 +5,7 @@ from maya.api import OpenMaya as om
 
 __all__: List[str] = [
     'MSpace',
+    'MObject',
     'MObjectArray',
     'MMatrix',
     'MMatrixArray',

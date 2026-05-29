@@ -42,10 +42,10 @@ class Graph(om.MSelectionList):
             return obj.name()
 
         if Graph.__isSubClass(obj, om.MObject):
-            return om.MFnDependencyNode(obj).name()
+            return om.MFnDependencyNode(obj).uniqueName()
 
         if Graph.__isSubClass(obj, om.MFnDependencyNode):
-            return obj.name()
+            return obj.uniqueName()
 
         if isinstance(obj, Graph):
             return obj.getSelectionStrings()
@@ -340,11 +340,11 @@ class Graph(om.MSelectionList):
 
     def delete(self, **kwargs):
         """
-        Delete the nodes in the current graph
+        Delete ALL the nodes in the current graph
 
         """
 
-        cmds.delete(self, **kwargs)
+        cmds.delete(self.getSelectionStrings(), **kwargs)
 
     def setMembersAttributeValue(self, attr: Union[str, plugsLib.Plug], value: Any, raiseOnError: bool = False) -> None:
         """
@@ -482,8 +482,7 @@ class Graph(om.MSelectionList):
         :return: Graph, the current extended list
         """
         objects = list(map(self.__filterObjects, value))
-
-        result = cmds.ls(*objects) if objects else []
+        result = cmds.ls(*objects, long=True) if objects else []
         for item in result:
             self.add(item)
 
