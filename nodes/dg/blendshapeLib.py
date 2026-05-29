@@ -235,7 +235,7 @@ class BlendShape(geometryFilterLib.GeometryFilter):
         Add a target mesh to the blendShape deformer.
 
         :param sourceMesh: mesh use to sculpt the target, defaults to None
-        :param weight: mesh use to sculpt the target, defaults to None
+        :param weight: the weight of the target, defaults to 0.0
 
         :return: Dict, the target info
         """
@@ -289,7 +289,9 @@ class BlendShape(geometryFilterLib.GeometryFilter):
         return self.getTargetInfo(targetIndex)
 
     def addComboShape(self):
-        ...
+        raise NotImplementedError(
+            f'{self.__class__.__name__}.addComboShape is not implemented'
+        )
 
     def removeTarget(self, targetIndex: Union[int, str]):
         targetInfo = self.getTargetInfo(targetIndex)
@@ -305,21 +307,31 @@ class BlendShape(geometryFilterLib.GeometryFilter):
         cmds.removeMultiInstance(groupAttribute, b=True)
 
     def resetAllTargetWeights(self):
-        return NotImplementedError('resetting all targets')
+        raise NotImplementedError(
+            f'{self.__class__.__name__}.resetAllTargetWeights is not implemented'
+        )
 
     def resetTargetWeight(self, arg: Union[int, str]):
-        return NotImplementedError(f'Resetting target from idx {arg}')
+        raise NotImplementedError(
+            f'{self.__class__.__name__}.resetTargetWeight is not implemented'
+        )
 
     # TODO: move transfer to api
     def transferTo(self, arg: Union[str, om.MObject]):
-        return NotImplementedError(f'Transferring target to obj {arg}')
+        raise NotImplementedError(
+            f'{self.__class__.__name__}.transferTo is not implemented'
+        )
 
     # TODO: maybe rebuild functions move to api as well
     def rebuildAllTargets(self):
-        return NotImplementedError(f'Rebuilding all target')
+        raise NotImplementedError(
+            f'{self.__class__.__name__}.rebuildAllTargets is not implemented'
+        )
 
     def rebuildTarget(self, arg: Union[int, str]):
-        return NotImplementedError(f'Rebuilding target {arg}')
+        raise NotImplementedError(
+            f'{self.__class__.__name__}.rebuildTarget is not implemented'
+        )
 
 
 NodeRegistry()[BlendShape.nodeType()] = BlendShape
