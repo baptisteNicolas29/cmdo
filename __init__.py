@@ -149,6 +149,7 @@ from .core.graphLib import GraphType
 # api imports, dump all api functions in the main namespace
 from .api import *
 from .api.cmdoFilterKeys import *
+from .api.cmdoMapFunctions import *
 from .api.hierarchy import *
 from .api.history import *
 from .api.materials import *

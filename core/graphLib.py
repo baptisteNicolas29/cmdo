@@ -499,6 +499,16 @@ class Graph(om.MSelectionList):
 
         return self.__class__.ls(*fil) if bool(fil := list(filter(filterKey, self))) else self.__class__()
 
+    def applyFunction(self, mapFunction: Callable) -> None:
+        """
+        Given a function, apply it to the current graph
+
+        :param mapFunction: Callable, a function to apply to the current graph
+
+        """
+
+        list(map(mapFunction, self))
+
     def __str__(self) -> str:
         args = ', '.join([f'"{x}"' for x in self])
         return f'{self.__class__.__name__} [{args}]'

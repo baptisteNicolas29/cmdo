@@ -1,4 +1,4 @@
-from typing import Union, Any, Type, Tuple
+from typing import Union, Any, Type, Tuple, Generator
 
 import math
 
@@ -39,7 +39,7 @@ class Plug(om.MPlug):
         self._HASH = self.node().hash + hash(self.name())
         return self._HASH
 
-    def __iter__(self, *args, **kwargs) -> om.MPlug:
+    def __iter__(self, *args, **kwargs) -> Generator[om.MPlug, None, None]:
 
         if self.isNull:
             return
@@ -405,7 +405,7 @@ class Plug(om.MPlug):
         dg_modifier.doIt()
 
     def fullName(self):
-        return f'{self.node().name}.{self.partialName(includeNodeName=False, useLongNames=True, includeInstancedIndices=True)}'
+        return f'{self.node().name}.{self.longName}'
 
     @property
     def hash(self) -> int:
@@ -420,6 +420,10 @@ class Plug(om.MPlug):
     def multi(self) -> bool:
 
         return om.MFnAttribute(self.attribute()).array
+
+    @property
+    def longName(self):
+        return self.partialName(includeNodeName=False, useLongNames=True, includeInstancedIndices=True)
 
     @property
     def value(self) -> Any:
@@ -460,6 +464,35 @@ class Plug(om.MPlug):
         """
 
         self.set(value)
+
+    @property
+    def defaultValue(self):
+        attribute = self.attribute()
+        match attribute.apiType():
+
+            case om.MFn.kTypedAttribute:
+                defaultObj = om.MFnTypedAttribute(attribute).default
+                return defaultObj if not defaultObj.isNull() else None
+
+            case om.MFn.kMatrixAttribute:
+                return om.MFnMatrixAttribute(attribute).default
+
+            case om.MFn.kAttribute3Float:
+                return om.MFnNumericAttribute(attribute).default
+
+            case om.MFn.kAttribute3Double:
+                return om.MFnNumericAttribute(attribute).default
+
+            case om.MFn.kNumericAttribute:
+                return om.MFnNumericAttribute(attribute).default
+
+            case om.MFn.kDoubleLinearAttribute:
+                return om.MFnUnitAttribute(attribute).default.value
+
+            case om.MFn.kDoubleAngleAttribute:
+                return om.MFnUnitAttribute(attribute).default.asDegrees()
+
+        return cmds.attributeQuery(self.longName, node=self.node().name, listDefault=True)
 
     @property
     def type(self):
