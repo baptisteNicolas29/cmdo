@@ -5,6 +5,7 @@ from maya.api import OpenMaya as om
 
 from ..core.abstract import nodeLib, dagLib, dgLib
 from ..core import plugsLib
+from ..nodes.dag import transformLib
 
 
 __all__: List[str] = [
@@ -99,6 +100,16 @@ def isNurbsCurveFilter(obj: nodeLib.Node) -> bool:
 
 def isNurbsSurfaceFilter(obj: nodeLib.Node) -> bool:
     return isDagFilter(obj) and isTypeFilter(obj, 'nurbsSurface')
+
+
+# ------------------------------------------------------------ Transform Filters
+def isTransformZeroFilter(obj: transformLib.Transform) -> bool:
+    delta = round(sum(list(map(
+        lambda v: abs(v),
+        [*obj.translate, *obj.rotate, *obj.scale]
+    )))-3, 6)
+
+    return delta < 0.0001
 
 
 # ------------------------------------------------------------------- DG Filters

@@ -52,7 +52,7 @@ class NodeRegistry(dict, metaclass=SingletonMeta):
         return repr(cls2) in repr(cls1.mro())
 
     def get(self, key, default=dgLib.DGNode):
-        if isinstance(key, (str, om.MObject)):
+        if isinstance(key, str) or issubclass(key.__class__, nodeLib.Node):
             return super().get(nodeLib.Node(key).type, default)
 
         elif isinstance(key, int):
