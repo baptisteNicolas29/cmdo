@@ -1,3 +1,4 @@
+import contextlib
 from typing import List, Any
 
 from maya import cmds
@@ -8,6 +9,7 @@ from .graph import Graph
 __all__: List[str] = [
     'ROOT_NAMESPACE',
     'BASE_NAMESPACES',
+    'setCurrentNamespaceContext',
     'namespaceExists',
     'getAllNamespaces',
     'getAllUnusedNamespaces',
@@ -24,6 +26,28 @@ ROOT_NAMESPACE = om.MNamespace.rootNamespace
 
 # the names of non-deletable namespaces
 BASE_NAMESPACES = [':UI', ':shared']
+
+
+@contextlib.contextmanager
+def setCurrentNamespaceContext(namespace: str, create=True):
+    currentNamespace = cmds.namespaceInfo(currentNamespace=True, absoluteName=True)
+    """
+    this function set current namespace on given on
+    and return to the previous on
+    :param namespace: str, the namespace to be current
+    :param create: bool, say if the given namespace can be created by the function
+    """
+
+    if not cmds.namespace(exists=namespace) and create:
+        cmds.namespace(add=namespace)
+
+    cmds.namespace(setNamespace=namespace)
+
+    try:
+        yield
+
+    finally:
+        cmds.namespace(setNamespace=currentNamespace)
 
 
 def namespaceExists(namespace: str) -> bool:
