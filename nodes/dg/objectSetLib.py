@@ -171,7 +171,7 @@ class ObjectSet(DGNode):
         objects = Graph.ls(value).getSelectionStrings()
         return cmds.sets(*objects, anyMember=self.name)
 
-    def addMembers(self, value: Union[List, str, om.MObject, Graph], force=False) -> None:
+    def addMembers(self, value: Union[List, str, om.MObject, Graph], force: bool = False) -> None:
         """
         Add members to set
 
@@ -211,7 +211,7 @@ class ShadingEngine(ObjectSet):
         cmds.sets(meshName, edit=True, forceElement=self.name)
 
     @property
-    def members(self):
+    def members(self) -> List[str]:
         """
         Get the set members as cmdo objects
 
