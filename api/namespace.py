@@ -10,6 +10,7 @@ __all__: List[str] = [
     'ROOT_NAMESPACE',
     'BASE_NAMESPACES',
     'setCurrentNamespaceContext',
+    'temporaryNamespaceContext',
     'namespaceExists',
     'getAllNamespaces',
     'getAllUnusedNamespaces',
@@ -29,14 +30,15 @@ BASE_NAMESPACES = [':UI', ':shared']
 
 
 @contextlib.contextmanager
-def setCurrentNamespaceContext(namespace: str, create=True):
-    currentNamespace = cmds.namespaceInfo(currentNamespace=True, absoluteName=True)
+def setCurrentNamespaceContext(namespace: str, create=False):
     """
-    this function set current namespace on given on
-    and return to the previous on
+    this function set current namespace on given one
+    and return to the previous one
     :param namespace: str, the namespace to be current
     :param create: bool, say if the given namespace can be created by the function
     """
+
+    currentNamespace = cmds.namespaceInfo(currentNamespace=True, absoluteName=True)
 
     if not cmds.namespace(exists=namespace) and create:
         cmds.namespace(add=namespace)
@@ -48,6 +50,36 @@ def setCurrentNamespaceContext(namespace: str, create=True):
 
     finally:
         cmds.namespace(setNamespace=currentNamespace)
+
+
+@contextlib.contextmanager
+def temporaryNamespaceContext(namespace: str, moveContentTo: str = None):
+    """
+    create a temporary namespace and finally delete it with its content.
+    :param namespace: str, the namespace to be current
+    :param moveContentTo: str | None, the destination namespace before remove the temporary namespace
+    """
+
+    currentNamespace = cmds.namespaceInfo(currentNamespace=True, absoluteName=True)
+    if cmds.namespace(exists=namespace):
+        raise NameError(f'namespace: {namespace} already exists fail to use it a temporary namespace')
+
+    if (moveContentTo is not None) and not cmds.namespace(exists=moveContentTo):
+        raise NameError(f'namespace destination: {moveContentTo} does not exists')
+
+    cmds.namespace(addNamespace=namespace)
+    cmds.namespace(setNamespace=namespace)
+
+    try:
+        yield
+
+    finally:
+        cmds.namespace(setNamespace=currentNamespace)
+
+        if moveContentTo is not None:
+            moveNamespace(namespace, moveContentTo, force=True)
+
+        removeNamespace(namespace, deleteContent=True)
 
 
 def namespaceExists(namespace: str) -> bool:
@@ -126,7 +158,6 @@ def removeNamespace(namespace: str, deleteContent: bool = False) -> None:
     :param namespace: str, the namespace to remove
     :param deleteContent: bool, delete namespace content with namespace
     """
-
     if not om.MNamespace.namespaceExists(namespace):
         cmds.warning(
             f'Namespace does not exist : {namespace}'
@@ -148,7 +179,8 @@ def removeNamespace(namespace: str, deleteContent: bool = False) -> None:
 
             objectsToDelete.append(objectName)
 
-        cmds.delete(*cmds.ls(*objectsToDelete))
+        if objectsToDelete:
+            cmds.delete(*cmds.ls(*objectsToDelete))
 
     om.MNamespace.moveNamespace(namespace, ROOT_NAMESPACE(), force=True)
     om.MNamespace.removeNamespace(namespace, removeContents=False)
@@ -177,7 +209,12 @@ def getObjectsFromNamespace(namespace: str) -> Graph:
     if not namespaceExists(namespace):
         return Graph()
 
-    return Graph.ls(*om.MNamespace.getNamespaceObjects(namespace, recurse=True))
+    namespaceObjects = om.MNamespace.getNamespaceObjects(namespace, recurse=True)
+    if len(namespaceObjects):
+        return Graph.ls(*namespaceObjects)
+
+    else:
+        return Graph()
 
 
 def moveNamespace(source: str, destination: str, force: bool = False, ensureExists: bool = True) -> None:
