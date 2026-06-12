@@ -57,7 +57,7 @@ class Plug(om.MPlug):
         else:
             raise TypeError(f"{self} is not an iterable plug")
 
-    def __getitem__(self, value: Union[int, str]) -> 'Plug':
+    def __getitem__(self, value: Union[int, str]) -> Union['Plug', 'PlugArray']:
         """
         __getitem__ implementation
             - plug["childPlug"]
@@ -89,7 +89,7 @@ class Plug(om.MPlug):
                 return self.__class__(self.child(value))
 
         elif isinstance(value, slice):
-            plugs = []
+            plugs = PlugArray()
 
             if self.multi:
 
@@ -102,15 +102,12 @@ class Plug(om.MPlug):
                     byLogical = True
 
                     if value.stop <= 0:
-                        raise CmdoPlugException(f"{self} has zero lenght no negative stop")
+                        raise CmdoPlugException(f"{self} has zero length no negative stop")
                     stop = value.stop
 
                 for index in range(start, stop, step):
-                    plug = None
                     if byLogical:
-
-                        plug = self.__class__(self.elementByLogicalIndex(index))
-                        plugs.append(plug)
+                        plugs.append(self.__class__(self.elementByLogicalIndex(index)))
 
                     else:
                         plugs.append(self.__class__(self.elementByPhysicalIndex(index)))
@@ -502,11 +499,29 @@ class Plug(om.MPlug):
         :return: str, the type of attribute this plug represents
         """
 
-        return cmds.getAttr(self.name(), type=True)
+        return cmds.getAttr(self.fullName(), type=True)
 
 
 # TODO: Update PlugArray properties and dunders
 class PlugArray(om.MPlugArray):
+
+    def __str__(self) -> str:
+
+        if not self:
+            return ''
+
+        selList = om.MSelectionList()
+        for plug in self:
+            selList.add(plug)
+
+        return str(list(selList.getSelectionStrings()))
+
+    def __repr__(self) -> str:
+
+        if not self:
+            return f'{self.__class__.__name__}()'
+
+        return f"{self.__class__.__name__}({str(self)})"
 
     def __getitem__(self, *args, **kwargs) -> 'Plug':
         return Plug(super().__getitem__(*args, **kwargs))

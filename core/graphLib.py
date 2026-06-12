@@ -119,10 +119,10 @@ class Graph(om.MSelectionList):
     @classmethod
     def listRelatives(cls, *args, **kwargs) -> 'Graph':
         """
-        This function is a reimplementation of the cmds.listHistory function
+        This function is a reimplementation of the cmds.listRelatives function
 
         allow user to gather nodes from string list
-        args and kwargs work like cmds.listHistory command
+        args and kwargs work like cmds.listRelatives command
 
         """
 

@@ -30,9 +30,9 @@ BASE_NAMESPACES = [':UI', ':shared']
 
 
 @contextlib.contextmanager
-def setCurrentNamespaceContext(namespace: str, create=False):
+def setCurrentNamespaceContext(namespace: str, create: bool = False):
     """
-    this function set current namespace on given one
+    This function set current namespace on given one
     and return to the previous one
     :param namespace: str, the namespace to be current
     :param create: bool, say if the given namespace can be created by the function
@@ -41,7 +41,7 @@ def setCurrentNamespaceContext(namespace: str, create=False):
     currentNamespace = cmds.namespaceInfo(currentNamespace=True, absoluteName=True)
 
     if not cmds.namespace(exists=namespace) and create:
-        cmds.namespace(add=namespace)
+        cmds.namespace(addNamespace=namespace)
 
     cmds.namespace(setNamespace=namespace)
 

@@ -14,6 +14,7 @@ class Node(om.MObject):
     # This enables cmdo to create and get those nodes using graphLib
     _NODE_TYPE = None
     _API_TYPE = None
+    _hash = 0
 
     @classmethod
     def openMayaType(cls) -> int:
@@ -94,6 +95,7 @@ class Node(om.MObject):
             super().__init__(name)
 
         self.__dependencyNode = om.MFnDependencyNode(self)
+        self._hash = om.MObjectHandle(self).hashCode()
 
     def __hash__(self) -> int:
         """
@@ -295,7 +297,7 @@ class Node(om.MObject):
         :return: int, the hash value
         """
 
-        return hash(self)
+        return self._hash
 
     @property
     def name(self) -> str:
